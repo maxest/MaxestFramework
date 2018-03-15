@@ -1,0 +1,38 @@
+- connections manager
+	- deque zamienic chyba na queue
+- math
+	- funkcje do konwersji macierz/kwaternion/euler
+	- quaternion add angular velocity
+	- quaternion pow jest dobrze zrobiony?
+- czasem mouseRelX/mouseRelY zle zwraca
+- zrobic typy f32, f64, s8, s16, ..., i nie uzywac w ogole int, float itp.
+- TCP na socketach i wyjebac SDL_net
+- dx11
+	- devicecontext itp. wsadzic w jakas klase
+	- porobic resource view'y
+- demo z ssao
+	- temporal z min-max'em
+	- w artykule masz reszte sugestii
+- fpp zoom
+- w common zrobic szablon aplikacji do sampli
+- skrypt tworzacy projekty visual'owe
+- ray-tracer
+	- dokonczyc pokoj (zrobic z modeli 3D)
+	- czy transmittance nie jest zjebany?
+	- generowanie probek do samples.h i moze nie na stl::vector; wczytywanie wygenerowanych probek z pliku
+	- moze bardziej obiektowo jednak
+	- area lights
+	- lepszy glossy specular
+	- double do przeciec
+	- normalny dof
+	- implicit surfaces
+	* czy uzywanie pdf'a z cosine distribution jest rownowazne z takimi sample'ami
+	* czy uzycie PDF nie uniform z area light nie bedzie lepsze?
+- opengl
+	- zrobic API
+	* szybszy update bufora cass'a (http://www.ozone3d.net/dl/201401/NVIDIA_OpenGL_beyond_porting.pdf)
+- meshe
+	- FBX
+
+	
+- wszystkie funkcje powinny miec schemat argumentow: output values, input values (bo moze byc ... w inpucie)

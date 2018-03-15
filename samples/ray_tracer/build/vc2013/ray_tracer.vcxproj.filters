@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\src\brdf.h" />
+    <ClInclude Include="..\..\src\camera.h" />
+    <ClInclude Include="..\..\src\ray_tracer.h" />
+    <ClInclude Include="..\..\src\types.h" />
+    <ClInclude Include="..\..\..\common\src\ogl_texture_renderer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{2039d659-116d-40cb-827e-98f85051d12d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\main.cpp" />
+    <ClCompile Include="..\..\src\ray_tracer.cpp" />
+  </ItemGroup>
+</Project>
