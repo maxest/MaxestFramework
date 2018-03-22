@@ -453,7 +453,7 @@ void NGPU::NUtils::CMesh::Render()
 // Resources
 
 
-const int NGPU::NUtils::CResources::cPrefixSumBatchSize = 256;
+const int NGPU::NUtils::CResources::cPrefixSumBatchSize = 512;
 
 
 void NGPU::NUtils::CResources::Create(const string& frameworkPath)
@@ -1334,6 +1334,7 @@ void NGPU::NUtils::PrefixSum(int elementsCount, const NGPU::SBuffer& inputBuffer
 	deviceContext->ClearUnorderedAccessViewUint(gGPUUtilsResources.prefixSumBuffer_blocksSums.uav, clearValues);
 
 	int batchesCount = elementsCount / gGPUUtilsResources.cPrefixSumBatchSize;
+	MF_ASSERT(batchesCount <= gGPUUtilsResources.cPrefixSumBatchSize);
 
 	// prefix sum of each block
 
