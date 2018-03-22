@@ -57,7 +57,8 @@ static const int LevelsCount = log2(ElementsCount);
 
 			PrefixSum(threadID);
 
-			outputBuffer_perBlockPrefixSums[ElementsCount*blockID + ai] = tempData[ElementsCount + ai];
+			int tempDataOffset = (LevelsCount % 2 == 0 ? ElementsCount : 0);
+			outputBuffer_perBlockPrefixSums[ElementsCount*blockID + ai] = tempData[tempDataOffset + ai];
 
 		#ifdef WRITE_BLOCKS_SUMS
 			if (threadID == ElementsCount - 1)

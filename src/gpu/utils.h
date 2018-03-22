@@ -111,7 +111,7 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 	class CResources
 	{
 	public:
-		static const int cPrefixSumElementsCount;
+		static const int cPrefixSumBatchSize;
 
 	public:
 		void Create(const string& frameworkPath);
@@ -304,7 +304,7 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 	void SetCSSamplers();
 	void SetSamplers();
 
-	void PrefixSum(int batchesCount, const NGPU::SBuffer& inputBuffer, const NGPU::SBuffer& outputBuffer);
+	void PrefixSum(int elementsCount, const NGPU::SBuffer& inputBuffer, const NGPU::SBuffer& outputBuffer);
 
 	//
 

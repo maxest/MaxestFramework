@@ -453,7 +453,7 @@ void NGPU::NUtils::CMesh::Render()
 // Resources
 
 
-const int NGPU::NUtils::CResources::cPrefixSumElementsCount = 256;
+const int NGPU::NUtils::CResources::cPrefixSumBatchSize = 256;
 
 
 void NGPU::NUtils::CResources::Create(const string& frameworkPath)
@@ -493,8 +493,8 @@ void NGPU::NUtils::CResources::Create(const string& frameworkPath)
 	uint16 indices[] = { 0, 1, 2, 0, 2, 3 };
 	CreateIndexBuffer(false, (uint8*)indices, 6 * sizeof(uint16), screenQuadIB);
 
-	CreateRWStructuredBuffer(cPrefixSumElementsCount * sizeof(uint32), sizeof(uint32), prefixSumBuffer_blocksSums);
-	CreateRWStructuredBuffer(cPrefixSumElementsCount * sizeof(uint32), sizeof(uint32), prefixSumBuffer_cumulativeBlocksSums);
+	CreateRWStructuredBuffer(cPrefixSumBatchSize * sizeof(uint32), sizeof(uint32), prefixSumBuffer_blocksSums);
+	CreateRWStructuredBuffer(cPrefixSumBatchSize * sizeof(uint32), sizeof(uint32), prefixSumBuffer_cumulativeBlocksSums);
 
 	//
 
@@ -636,9 +636,9 @@ void NGPU::NUtils::CResources::CreateShaders(const string& frameworkPath)
 
 	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/pixel_copy_cs.hlsl", pixelCopyCS));
 
-	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "PREFIX_SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumElementsCount) + "|VARIANT=1", prefixSumCS_prefixSum));
-	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "PREFIX_SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumElementsCount) + "|VARIANT=1|WRITE_BLOCKS_SUMS", prefixSumCS_prefixSum_writeBlocksSums));
-	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumElementsCount), prefixSumCS_sum));
+	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "PREFIX_SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumBatchSize) + "|VARIANT=1", prefixSumCS_prefixSum));
+	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "PREFIX_SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumBatchSize) + "|VARIANT=1|WRITE_BLOCKS_SUMS", prefixSumCS_prefixSum_writeBlocksSums));
+	MF_ASSERT(CreateComputeShader(frameworkPath + "/data/gpu/prefix_sum_cs.hlsl", "SUM|ELEMENTS_COUNT=" + ToString(cPrefixSumBatchSize), prefixSumCS_sum));
 }
 
 
@@ -1321,9 +1321,9 @@ void NGPU::NUtils::SetSamplers()
 }
 
 
-void NGPU::NUtils::PrefixSum(int batchesCount, const NGPU::SBuffer& inputBuffer, const NGPU::SBuffer& outputBuffer)
+void NGPU::NUtils::PrefixSum(int elementsCount, const NGPU::SBuffer& inputBuffer, const NGPU::SBuffer& outputBuffer)
 {
-	MF_ASSERT(batchesCount <= gGPUUtilsResources.cPrefixSumElementsCount);
+	MF_ASSERT(elementsCount % gGPUUtilsResources.cPrefixSumBatchSize == 0);
 
 	//
 
@@ -1332,6 +1332,8 @@ void NGPU::NUtils::PrefixSum(int batchesCount, const NGPU::SBuffer& inputBuffer,
 
 	uint32 clearValues[] = { 0, 0, 0, 0 };
 	deviceContext->ClearUnorderedAccessViewUint(gGPUUtilsResources.prefixSumBuffer_blocksSums.uav, clearValues);
+
+	int batchesCount = elementsCount / gGPUUtilsResources.cPrefixSumBatchSize;
 
 	// prefix sum of each block
 
