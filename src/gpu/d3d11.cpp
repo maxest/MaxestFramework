@@ -732,7 +732,7 @@ bool NGPU::CreateShaderBlob(EShaderFileType shaderFileType, EShaderType shaderTy
 		else if (shaderType == EShaderType::Compute)
 			shaderModelName = "cs_5_0";
 
-		if (FAILED(CompileShaderFromSourceFile(path, entryPointName, shaderModelName, shaderMacros, blob)))
+		if (!CompileShaderFromSourceFile(path, entryPointName, shaderModelName, shaderMacros, blob))
 			return false;
 	}
 
@@ -793,7 +793,7 @@ bool NGPU::CreateInputLayout(const string& dummyVertexShaderPath, const string& 
 	ID3D11VertexShader* vs = nullptr;
 	ID3DBlob* vsBlob = nullptr;
 
-	if (FAILED(CompileShaderFromSourceFile(dummyVertexShaderPath, "main", "vs_5_0", dummyVertexShaderMacros, vsBlob)))
+	if (!CompileShaderFromSourceFile(dummyVertexShaderPath, "main", "vs_5_0", dummyVertexShaderMacros, vsBlob))
 		return false;
 
 	if (!vsBlob)
