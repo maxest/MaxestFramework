@@ -38,6 +38,7 @@ namespace NMaxestFramework { namespace NMath
 	float Log(float x);
 	float Log2(float x);
 	double Log2(double x);
+	int Balance(int value, int index, int count);
 
 	//
 
@@ -204,5 +205,18 @@ namespace NMaxestFramework { namespace NMath
 	inline double Log2(double x)
 	{
 		return log(x) / log(2.0);
+	}
+
+	inline int Balance(int value, int index, int count)
+	{
+		float f = (float)value / (float)count;
+
+		int count2 = (int)(Frac(f) * count);
+		int count1 = count - count2;
+
+		if (index < count1)
+			return (int)f;
+		else
+			return (int)f + 1;
 	}
 } }
