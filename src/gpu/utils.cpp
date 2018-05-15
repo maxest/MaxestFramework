@@ -602,6 +602,9 @@ void NGPU::NUtils::CResources::CreateShaders(const string& frameworkPath)
 	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "COPY_LINEAR", postprocess_copyLinearTexturePS));
 	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "COPY_POINT|SCALE_AND_OFFSET", postprocess_copyPointTextureWithScaleAndOffsetPS));
 	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "COPY_LINEAR|SCALE_AND_OFFSET", postprocess_copyLinearTextureWithScaleAndOffsetPS));
+	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "LUMA", postprocess_lumaPS));
+	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "ADD", postprocess_addPS));
+	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "MUL", postprocess_mulPS));
 	MF_ASSERT(CreatePixelShader(frameworkPath + "/data/gpu/postprocess_ps.hlsl", "POW", postprocess_powPS));
 	for (int i = 0; i < 4; i++)
 	{
@@ -665,6 +668,9 @@ void NGPU::NUtils::CResources::DestroyShaders()
 	DestroyPixelShader(postprocess_copyLinearTexturePS);
 	DestroyPixelShader(postprocess_copyPointTextureWithScaleAndOffsetPS);
 	DestroyPixelShader(postprocess_copyLinearTextureWithScaleAndOffsetPS);
+	DestroyPixelShader(postprocess_lumaPS);
+	DestroyPixelShader(postprocess_addPS);
+	DestroyPixelShader(postprocess_mulPS);
 	DestroyPixelShader(postprocess_powPS);
 	for (int i = 0; i < 4; i++)
 	{
@@ -863,13 +869,54 @@ void NGPU::NUtils::CPostprocessor::CopyLinearTexture(const NGPU::STexture& outpu
 }
 
 
-void NGPU::NUtils::CPostprocessor::Pow(const NGPU::STexture& output, const NGPU::STexture& input, float value)
+void NGPU::NUtils::CPostprocessor::Luma(const NGPU::STexture& output, const NGPU::STexture& input)
 {
-	float data[4] = { value, 0.0f, 0.0f, 0.0f };
-	deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer, 0, nullptr, data, 0, 0);
+	Quad(output, input, gGPUUtilsResources.postprocess_lumaPS);
+}
+
+
+void NGPU::NUtils::CPostprocessor::Add(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value)
+{
+	deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer, 0, nullptr, &value, 0, 0);
+	deviceContext->PSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer);
+
+	Quad(output, input, gGPUUtilsResources.postprocess_addPS);
+}
+
+
+void NGPU::NUtils::CPostprocessor::Add(const NGPU::STexture& output, const NGPU::STexture& input, float value)
+{
+	Add(output, input, VectorCustom(value, value, value, value));
+}
+
+
+void NGPU::NUtils::CPostprocessor::Mul(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value)
+{
+	deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer, 0, nullptr, &value, 0, 0);
+	deviceContext->PSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer);
+
+	Quad(output, input, gGPUUtilsResources.postprocess_mulPS);
+}
+
+
+void NGPU::NUtils::CPostprocessor::Mul(const NGPU::STexture& output, const NGPU::STexture& input, float value)
+{
+	Mul(output, input, VectorCustom(value, value, value, value));
+}
+
+
+void NGPU::NUtils::CPostprocessor::Pow(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value)
+{
+	deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer, 0, nullptr, &value, 0, 0);
 	deviceContext->PSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer);
 
 	Quad(output, input, gGPUUtilsResources.postprocess_powPS);
+}
+
+
+void NGPU::NUtils::CPostprocessor::Pow(const NGPU::STexture& output, const NGPU::STexture& input, float value)
+{
+	Pow(output, input, VectorCustom(value, value, value, value));
 }
 
 

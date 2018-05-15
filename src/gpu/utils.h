@@ -181,6 +181,9 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 		ID3D11PixelShader* postprocess_copyLinearTexturePS;
 		ID3D11PixelShader* postprocess_copyPointTextureWithScaleAndOffsetPS;
 		ID3D11PixelShader* postprocess_copyLinearTextureWithScaleAndOffsetPS;
+		ID3D11PixelShader* postprocess_lumaPS;
+		ID3D11PixelShader* postprocess_addPS;
+		ID3D11PixelShader* postprocess_mulPS;
 		ID3D11PixelShader* postprocess_powPS;
 		ID3D11PixelShader* postprocess_minXPS[4];
 		ID3D11PixelShader* postprocess_minYPS[4];
@@ -235,6 +238,12 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 		void CopyLinearTexture(const NGPU::STexture& output, const NGPU::STexture& input);
 		void CopyPointTexture(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector2& scale, const NMath::SVector2& offset);
 		void CopyLinearTexture(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector2& scale, const NMath::SVector2& offset);
+		void Luma(const NGPU::STexture& output, const NGPU::STexture& input);
+		void Add(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value);
+		void Add(const NGPU::STexture& output, const NGPU::STexture& input, float value);
+		void Mul(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value);
+		void Mul(const NGPU::STexture& output, const NGPU::STexture& input, float value);
+		void Pow(const NGPU::STexture& output, const NGPU::STexture& input, const NMath::SVector4& value);
 		void Pow(const NGPU::STexture& output, const NGPU::STexture& input, float value);
 		void MinX(const NGPU::STexture& output, const NGPU::STexture& input, byte channelsCount, const NMath::SVector2& pixelSize, int32 from, int32 to);
 		void MinY(const NGPU::STexture& output, const NGPU::STexture& input, byte channelsCount, const NMath::SVector2& pixelSize, int32 from, int32 to);

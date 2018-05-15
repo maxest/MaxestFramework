@@ -12,7 +12,9 @@ namespace NMaxestFramework { namespace NMath
 {
 	float Pow(float x, float y);
 	float Sqrt(float x);
+	double Sqrt(double x);
 	float Exp(float x);
+	double Exp(double x);
 	float Sin(float x);
 	float Cos(float x);
 	float Tan(float x);
@@ -35,6 +37,7 @@ namespace NMaxestFramework { namespace NMath
 	float Round(float x);
 	float Frac(float x);
 	float Saturate(float x);
+	double Saturate(double x);
 	float Log(float x);
 	float Log2(float x);
 	double Log2(double x);
@@ -52,9 +55,19 @@ namespace NMaxestFramework { namespace NMath
 		return sqrtf(x);
 	}
 
+	inline double Sqrt(double x)
+	{
+		return sqrt(x);
+	}
+
 	inline float Exp(float x)
 	{
 		return expf(x);
+	}
+
+	inline double Exp(double x)
+	{
+		return exp(x);
 	}
 
 	inline float Sin(float x)
@@ -190,6 +203,11 @@ namespace NMaxestFramework { namespace NMath
 	inline float Saturate(float x)
 	{
 		return Clamp(x, 0.0f, 1.0f);
+	}
+
+	inline double Saturate(double x)
+	{
+		return Clamp(x, 0.0, 1.0);
 	}
 
 	inline float Log(float x)

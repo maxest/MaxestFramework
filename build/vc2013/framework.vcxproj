@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\src\common\jobs.h" />
     <ClInclude Include="..\..\src\common\lossless_compression.h" />
     <ClInclude Include="..\..\src\common\main.h" />
+    <ClInclude Include="..\..\src\common\neural_network.h" />
     <ClInclude Include="..\..\src\essentials\array.h" />
     <ClInclude Include="..\..\src\essentials\assert.h" />
     <ClInclude Include="..\..\src\essentials\bit.h" />
@@ -86,6 +87,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\common\jobs.cpp" />
     <ClCompile Include="..\..\src\common\lossless_compression.cpp" />
+    <ClCompile Include="..\..\src\common\neural_network.cpp" />
     <ClCompile Include="..\..\src\gpu\d3d11.cpp" />
     <ClCompile Include="..\..\src\gpu\profiler.cpp" />
     <ClCompile Include="..\..\src\gpu\utils.cpp" />

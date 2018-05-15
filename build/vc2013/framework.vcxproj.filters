@@ -212,6 +212,9 @@
     <ClInclude Include="..\..\src\essentials\hash.h">
       <Filter>essentials</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\neural_network.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\common\jobs.cpp">
@@ -270,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="..\..\src\net\connections_manager.cpp">
       <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\common\neural_network.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

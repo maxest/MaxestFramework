@@ -12,6 +12,8 @@ namespace NMaxestFramework { namespace NImage
 	SImage Create(const SImage& image);
 	SImage Copy(const SImage& image);
 
+	void Destroy(SImage& image);
+
 	bool Load(const string& path, SImage& image);
 	bool Load(const string& path, SImage& image, bool swapChannels, bool invertY, EFormat format);
 	bool Save(const string& path, const SImage& image, int flags = 0);

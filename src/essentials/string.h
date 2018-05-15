@@ -17,6 +17,7 @@ namespace NMaxestFramework { namespace NEssentials
 	bool ToBool(const string& s);
 	int ToInt(const string& s);
 	float ToFloat(const string& s);
+	double ToDouble(const string& s);
 	template<typename TYPE> string ToString(const TYPE& value);
 
 	bool Find(const string& str, const string& subStr);
@@ -64,6 +65,14 @@ namespace NMaxestFramework { namespace NEssentials
 	inline float ToFloat(const string& s)
 	{
 		float f;
+		istringstream in(s);
+		in >> f;
+		return f;
+	}
+
+	inline double ToDouble(const string& s)
+	{
+		double f;
 		istringstream in(s);
 		in >> f;
 		return f;

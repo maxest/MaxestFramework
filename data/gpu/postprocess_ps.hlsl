@@ -47,9 +47,8 @@ static float gaussWeightsSigma3[7] =
 
 cbuffer ConstantBuffer: register(b0)
 {
-#if defined(POW)
-	float value;
-	float3 padding;
+#if ( defined(ADD) || defined(MUL) || defined(POW) )
+	float4 value;
 #elif defined(SCALE_AND_OFFSET)
 	float2 scale;
 	float2 offset;
@@ -81,6 +80,22 @@ float4 main(PS_INPUT input): SV_Target
 
 #ifdef COPY_LINEAR
 	return mainTexture.SampleLevel(linearClampSampler, uv, 0);
+#endif
+
+#ifdef LUMA
+	float4 color = mainTexture.SampleLevel(pointClampSampler, uv, 0);
+	float3 lumaConst = float3(0.299f, 0.587f, 0.114f);
+	return dot(color.xyz, lumaConst);
+#endif
+
+#ifdef ADD
+	float4 color = mainTexture.SampleLevel(pointClampSampler, uv, 0);
+	return color + value;
+#endif
+
+#ifdef MUL
+	float4 color = mainTexture.SampleLevel(pointClampSampler, uv, 0);
+	return color * value;
 #endif
 
 #ifdef POW

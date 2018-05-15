@@ -40,6 +40,12 @@ NImage::SImage NImage::Copy(const SImage& image)
 }
 
 
+void NImage::Destroy(SImage& image)
+{
+	SAFE_DELETE_ARRAY(image.data);
+}
+
+
 bool NImage::Load(const string& path, SImage& image)
 {
 	FREE_IMAGE_FORMAT fif;
