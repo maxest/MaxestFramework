@@ -20,11 +20,8 @@ struct SMeshConstantBuffer
 
 
 bool fullScreen = false;
-int screenWidth = 1920;
-int screenHeight = 1080;
-int renderTargetWidth = 1920;
-int renderTargetHeight = 1080;
-float aspect = (float)renderTargetWidth / (float)renderTargetHeight;
+int screenWidth;
+int screenHeight;
 
 
 CApplication application;
@@ -90,12 +87,12 @@ bool Create()
 	gGPUUtilsResources.Create("../../../../");
 
 	DXGI_FORMAT floatFormat = DXGI_FORMAT_R11G11B10_FLOAT;
-	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRTs[0]);
-	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRTs[1]);
-	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_temporalAA);
-	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_edgeBlurAA);
-	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_fxaa);
-	CreateDepthStencilTarget(renderTargetWidth, renderTargetHeight, 1, screenDST);
+	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, colorRTs[0]);
+	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, colorRTs[1]);
+	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, colorRT_temporalAA);
+	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, colorRT_edgeBlurAA);
+	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, colorRT_fxaa);
+	CreateDepthStencilTarget(screenWidth, screenHeight, 1, screenDST);
 
 	CreateShaders();
 
@@ -344,7 +341,7 @@ bool Run()
 	SVector3 lightDirection = Normalize(VectorCustom(-2.0f, -8.0f, -2.0f));
 
 	SMatrix viewTransform = MatrixLookAtRH(camera.eye, camera.at, camera.up);
-	SMatrix projTransform = MatrixPerspectiveFovRH(EZRange::ZeroToOne, cPi / 3.0f, aspect, 1.0f, 1000.0f);
+	SMatrix projTransform = MatrixPerspectiveFovRH(EZRange::ZeroToOne, cPi / 3.0f, (float)screenWidth/(float)screenHeight, 1.0f, 1000.0f);
 	SMatrix projTransform_jittered = projTransform;
 	if (temporalAA)
 	{
@@ -356,11 +353,11 @@ bool Run()
 
 		SMatrix subPixelOffsetTransform = MatrixIdentity();
 		// image offset
-		subPixelOffsetTransform.m[3][0] = subPixelOffset.x / (float)renderTargetWidth;
-		subPixelOffsetTransform.m[3][1] = subPixelOffset.y / (float)renderTargetHeight;
+		subPixelOffsetTransform.m[3][0] = subPixelOffset.x / (float)screenWidth;
+		subPixelOffsetTransform.m[3][1] = subPixelOffset.y / (float)screenHeight;
 		// per-pixel offset
-		subPixelOffsetTransform.m[0][0] = 1.0f - subPixelOffset.x / (float)renderTargetWidth;
-		subPixelOffsetTransform.m[1][1] = 1.0f - subPixelOffset.y / (float)renderTargetHeight;
+		subPixelOffsetTransform.m[0][0] = 1.0f - subPixelOffset.x / (float)screenWidth;
+		subPixelOffsetTransform.m[1][1] = 1.0f - subPixelOffset.y / (float)screenHeight;
 
 		projTransform_jittered = projTransform * subPixelOffsetTransform;
 	}
@@ -440,20 +437,12 @@ bool Run()
 
 void LoadConfigFile()
 {
-	string temp;
-
-	CFile file;
-	if (file.Open("config.txt", CFile::EOpenMode::ReadText))
-	{
-		file.ReadText(temp);
-		file.ReadText(fullScreen);
-		file.ReadText(temp);
-		file.ReadText(screenWidth);
-		file.ReadText(temp);
-		file.ReadText(screenHeight);
-
-		file.Close();
-	}
+	CConfigFile configFile;
+	configFile.Open("config.txt");
+	configFile.Process("fullScreen", fullScreen);
+	configFile.Process("screenWidth", screenWidth);
+	configFile.Process("screenHeight", screenHeight);
+	configFile.Close();
 }
 
 
@@ -462,6 +451,7 @@ int main()
 	NSystem::Initialize();
 	NImage::Initialize();
 
+	NSystem::ScreenSize(screenWidth, screenHeight);
 	LoadConfigFile();
 
 	if (!application.Create(screenWidth, screenHeight, fullScreen))
