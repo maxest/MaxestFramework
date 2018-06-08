@@ -81,6 +81,10 @@ float4 main(PS_INPUT input): SV_Target
 	for (int i = 0; i < 16; i++)
 	{
 		float2 sampleUV = VogelDiskOffset(i, 16, gradientNoise);
+		
+		// blue noise; more pre-generated samples in data/gpu/samples.hlsl; generation algorithms in src/math/samples.h
+	//	sampleUV = blueNoiseOffsets16[i];
+	//	sampleUV = RotatePoint(sampleUV, gradientNoise);
 
 		sampleUV = shadowMapUV + shadowFilterMaxSize*penumbra*sampleUV;
 		shadow += shadowMapTexture.SampleCmp(linearClampComparisonSampler, sampleUV, z_shadowMapView).x;
