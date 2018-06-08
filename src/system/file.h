@@ -256,11 +256,15 @@ namespace NMaxestFramework { namespace NSystem
 		FILETIME ft1, ft2, ft3;
 
 		fileHandle = CreateFileW(NEssentials::StringToWString(path).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+		if (fileHandle == INVALID_HANDLE_VALUE)
+			return true;
 		GetFileTime(fileHandle, &ft1, &ft2, &ft3);
 		uint64 t1 = ((uint64)ft3.dwHighDateTime << 32) | ((uint64)ft3.dwLowDateTime);
 		CloseHandle(fileHandle);
 
 		fileHandle = CreateFileW(NEssentials::StringToWString(refFilePath).c_str(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_OVERLAPPED, NULL);
+		if (fileHandle == INVALID_HANDLE_VALUE)
+			return true;
 		GetFileTime(fileHandle, &ft1, &ft2, &ft3);
 		uint64 t2 = ((uint64)ft3.dwHighDateTime << 32) | ((uint64)ft3.dwLowDateTime);
 		CloseHandle(fileHandle);

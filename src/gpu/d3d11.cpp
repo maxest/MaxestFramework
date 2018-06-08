@@ -329,6 +329,7 @@ void NGPU::CreateRenderTarget(int width, int height, DXGI_FORMAT format, int sam
 	renderTarget.width = width;
 	renderTarget.height = height;
 	renderTarget.mipmapsCount = 1;
+	renderTarget.arraysCount = 1;
 	renderTarget.samplesCount = samplesCount;
 	renderTarget.format = format;
 
@@ -338,8 +339,8 @@ void NGPU::CreateRenderTarget(int width, int height, DXGI_FORMAT format, int sam
 	ZeroMemory(&td, sizeof(td));
 	td.Width = width;
 	td.Height = height;
-	td.MipLevels = 1;
-	td.ArraySize = 1;
+	td.MipLevels = renderTarget.mipmapsCount;
+	td.ArraySize = renderTarget.arraysCount;
 	td.Format = format;
 	td.SampleDesc.Count = Max(samplesCount, 1);
 	td.SampleDesc.Quality = 0;
@@ -367,7 +368,7 @@ void NGPU::CreateRenderTarget(int width, int height, DXGI_FORMAT format, int sam
 	ZeroMemory(&srvd, sizeof(srvd));
 	srvd.Format = format;
 	srvd.ViewDimension = (samplesCount < 2 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
-	srvd.Texture2D.MipLevels = 1;
+	srvd.Texture2D.MipLevels = renderTarget.mipmapsCount;
 	srvd.Texture2D.MostDetailedMip = 0;
 
 	hr = device->CreateShaderResourceView(renderTarget.texture, &srvd, &renderTarget.srv);
@@ -381,6 +382,7 @@ void NGPU::CreateDepthStencilTarget(int width, int height, int samplesCount, TDe
 	depthStencilTarget.width = width;
 	depthStencilTarget.height = height;
 	depthStencilTarget.mipmapsCount = 1;
+	depthStencilTarget.arraysCount = 1;
 	depthStencilTarget.samplesCount = samplesCount;
 	depthStencilTarget.format = DXGI_FORMAT_R24G8_TYPELESS;
 
@@ -390,8 +392,8 @@ void NGPU::CreateDepthStencilTarget(int width, int height, int samplesCount, TDe
 	ZeroMemory(&td, sizeof(td));
 	td.Width = width;
 	td.Height = height;
-	td.MipLevels = 1;
-	td.ArraySize = 1;
+	td.MipLevels = depthStencilTarget.mipmapsCount;
+	td.ArraySize = depthStencilTarget.arraysCount;
 	td.Format = DXGI_FORMAT_R24G8_TYPELESS;
 	td.SampleDesc.Count = Max(samplesCount, 1);
 	td.SampleDesc.Quality = 0;
@@ -420,7 +422,7 @@ void NGPU::CreateDepthStencilTarget(int width, int height, int samplesCount, TDe
 	ZeroMemory(&srvd, sizeof(srvd));
 	srvd.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
 	srvd.ViewDimension = (samplesCount < 2 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
-	srvd.Texture2D.MipLevels = 1;
+	srvd.Texture2D.MipLevels = depthStencilTarget.mipmapsCount;
 	srvd.Texture2D.MostDetailedMip = 0;
 
 	hr = device->CreateShaderResourceView(depthStencilTarget.texture, &srvd, &depthStencilTarget.srv);
@@ -434,6 +436,7 @@ void NGPU::CreateDepthStencilTarget64(int width, int height, int samplesCount, T
 	depthStencilTarget.width = width;
 	depthStencilTarget.height = height;
 	depthStencilTarget.mipmapsCount = 1;
+	depthStencilTarget.arraysCount = 1;
 	depthStencilTarget.samplesCount = samplesCount;
 	depthStencilTarget.format = DXGI_FORMAT_R32G8X24_TYPELESS;
 
@@ -443,8 +446,8 @@ void NGPU::CreateDepthStencilTarget64(int width, int height, int samplesCount, T
 	ZeroMemory(&td, sizeof(td));
 	td.Width = width;
 	td.Height = height;
-	td.MipLevels = 1;
-	td.ArraySize = 1;
+	td.MipLevels = depthStencilTarget.mipmapsCount;
+	td.ArraySize = depthStencilTarget.arraysCount;
 	td.Format = DXGI_FORMAT_R32G8X24_TYPELESS;
 	td.SampleDesc.Count = Max(samplesCount, 1);
 	td.SampleDesc.Quality = 0;
@@ -473,7 +476,7 @@ void NGPU::CreateDepthStencilTarget64(int width, int height, int samplesCount, T
 	ZeroMemory(&srvd, sizeof(srvd));
 	srvd.Format = DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS;
 	srvd.ViewDimension = (samplesCount < 2 ? D3D11_SRV_DIMENSION_TEXTURE2D : D3D11_SRV_DIMENSION_TEXTURE2DMS);
-	srvd.Texture2D.MipLevels = 1;
+	srvd.Texture2D.MipLevels = depthStencilTarget.mipmapsCount;
 	srvd.Texture2D.MostDetailedMip = 0;
 
 	hr = device->CreateShaderResourceView(depthStencilTarget.texture, &srvd, &depthStencilTarget.srv);
@@ -487,6 +490,7 @@ void NGPU::CreateTexture(int width, int height, int mipmapsCount, DXGI_FORMAT fo
 	texture.width = width;
 	texture.height = height;
 	texture.mipmapsCount = (mipmapsCount == 0 ? MipmapsCount(width, height) : mipmapsCount);
+	texture.arraysCount = 1;
 	texture.samplesCount = 1;
 	texture.format = format;
 
@@ -497,9 +501,9 @@ void NGPU::CreateTexture(int width, int height, int mipmapsCount, DXGI_FORMAT fo
 	td.Width = width;
 	td.Height = height;
 	td.MipLevels = texture.mipmapsCount;
-	td.ArraySize = 1;
+	td.ArraySize = texture.arraysCount;
 	td.Format = texture.format;
-	td.SampleDesc.Count = 1;
+	td.SampleDesc.Count = texture.samplesCount;
 	td.SampleDesc.Quality = 0;
 	td.Usage = D3D11_USAGE_DEFAULT;
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -534,6 +538,7 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 	texture.width = width;
 	texture.height = height;
 	texture.mipmapsCount = (mipmapsCount == 0 ? MipmapsCount(width, height) : mipmapsCount);
+	texture.arraysCount = 1;
 	texture.samplesCount = 1;
 	texture.format = format;
 
@@ -544,9 +549,9 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 	td.Width = width;
 	td.Height = height;
 	td.MipLevels = texture.mipmapsCount;
-	td.ArraySize = 1;
+	td.ArraySize = texture.arraysCount;
 	td.Format = texture.format;
-	td.SampleDesc.Count = 1;
+	td.SampleDesc.Count = texture.samplesCount;
 	td.SampleDesc.Quality = 0;
 	td.Usage = D3D11_USAGE_DEFAULT;
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
@@ -561,9 +566,7 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 	ZeroMemory(&uavd, sizeof(uavd));
 	uavd.Format = format;
 	uavd.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2D;
-	uavd.Buffer.FirstElement = 0;
-	uavd.Buffer.NumElements = 1;
-	uavd.Buffer.Flags = 0;
+	uavd.Texture2D.MipSlice = 0;
 
 	hr = device->CreateUnorderedAccessView(texture.texture, &uavd, &texture.uav);
 	MF_ASSERT(hr == S_OK);
@@ -582,12 +585,70 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 }
 
 
+void NGPU::CreateRWTextureArray(int width, int height, int arraysCount, DXGI_FORMAT format, STexture& texture)
+{
+	texture.type = STexture::EType::ReadWrite2D;
+	texture.width = width;
+	texture.height = height;
+	texture.mipmapsCount = 1;
+	texture.arraysCount = arraysCount;
+	texture.samplesCount = 1;
+	texture.format = format;
+
+	//
+
+	D3D11_TEXTURE2D_DESC td;
+	ZeroMemory(&td, sizeof(td));
+	td.Width = width;
+	td.Height = height;
+	td.MipLevels = texture.mipmapsCount;
+	td.ArraySize = texture.arraysCount;
+	td.Format = texture.format;
+	td.SampleDesc.Count = texture.samplesCount;
+	td.SampleDesc.Quality = 0;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	td.CPUAccessFlags = 0;
+
+	HRESULT hr = device->CreateTexture2D(&td, NULL, &texture.texture);
+	MF_ASSERT(hr == S_OK);
+
+	//
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC uavd;
+	ZeroMemory(&uavd, sizeof(uavd));
+	uavd.Format = format;
+	uavd.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE2DARRAY;
+	uavd.Texture2DArray.MipSlice = 0;
+	uavd.Texture2DArray.FirstArraySlice = 0;
+	uavd.Texture2DArray.ArraySize = texture.arraysCount;
+
+	hr = device->CreateUnorderedAccessView(texture.texture, &uavd, &texture.uav);
+	MF_ASSERT(hr == S_OK);
+
+	//
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+	ZeroMemory(&srvd, sizeof(srvd));
+	srvd.Format = format;
+	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	srvd.Texture2DArray.MostDetailedMip = 0;
+	srvd.Texture2DArray.MipLevels = texture.mipmapsCount;
+	srvd.Texture2DArray.FirstArraySlice = 0;
+	srvd.Texture2DArray.ArraySize = texture.arraysCount;
+
+	hr = device->CreateShaderResourceView(texture.texture, &srvd, &texture.srv);
+	MF_ASSERT(hr == S_OK);
+}
+
+
 void NGPU::CreateStagingTexture(const STexture& srcTexture, STexture& texture)
 {
 	texture.type = STexture::EType::Unknown;
 	texture.width = srcTexture.width;
 	texture.height = srcTexture.height;
 	texture.mipmapsCount = srcTexture.mipmapsCount;
+	texture.arraysCount = srcTexture.arraysCount;
 	texture.samplesCount = srcTexture.samplesCount;
 	texture.format = srcTexture.format;
 
@@ -598,9 +659,9 @@ void NGPU::CreateStagingTexture(const STexture& srcTexture, STexture& texture)
 	td.Width = srcTexture.width;
 	td.Height = srcTexture.height;
 	td.MipLevels = srcTexture.mipmapsCount;
-	td.ArraySize = 1;
+	td.ArraySize = srcTexture.arraysCount;
 	td.Format = srcTexture.format;
-	td.SampleDesc.Count = 1;
+	td.SampleDesc.Count = srcTexture.samplesCount;
 	td.SampleDesc.Quality = 0;
 	td.Usage = D3D11_USAGE_STAGING;
 	td.BindFlags = 0;
@@ -793,7 +854,7 @@ bool NGPU::CreateInputLayout(const string& dummyVertexShaderPath, const string& 
 	ID3D11VertexShader* vs = nullptr;
 	ID3DBlob* vsBlob = nullptr;
 
-	if (!CompileShaderFromSourceFile(dummyVertexShaderPath, "main", "vs_5_0", dummyVertexShaderMacros, vsBlob))
+	if (!CreateShaderBlob(gGPUCreateShaderFileType, EShaderType::Vertex, dummyVertexShaderPath, "main", dummyVertexShaderMacros, vsBlob))
 		return false;
 
 	if (!vsBlob)

@@ -344,7 +344,7 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 
 	void ImageToTensors(const NImage::SImage& image, STensor& red, STensor& green, STensor& blue);
 	NImage::SImage TensorsToImage(int width, int height, STensor& red, STensor& green, STensor& blue);
-	void ProcessImage(const string& modelPath, const string& inputImagePath, const string& outputImagePath);
+	void ProcessImage(const string& residualModelPath, const string& inputImagePath, const string& outputImagePath);
 
 	void UnitTest(const string& path);
 } } }

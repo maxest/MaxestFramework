@@ -15,6 +15,7 @@ namespace NMaxestFramework { namespace NGPU
 		EType type;
 		int width, height;
 		int mipmapsCount;
+		int arraysCount;
 		int samplesCount;
 		DXGI_FORMAT format;
 		uint32 tag;

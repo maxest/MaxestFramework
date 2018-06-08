@@ -11,6 +11,7 @@
 namespace NMaxestFramework { namespace NMath
 {
 	void Randomize();
+	void Randomize(int seed);
 
 	uint32 RandomSystem();
 	uint32 RandomSystem(uint16 from, uint16 to);
@@ -36,6 +37,11 @@ namespace NMaxestFramework { namespace NMath
 	inline void Randomize()
 	{
 		srand((uint)time(nullptr));
+	}
+
+	inline void Randomize(int seed)
+	{
+		srand(seed);
 	}
 
 	inline uint32 RandomSystem()

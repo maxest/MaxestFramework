@@ -215,6 +215,9 @@
     <ClInclude Include="..\..\src\common\neural_network.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\common\config_file.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\common\jobs.cpp">

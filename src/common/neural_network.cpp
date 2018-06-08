@@ -277,13 +277,13 @@ NImage::SImage NNeuralNetwork::TensorsToImage(int width, int height, STensor& re
 }
 
 
-void NNeuralNetwork::ProcessImage(const string& modelPath, const string& inputImagePath, const string& outputImagePath)
+void NNeuralNetwork::ProcessImage(const string& residualModelPath, const string& inputImagePath, const string& outputImagePath)
 {
 	SModel model;
-	model.Create(modelPath);
+	MF_ASSERT(model.Create(residualModelPath));
 
 	NImage::SImage inputImage;
-	NImage::Load(inputImagePath, inputImage, true, true, NImage::EFormat::RGB8);
+	MF_ASSERT(NImage::Load(inputImagePath, inputImage, true, true, NImage::EFormat::RGB8));
 	STensor red;
 	STensor green;
 	STensor blue;
