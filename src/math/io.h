@@ -37,3 +37,10 @@ inline ostream& operator << (ostream& os, const NMaxestFramework::NMath::SMatrix
 		"[ " << m.m[3][0] << ", " << m.m[3][1] << ", " << m.m[3][2] << ", " << m.m[3][3] << " ]";
 	return os;
 }
+
+
+inline ostream& operator << (ostream& os, const NMaxestFramework::NMath::SQuaternion& q)
+{
+	os << "[ " << q.x << ", " << q.y << ", " << q.z << ", " << q.w << " ]";
+	return os;
+}

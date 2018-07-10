@@ -12,9 +12,11 @@ namespace NMaxestFramework { namespace NMath
 	SQuaternion SQuaternionCopy(const SQuaternion& q);
 
 	SQuaternion Add(const SQuaternion& q1, const SQuaternion& q2);
+	SQuaternion Add(const SQuaternion& q, const SVector3& v);
 	SQuaternion Mul(const SQuaternion& q1, const SQuaternion& q2);
 	SQuaternion Mul(const SQuaternion& q, float f);
 	void AddIn(SQuaternion& q1, const SQuaternion& q2);
+	void AddIn(SQuaternion& q, const SVector3& v);
 	void MulIn(SQuaternion& q1, const SQuaternion& q2);
 	void MulIn(SQuaternion& q, float f);
 	SQuaternion Conjugate(const SQuaternion& q);
@@ -86,6 +88,12 @@ namespace NMaxestFramework { namespace NMath
 		return temp;
 	}
 
+	inline SQuaternion Add(const SQuaternion& q, const SVector3& v)
+	{
+		SQuaternion vq = SQuaternionCustom(v.x, v.y, v.z, 0.0f);
+		return q + 0.5f*q*vq;
+	}
+
 	inline SQuaternion Mul(const SQuaternion& q1, const SQuaternion& q2)
 	{
 		SQuaternion temp;
@@ -123,6 +131,11 @@ namespace NMaxestFramework { namespace NMath
 	inline void AddIn(SQuaternion& q1, const SQuaternion& q2)
 	{
 		q1 = Add(q1, q2);
+	}
+
+	inline void AddIn(SQuaternion& q, const SVector3& v)
+	{
+		q = Add(q, v);
 	}
 
 	inline SQuaternion Conjugate(const SQuaternion& q)
