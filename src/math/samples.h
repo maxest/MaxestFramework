@@ -4,6 +4,7 @@
 #include "types.h"
 #include "vector.h"
 #include "../essentials/main.h"
+#include "../system/file.h"
 
 
 namespace NMaxestFramework { namespace NMath
@@ -11,15 +12,24 @@ namespace NMaxestFramework { namespace NMath
 	// disk
 	vector<SVector2> VogelDiskSamples(uint n);
 	vector<SVector2> AlchemySpiralDiskSamples(uint n, uint spiralsCount = 7);
+	vector<SVector2> BlueNoiseDiskSamples(uint n);
 
-	// rect
+	// rect - all in [0, 1] x [0, 1] range
 	vector<SVector2> RandomRectSamples2D(uint sqrtN);
+	vector<SVector2> BlueNoiseRectSamples2D(uint n);
 	vector<SVector2> JitteredRectSamples2D(uint sqrtN);
 	vector<SVector2> MultiJitteredRectSamples2D(uint sqrtN);
-	vector<SSpherical> MapRectSamplesToHemisphere(const vector<SVector2>& samples, float e);
+
+	// conversion
+	void Range01ToRange11(vector<SVector2>& samples); // [0, 1] x [0, 1] to [-1, 1,] x [-1, 1]
+	void Range11ToRange01(vector<SVector2>& samples); // [-1, 1] x [-1, 1] to [0, 1,] x [0, 1]
+
+	// remapping
+	vector<SVector2> MapRectSamplesToDisk(const vector<SVector2>& samples); // samples should be in [-1, 1] x [-1, 1] range
+	vector<SSpherical> MapRectSamplesToHemisphere(const vector<SVector2>& samples, float e); // samples should be in [0, 1] x [0, 1] range
 
 	// helper
-	vector<string> DumpSamples(const vector<SVector2>& samples);
+	void DumpSamples(const string& path, const vector<SVector2>& samples);
 
 	//
 
@@ -59,6 +69,13 @@ namespace NMaxestFramework { namespace NMath
 		return samples;
 	}
 
+	inline vector<SVector2> BlueNoiseDiskSamples(uint n)
+	{
+		vector<SVector2> samples = BlueNoiseRectSamples2D(n);
+		Range01ToRange11(samples);
+		return MapRectSamplesToDisk(samples);
+	}
+
 	inline vector<SVector2> RandomRectSamples2D(uint sqrtN)
 	{
 		uint n = sqrtN * sqrtN;
@@ -70,6 +87,44 @@ namespace NMaxestFramework { namespace NMath
 		{
 			samples[i].x = RandomFloat();
 			samples[i].y = RandomFloat();
+		}
+
+		return samples;
+	}
+	
+	inline vector<SVector2> BlueNoiseRectSamples2D(uint n)
+	{
+		// https://blog.demofox.org/2017/10/20/generating-blue-noise-sample-points-with-mitchells-best-candidate-algorithm/
+
+		vector<SVector2> samples;
+		samples.push_back(VectorCustom(RandomFloat(), RandomFloat()));
+
+		for (uint i = 1; i < n; i++)
+		{
+			SVector2 bestPos = VectorCustom(0.0f, 0.0f);
+			float bestMinDist = 0.0f;
+
+			int candidatesCount = (int)samples.size() + 1;
+			for (int j = 0; j < candidatesCount; j++)
+			{
+				SVector2 candidatePos = VectorCustom(RandomFloat(), RandomFloat());
+
+				float candidateMinDistToExistingSamples = cFloatMax;
+				for (uint k = 0; k < samples.size(); k++)
+				{
+					float dist = Distance_RectWarped(candidatePos, samples[k], 1.0f);
+					candidateMinDistToExistingSamples = NEssentials::Min(candidateMinDistToExistingSamples, dist);
+				}
+
+				if (candidateMinDistToExistingSamples > bestMinDist)
+				{					
+					bestPos.x = candidatePos.x;
+					bestPos.y = candidatePos.y;
+					bestMinDist = candidateMinDistToExistingSamples;
+				}
+			}
+
+			samples.push_back(bestPos);
 		}
 
 		return samples;
@@ -141,6 +196,73 @@ namespace NMaxestFramework { namespace NMath
 		return samples;
 	}
 
+	inline void Range01ToRange11(vector<SVector2>& samples)
+	{
+		for (uint i = 0; i < samples.size(); i++)
+		{
+			samples[i].x = 2.0f*samples[i].x - 1.0f;
+			samples[i].y = 2.0f*samples[i].y - 1.0f;
+		}
+	}
+
+	inline void Range11ToRange01(vector<SVector2>& samples)
+	{
+		for (uint i = 0; i < samples.size(); i++)
+		{
+			samples[i].x = 0.5f*samples[i].x + 0.5f;
+			samples[i].y = 0.5f*samples[i].y + 0.5f;
+		}
+	}
+
+	inline vector<SVector2> MapRectSamplesToDisk(const vector<SVector2>& samples)
+	{
+		vector<SVector2> samples2;
+		samples2.resize(samples.size());
+
+		for (uint i = 0; i < samples.size(); i++)
+		{
+			SVector2 sp = samples[i];
+			float r, phi;
+
+			if (sp.x > -sp.y)
+			{
+				if (sp.x > sp.y)
+				{
+					r = sp.x;
+					phi = sp.y / sp.x;
+				}
+				else
+				{
+					r = sp.y;
+					phi = 2.0f - sp.x / sp.y;
+				}
+			}
+			else
+			{
+				if (sp.x < sp.y)
+				{
+					r = -sp.x;
+					phi = 4.0f + sp.y / sp.x;
+				}
+				else
+				{
+					r = -sp.y;
+					if (sp.y != 0.0f)
+						phi = 6.0f - sp.x / sp.y;
+					else
+						phi = 0.0f;
+				}
+			}
+
+			phi *= cPi / 4.0f;
+
+			samples2[i].x = r * Cos(phi);
+			samples2[i].y = r * Sin(phi);
+		}
+
+		return samples2;
+	}
+
 	inline vector<SSpherical> MapRectSamplesToHemisphere(const vector<SVector2>& samples, float e)
 	{
 		vector<SSpherical> samples2;
@@ -157,9 +279,10 @@ namespace NMaxestFramework { namespace NMath
 		return samples2;
 	}
 
-	inline vector<string> DumpSamples(const vector<SVector2>& samples)
+	inline void DumpSamples(const string& path, const vector<SVector2>& samples)
 	{
-		vector<string> content;
+		NSystem::CFile file;
+		MF_ASSERT(file.Open(path, NSystem::CFile::EOpenMode::WriteText));
 
 		for (int i = 0; i < samples.size(); i++)
 		{
@@ -171,10 +294,10 @@ namespace NMaxestFramework { namespace NMath
 			if (ys.length() == 1)
 				ys += ".0";
 
-			string s = "\tfloat2(" + xs + "f, " + ys + "f),";
-			content.push_back(s);
+			string s = "\tfloat2(" + xs + "f, " + ys + "f),\n";
+			file.WriteText(s);
 		}
 
-		return content;
+		file.Close();
 	}
 } }

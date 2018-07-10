@@ -14,7 +14,7 @@ namespace NMaxestFramework { namespace NMath
 
 	//
 
-	inline SPlane SPlaneFromPointAndNormal(const SVector3& point, const SVector3& normal)
+	inline SPlane PlaneFromPointAndNormal(const SVector3& point, const SVector3& normal)
 	{
 		SPlane temp;
 

@@ -10,8 +10,8 @@ struct SMeshConstantBuffer
 
 
 bool fullScreen = false;
-int screenWidth = 1280;
-int screenHeight = 720;
+int screenWidth;
+int screenHeight;
 
 float dofFocalPlaneDistance = 40.0f;
 float dofFocusTransitionDistance = 20.0f;
@@ -457,30 +457,12 @@ bool Run()
 
 void LoadConfigFile()
 {
-	string temp;
-
-	CFile file;
-	if (file.Open("config.txt", CFile::EOpenMode::ReadText))
-	{
-		file.ReadText(temp);
-		file.ReadText(fullScreen);
-		file.ReadText(temp);
-		file.ReadText(screenWidth);
-		file.ReadText(temp);
-		file.ReadText(screenHeight);
-
-		file.Close();
-	}
-	else
-	{
-		file.Open("config.txt", CFile::EOpenMode::WriteText);
-		
-		file.WriteText("FullScreen 0\n");
-		file.WriteText("ScreenWidth 1280\n");
-		file.WriteText("ScreenHeight 720\n");
-
-		file.Close();
-	}
+	CConfigFile configFile;
+	configFile.Open("config.txt");
+	configFile.Process("fullScreen", fullScreen);
+	configFile.Process("screenWidth", screenWidth);
+	configFile.Process("screenHeight", screenHeight);
+	configFile.Close();
 }
 
 
@@ -489,9 +471,10 @@ int main()
 	NSystem::Initialize();
 	NImage::Initialize();
 
+	NSystem::ScreenSize(screenWidth, screenHeight);
 	LoadConfigFile();
 
-	if (!application.Create(screenWidth, screenHeight, false))
+	if (!application.Create(screenWidth, screenHeight, fullScreen))
 		return 1;
 	application.SetMouseWrapping(true);
 	application.ShowCursor(false);

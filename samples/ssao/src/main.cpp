@@ -9,9 +9,9 @@ struct SMeshConstantBuffer
 } meshConstantBuffer;
 
 
-bool fullScreen = true;
-int screenWidth = 1920;
-int screenHeight = 1080;
+bool fullScreen = false;
+int screenWidth;
+int screenHeight;
 
 int viewMode = 0; // 0 - diffuse with SSAO, 1 - diffuse, 2 - SSAO, 3 - raw SSAO
 int ssaoVariant = 0;
@@ -481,30 +481,12 @@ bool Run()
 
 void LoadConfigFile()
 {
-	string temp;
-
-	CFile file;
-	if (file.Open("config.txt", CFile::EOpenMode::ReadText))
-	{
-		file.ReadText(temp);
-		file.ReadText(fullScreen);
-		file.ReadText(temp);
-		file.ReadText(screenWidth);
-		file.ReadText(temp);
-		file.ReadText(screenHeight);
-
-		file.Close();
-	}
-	else
-	{
-		file.Open("config.txt", CFile::EOpenMode::WriteText);
-
-		file.WriteText("FullScreen 0\n");
-		file.WriteText("ScreenWidth 1280\n");
-		file.WriteText("ScreenHeight 720\n");
-
-		file.Close();
-	}
+	CConfigFile configFile;
+	configFile.Open("config.txt");
+	configFile.Process("fullScreen", fullScreen);
+	configFile.Process("screenWidth", screenWidth);
+	configFile.Process("screenHeight", screenHeight);
+	configFile.Close();
 }
 
 
@@ -513,9 +495,10 @@ int main()
 	NSystem::Initialize();
 	NImage::Initialize();
 
+	NSystem::ScreenSize(screenWidth, screenHeight);
 	LoadConfigFile();
 
-	if (!application.Create(screenWidth, screenHeight, false))
+	if (!application.Create(screenWidth, screenHeight, fullScreen))
 		return 1;
 	application.SetMouseWrapping(true);
 	application.ShowCursor(false);

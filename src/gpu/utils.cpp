@@ -1305,6 +1305,8 @@ void NGPU::NUtils::CDebugRenderer::Destroy()
 
 void NGPU::NUtils::CDebugRenderer::RenderBox(const NMath::SMatrix& worldTransform, const NMath::SMatrix& viewProjTransform, const NMath::SVector4& color)
 {
+	MF_ASSERT(boxMesh.chunks.size() > 0);
+
 	deviceContext->VSSetShader(gGPUUtilsResources.debugMeshVS, nullptr, 0);
 	deviceContext->PSSetShader(gGPUUtilsResources.debugMeshPS, nullptr, 0);
 

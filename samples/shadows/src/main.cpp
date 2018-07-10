@@ -34,8 +34,8 @@ struct SMeshConstantBuffer
 
 
 bool fullScreen = false;
-int screenWidth = 1920;
-int screenHeight = 1080;
+int screenWidth;
+int screenHeight;
 int shadowMapWidth = 2 * 1024;
 int shadowMapHeight = 2 * 1024;
 
@@ -722,20 +722,12 @@ bool Run()
 
 void LoadConfigFile()
 {
-	string temp;
-
-	CFile file;
-	if (file.Open("config.txt", CFile::EOpenMode::ReadText))
-	{
-		file.ReadText(temp);
-		file.ReadText(fullScreen);
-		file.ReadText(temp);
-		file.ReadText(screenWidth);
-		file.ReadText(temp);
-		file.ReadText(screenHeight);
-
-		file.Close();
-	}
+	CConfigFile configFile;
+	configFile.Open("config.txt");
+	configFile.Process("fullScreen", fullScreen);
+	configFile.Process("screenWidth", screenWidth);
+	configFile.Process("screenHeight", screenHeight);
+	configFile.Close();
 }
 
 
@@ -744,6 +736,7 @@ int main()
 	NSystem::Initialize();
 	NImage::Initialize();
 
+	NSystem::ScreenSize(screenWidth, screenHeight);
 	LoadConfigFile();
 
 	if (!application.Create(screenWidth, screenHeight, fullScreen))

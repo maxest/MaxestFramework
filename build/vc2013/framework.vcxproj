@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\common\config_file.h" />
     <ClInclude Include="..\..\src\common\jobs.h" />
     <ClInclude Include="..\..\src\common\lossless_compression.h" />
     <ClInclude Include="..\..\src\common\main.h" />

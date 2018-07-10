@@ -18,6 +18,7 @@ namespace NMaxestFramework { namespace NEssentials
 	int ToInt(const string& s);
 	float ToFloat(const string& s);
 	double ToDouble(const string& s);
+	template<typename TYPE> TYPE FromString(const string& s, const TYPE& dummy); // dummy is here only to force compiler to generate different functions for different parameters; in overloading it's not enough that functions differ only by return's type
 	template<typename TYPE> string ToString(const TYPE& value);
 
 	bool Find(const string& str, const string& subStr);
@@ -78,6 +79,21 @@ namespace NMaxestFramework { namespace NEssentials
 		return f;
 	}
 
+	template<typename TYPE> TYPE FromString(const string& s, const TYPE& dummy)
+	{
+		TYPE out;
+		istringstream in(s);
+		in >> out;
+		return out;
+	}
+	template<> inline bool FromString(const string& s, const bool& dummy)
+	{
+		if (s == "true")
+			return true;
+		else
+			return false;
+	}
+
 	template<typename TYPE> string ToString(const TYPE& value)
 	{
 		ostringstream out;
@@ -86,12 +102,10 @@ namespace NMaxestFramework { namespace NEssentials
 	}
 	template<> inline string ToString<bool>(const bool& value)
 	{
-		ostringstream out;
 		if (value)
-			out << "true";
+			return "true";
 		else
-			out << "false";
-		return out.str();
+			return "false";
 	}
 
 	inline bool Find(const string& str, const string& subStr)
