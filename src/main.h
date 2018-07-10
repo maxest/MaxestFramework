@@ -8,4 +8,5 @@
 #include "mesh/main.h"
 #include "gpu/main.h"
 #include "net/main.h"
+#include "physics/main.h"
 #include "common/main.h"

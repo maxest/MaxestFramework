@@ -25,6 +25,9 @@
     <Filter Include="net">
       <UniqueIdentifier>{b1f623a2-12a5-44f3-a80a-c221f9e64c23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="physics">
+      <UniqueIdentifier>{4fdfe912-b3f9-45b8-a226-5a9607257c0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\src\common\jobs.h">
@@ -217,6 +220,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\common\config_file.h">
       <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\physics\main.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\physics\rigid_body.h">
+      <Filter>physics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -9,4 +9,5 @@ using namespace NImage;
 using namespace NMesh;
 using namespace NGPU;
 using namespace NGPU::NUtils;
+using namespace NPhysics;
 using namespace NCommon;

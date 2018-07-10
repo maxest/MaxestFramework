@@ -77,6 +77,8 @@
     <ClInclude Include="..\..\src\net\main.h" />
     <ClInclude Include="..\..\src\net\packet_manager.h" />
     <ClInclude Include="..\..\src\net\web_socket.h" />
+    <ClInclude Include="..\..\src\physics\main.h" />
+    <ClInclude Include="..\..\src\physics\rigid_body.h" />
     <ClInclude Include="..\..\src\system\application.h" />
     <ClInclude Include="..\..\src\system\common.h" />
     <ClInclude Include="..\..\src\system\file.h" />
