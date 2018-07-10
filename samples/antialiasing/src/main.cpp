@@ -29,7 +29,7 @@ float aspect = (float)renderTargetWidth / (float)renderTargetHeight;
 
 CApplication application;
 
-TRenderTarget colorRTs[2];
+TRenderTarget colorRTs[3];
 TRenderTarget colorRT_temporalAA;
 TRenderTarget colorRT_edgeBlurAA;
 TRenderTarget colorRT_fxaa;
@@ -92,6 +92,7 @@ bool Create()
 	DXGI_FORMAT floatFormat = DXGI_FORMAT_R11G11B10_FLOAT;
 	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRTs[0]);
 	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRTs[1]);
+	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRTs[2]);
 	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_temporalAA);
 	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_edgeBlurAA);
 	CreateRenderTarget(renderTargetWidth, renderTargetHeight, floatFormat, 1, colorRT_fxaa);
@@ -121,6 +122,7 @@ void Destroy()
 
 	DestroyRenderTarget(colorRTs[0]);
 	DestroyRenderTarget(colorRTs[1]);
+	DestroyRenderTarget(colorRTs[2]);
 	DestroyRenderTarget(colorRT_temporalAA);
 	DestroyRenderTarget(colorRT_edgeBlurAA);
 	DestroyRenderTarget(colorRT_fxaa);
@@ -198,6 +200,7 @@ void AATemporal(
 	const TRenderTarget& output,
 	const TRenderTarget& input_currFrame,
 	const TRenderTarget& input_prevFrame,
+	const TRenderTarget& input_prevFrame2,
 	const TDepthStencilTarget& depthStencilTarget,
 	const SCameraTransforms& cameraTransforms_currFrame,
 	const SCameraTransforms& cameraTransforms_prevFrame)
@@ -210,7 +213,8 @@ void AATemporal(
 	deviceContext->PSSetShader(aaTemporalPS, nullptr, 0);
 	deviceContext->PSSetShaderResources(0, 1, &input_currFrame.srv);
 	deviceContext->PSSetShaderResources(1, 1, &input_prevFrame.srv);
-	deviceContext->PSSetShaderResources(2, 1, &screenDST.srv);
+	deviceContext->PSSetShaderResources(2, 1, &input_prevFrame2.srv);
+	deviceContext->PSSetShaderResources(3, 1, &screenDST.srv);
 
 	struct Data
 	{
@@ -297,7 +301,7 @@ bool Run()
 	float lastFrameTime = application.LastFrameTime();
 
 	static bool temporalAA = true;
-	static bool edgeBlurAA = true;
+	static bool edgeBlurAA = false;
 	static bool fxaa = false;
 	static int frameID = 0;
 	frameID++;
@@ -376,14 +380,14 @@ bool Run()
 	SetSamplers();
 
 	// render scene
-	RenderScene(tickCount, colorRTs[frameID % 2], screenDST, cameraViewProjTransform_jittered);
+	RenderScene(tickCount, colorRTs[frameID % 3], screenDST, cameraViewProjTransform_jittered);
 
-	TRenderTarget* currentRT = &colorRTs[frameID % 2];
+	TRenderTarget* currentRT = &colorRTs[frameID % 3];
 
 	// AA
 	if (temporalAA)
 	{
-		AATemporal(colorRT_temporalAA, *currentRT, colorRTs[(frameID - 1) % 2], screenDST, cameraTransforms[frameID % 2], cameraTransforms[(frameID - 1) % 2]);
+		AATemporal(colorRT_temporalAA, *currentRT, colorRTs[(frameID - 1) % 3], colorRTs[(frameID - 2) % 3], screenDST, cameraTransforms[frameID % 2], cameraTransforms[(frameID - 1) % 2]);
 		currentRT = &colorRT_temporalAA;
 	}
 	if (edgeBlurAA)
@@ -414,7 +418,7 @@ bool Run()
 	ID3D11ShaderResourceView* nullSRVS[] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
 	deviceContext->PSSetShaderResources(0, 6, nullSRVS);
 
-	swapChain->Present(0, 0);
+	swapChain->Present(2, 0);
 
 	gGPUProfiler.EndFrame();
 	gGPUProfiler.StopProfiling();

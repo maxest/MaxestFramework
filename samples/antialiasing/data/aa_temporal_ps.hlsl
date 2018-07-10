@@ -3,7 +3,8 @@
 
 Texture2D<float4> currFrameTexture: register(t0);
 Texture2D<float4> prevFrameTexture: register(t1);
-Texture2D<float4> depthTexture: register(t2);
+Texture2D<float4> prevFrameTexture2: register(t2);
+Texture2D<float4> depthTexture: register(t3);
 
 
 cbuffer ConstantBuffer: register(b0)
@@ -36,13 +37,21 @@ float4 main(PS_INPUT input): SV_Target
 	float3 prevColor = prevFrameTexture.SampleLevel(linearClampSampler, prevTexCoord, 0).xyz;
 	
 #ifdef CLAMP
-	float3 color_left = currFrameTexture.Load(int3(input.position.xy + int2(-1, 0), 0)).xyz;
-	float3 color_right = currFrameTexture.Load(int3(input.position.xy + int2(1, 0), 0)).xyz;
-	float3 color_top = currFrameTexture.Load(int3(input.position.xy + int2(0, -1), 0)).xyz;
-	float3 color_bottom = currFrameTexture.Load(int3(input.position.xy + int2(0, 1), 0)).xyz;
-	float3 minColor = min(color_left, min(color_right, min(color_top, color_bottom)));
-	float3 maxColor = max(color_left, max(color_right, max(color_top, color_bottom)));
-	prevColor = clamp(prevColor, minColor, maxColor);
+	float3 prevColor2 = prevFrameTexture2.Load(int3(input.position.xy, 0)).xyz;
+	float pixelDiff = length(color_center - prevColor2);
+
+	if (pixelDiff > 0.0f)
+	{
+		float3 color_left = currFrameTexture.Load(int3(input.position.xy + int2(-1, 0), 0)).xyz;
+		float3 color_right = currFrameTexture.Load(int3(input.position.xy + int2(1, 0), 0)).xyz;
+		float3 color_top = currFrameTexture.Load(int3(input.position.xy + int2(0, -1), 0)).xyz;
+		float3 color_bottom = currFrameTexture.Load(int3(input.position.xy + int2(0, 1), 0)).xyz;
+		
+		float3 minColor = min(color_left, min(color_right, min(color_top, color_bottom)));
+		float3 maxColor = max(color_left, max(color_right, max(color_top, color_bottom)));
+		
+		prevColor = clamp(prevColor, minColor, maxColor);
+	}
 #endif
 	
 	return float4(lerp(color_center, prevColor, 0.5f), 1.0f);
