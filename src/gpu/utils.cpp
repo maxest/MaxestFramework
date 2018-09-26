@@ -1418,6 +1418,20 @@ void NGPU::NUtils::PrefixSum(int elementsCount, const NGPU::SBuffer& inputBuffer
 }
 
 
+void NGPU::NUtils::DumpGPUTextureToFile(const NGPU::STexture& texture, const string& path)
+{
+	uint8* data;
+	CopyTextureFromGPUToCPU(texture, nullptr, data);
+
+	SImage image = NImage::Create(texture.width, texture.height, NImage::EFormat::RGBA8);
+	memcpy(image.data, data, 4 * image.width * image.height);
+	NImage::Save(path, image, false, true);
+	NImage::Destroy(image);
+
+	delete[] data;
+}
+
+
 // UnityLightmap & UnityLightmapGroup
 
 

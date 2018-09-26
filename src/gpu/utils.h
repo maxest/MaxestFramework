@@ -315,6 +315,8 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 
 	void PrefixSum(int elementsCount, const NGPU::SBuffer& inputBuffer, const NGPU::SBuffer& outputBuffer);
 
+	void DumpGPUTextureToFile(const NGPU::STexture& texture, const string& path);
+
 	//
 
 	class CUnityLightmap

@@ -6,7 +6,7 @@
 
 namespace NMaxestFramework { namespace NPhysics
 {
-	NMath::SMatrix BoxInertiaTensor(float mass, float width, float height, float depth)
+	inline NMath::SMatrix BoxInertiaTensor(float mass, float width, float height, float depth)
 	{
 		NMath::SMatrix m;
 
