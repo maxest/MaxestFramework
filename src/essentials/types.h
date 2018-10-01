@@ -48,3 +48,13 @@ const uint32 cUInt32Min = 0;
 const uint32 cUInt32Max = 0xffffffffu;
 const uint64 cUInt64Min = 0;
 const uint64 cUInt64Max = 0xffffffffffffffffu;
+
+
+namespace NMaxestFramework { namespace NEssentials
+{
+	struct SDataBuffer
+	{
+		int size;
+		uint8* data;
+	};
+} }
