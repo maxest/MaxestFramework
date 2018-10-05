@@ -85,11 +85,41 @@ namespace NMaxestFramework { namespace NMath
 
 	//
 
+	inline SMatrix MatrixIdentity()
+	{
+		SMatrix temp;
+		SetIdentity(temp);
+		return temp;
+	}
+
+	inline void SetIdentity(SMatrix& m)
+	{
+		m.m[0][0] = 1.0f;
+		m.m[0][1] = 0.0f;
+		m.m[0][2] = 0.0f;
+		m.m[0][3] = 0.0f;
+
+		m.m[1][0] = 0.0f;
+		m.m[1][1] = 1.0f;
+		m.m[1][2] = 0.0f;
+		m.m[1][3] = 0.0f;
+
+		m.m[2][0] = 0.0f;
+		m.m[2][1] = 0.0f;
+		m.m[2][2] = 1.0f;
+		m.m[2][3] = 0.0f;
+
+		m.m[3][0] = 0.0f;
+		m.m[3][1] = 0.0f;
+		m.m[3][2] = 0.0f;
+		m.m[3][3] = 1.0f;
+	}
+
 	inline float Determinant(
 		float _00, float _01, float _02,
 		float _10, float _11, float _12,
 		float _20, float _21, float _22)
 	{
-		return ( (_00*_11*_22 + _10*_21*_02 + _20*_01*_12) - (_02*_11*_20 + _12*_21*_00 + _22*_01*_10) );
+		return ((_00*_11*_22 + _10*_21*_02 + _20*_01*_12) - (_02*_11*_20 + _12*_21*_00 + _22*_01*_10));
 	}
 } }

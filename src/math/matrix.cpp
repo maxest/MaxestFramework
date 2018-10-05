@@ -338,30 +338,6 @@ void NMath::SetZeros(SMatrix& m)
 }
 
 
-void NMath::SetIdentity(SMatrix& m)
-{
-	m.m[0][0] = 1.0f;
-	m.m[0][1] = 0.0f;
-	m.m[0][2] = 0.0f;
-	m.m[0][3] = 0.0f;
-
-	m.m[1][0] = 0.0f;
-	m.m[1][1] = 1.0f;
-	m.m[1][2] = 0.0f;
-	m.m[1][3] = 0.0f;
-
-	m.m[2][0] = 0.0f;
-	m.m[2][1] = 0.0f;
-	m.m[2][2] = 1.0f;
-	m.m[2][3] = 0.0f;
-
-	m.m[3][0] = 0.0f;
-	m.m[3][1] = 0.0f;
-	m.m[3][2] = 0.0f;
-	m.m[3][3] = 1.0f;
-}
-
-
 void NMath::SetTranslate(SMatrix& m, float x, float y, float z)
 {
 	m.m[0][0] = 1.0f;
@@ -803,14 +779,6 @@ NMath::SMatrix NMath::MatrixZeros()
 {
 	SMatrix temp;
 	SetZeros(temp);
-	return temp;
-}
-
-
-NMath::SMatrix NMath::MatrixIdentity()
-{
-	SMatrix temp;
-	SetIdentity(temp);
 	return temp;
 }
 
