@@ -47,7 +47,7 @@ void Fourier(const string& imageFileName, const string& filterFileName, bool inv
 
 	// fourier
 
-	SImage dftImage = DiscreteFourierTransform(inputImage);
+	SImage dftImage = DiscreteFourierTransform_Separable(inputImage);
 	SImage dftShiftedImage = NImage::Shift(dftImage, width / 2, height / 2);
 
 	// apply filter
@@ -73,7 +73,7 @@ void Fourier(const string& imageFileName, const string& filterFileName, bool inv
 	delete[] dftImage.data;
 	dftImage = NImage::Shift(dftShiftedImage, -width / 2, -height / 2);
 
-	SImage idftImage = InverseDiscreteFourierTransform(dftImage);
+	SImage idftImage = InverseDiscreteFourierTransform_Separable(dftImage);
 
 	// generate output images
 

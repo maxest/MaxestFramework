@@ -1,68 +1,42 @@
-all: clean fourier
+all:  fourier
 
-ifeq ($(OS), Windows_NT)
-fourier: main math_matrix math_polygon image_image image_fourier image_main
+fourier: main math_matrix math_polygon image_image image_conversion image_filtering image_fourier image_main
 	g++ \
-	-L../../../dependencies/FreeImage/windows/ \
-	-L../../../dependencies/squish-1.10/windows/ \
-	main.o math_matrix.o math_polygon.o image_image.o image_fourier.o image_main.o -lfreeimage -lsquish -o fourier
-else
-fourier: main math_matrix math_polygon image_image image_fourier image_main
-	g++ \
-	-L../../../dependencies/FreeImage/linux/ \
-	-L../../../dependencies/squish-1.10/linux/ \
-	main.o math_matrix.o math_polygon.o image_image.o image_fourier.o image_main.o -lfreeimage -lsquish -o fourier
-endif
+	-L../../../../dependencies/FreeImage-3.17.0/lib/ \
+	-L../../../../dependencies/squish-1.11/lib/ \
+	main.o math_matrix.o math_polygon.o image_image.o image_conversion.o image_filtering.o image_fourier.o image_main.o -lfreeimage -lsquish -o fourier
 
-main: ../src/main.cpp
-	g++ -g \
-	-I../../../include/ \
-	-c ../src/main.cpp -o main.o
+main: ../../src/main.cpp
+	g++ -std=c++11 -g \
+	-c ../../src/main.cpp -o main.o
 
-math_matrix: ../../../src/math/matrix.cpp
-	g++ -g \
-	-I../../../include/ \
-	-c ../../../src/math/matrix.cpp -o math_matrix.o
+math_matrix: ../../../../src/math/matrix.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/math/matrix.cpp -o math_matrix.o
 	
-math_polygon: ../../../src/math/polygon.cpp
-	g++ -g \
-	-I../../../include/ \
-	-c ../../../src/math/polygon.cpp -o math_polygon.o
+math_polygon: ../../../../src/math/polygon.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/math/polygon.cpp -o math_polygon.o
 	
-ifeq ($(OS), Windows_NT)
-image_image: ../../../src/image/image.cpp
-	g++ -g \
-	-I../../../include/ \
-	-I../../../dependencies/FreeImage/windows/ \
-	-I../../../dependencies/squish-1.10/windows/ \
-	-c ../../../src/image/image.cpp -o image_image.o
-else
-image_image: ../../../src/image/image.cpp
-	g++ -g \
-	-I../../../include/ \
-	-I../../../dependencies/FreeImage/linux/ \
-	-I../../../dependencies/squish-1.10/linux/ \
-	-c ../../../src/image/image.cpp -o image_image.o
-endif
+image_image: ../../../../src/image/image.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/image/image.cpp -o image_image.o
 	
-image_fourier: ../../../src/image/fourier.cpp
-	g++ -g \
-	-I../../../include/ \
-	-c ../../../src/image/fourier.cpp -o image_fourier.o
+image_conversion: ../../../../src/image/conversion.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/image/conversion.cpp -o image_conversion.o
 	
-ifeq ($(OS), Windows_NT)	
-image_main: ../../../src/image/main.cpp
-	g++ -g \
-	-I../../../include/ \
-	-I../../../dependencies/FreeImage/windows/ \
-	-c ../../../src/image/main.cpp -o image_main.o
-else
-image_main: ../../../src/image/main.cpp
-	g++ -g \
-	-I../../../include/ \
-	-I../../../dependencies/FreeImage/linux/ \
-	-c ../../../src/image/main.cpp -o image_main.o
-endif
+image_filtering: ../../../../src/image/filtering.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/image/filtering.cpp -o image_filtering.o
+	
+image_fourier: ../../../../src/image/fourier.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/image/fourier.cpp -o image_fourier.o
+
+image_main: ../../../../src/image/main.cpp
+	g++ -std=c++11 -g \
+	-c ../../../../src/image/main.cpp -o image_main.o
 	
 clean:
 	rm *.o fourier
