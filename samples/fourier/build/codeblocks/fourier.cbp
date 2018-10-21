@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="../../data/image_6.png    ../../data/filter_0.png    1    0.0    1.0" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -20,6 +21,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="../../data/image_6.png    ../../data/filter_0.png    1    0.0    1.0" />
 				<Compiler>
 					<Add option="-O2" />
 				</Compiler>
@@ -29,10 +31,106 @@
 			</Target>
 		</Build>
 		<Compiler>
+			<Add option="-std=c++11" />
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
-		<Unit filename="main.cpp" />
+		<Linker>
+			<Add library="libSDL2" />
+			<Add library="libfreeimage" />
+			<Add library="libsquish" />
+			<Add library="libpthread" />
+			<Add directory="../../../../dependencies/SDL2-2.0.5/lib" />
+			<Add directory="../../../../dependencies/squish-1.11/lib" />
+		</Linker>
+		<Unit filename="../../../../src/common/config_file.h" />
+		<Unit filename="../../../../src/common/jobs.cpp" />
+		<Unit filename="../../../../src/common/jobs.h" />
+		<Unit filename="../../../../src/common/lossless_compression.cpp" />
+		<Unit filename="../../../../src/common/lossless_compression.h" />
+		<Unit filename="../../../../src/common/main.h" />
+		<Unit filename="../../../../src/common/neural_network.cpp" />
+		<Unit filename="../../../../src/common/neural_network.h" />
+		<Unit filename="../../../../src/essentials/array.h" />
+		<Unit filename="../../../../src/essentials/assert.h" />
+		<Unit filename="../../../../src/essentials/bit.h" />
+		<Unit filename="../../../../src/essentials/coding.h" />
+		<Unit filename="../../../../src/essentials/common.h" />
+		<Unit filename="../../../../src/essentials/hash.h" />
+		<Unit filename="../../../../src/essentials/macros.h" />
+		<Unit filename="../../../../src/essentials/main.h" />
+		<Unit filename="../../../../src/essentials/stl.h" />
+		<Unit filename="../../../../src/essentials/string.h" />
+		<Unit filename="../../../../src/essentials/types.h" />
+		<Unit filename="../../../../src/gpu/d3d11.cpp" />
+		<Unit filename="../../../../src/gpu/d3d11.h" />
+		<Unit filename="../../../../src/gpu/main.h" />
+		<Unit filename="../../../../src/gpu/profiler.cpp" />
+		<Unit filename="../../../../src/gpu/profiler.h" />
+		<Unit filename="../../../../src/gpu/types.h" />
+		<Unit filename="../../../../src/gpu/utils.cpp" />
+		<Unit filename="../../../../src/gpu/utils.h" />
+		<Unit filename="../../../../src/image/conversion.cpp" />
+		<Unit filename="../../../../src/image/conversion.h" />
+		<Unit filename="../../../../src/image/filtering.cpp" />
+		<Unit filename="../../../../src/image/filtering.h" />
+		<Unit filename="../../../../src/image/fourier.cpp" />
+		<Unit filename="../../../../src/image/fourier.h" />
+		<Unit filename="../../../../src/image/image.cpp" />
+		<Unit filename="../../../../src/image/image.h" />
+		<Unit filename="../../../../src/image/main.cpp" />
+		<Unit filename="../../../../src/image/main.h" />
+		<Unit filename="../../../../src/image/types.h" />
+		<Unit filename="../../../../src/main.h" />
+		<Unit filename="../../../../src/math/bounding_box.h" />
+		<Unit filename="../../../../src/math/camera.h" />
+		<Unit filename="../../../../src/math/color.h" />
+		<Unit filename="../../../../src/math/common.h" />
+		<Unit filename="../../../../src/math/constants.h" />
+		<Unit filename="../../../../src/math/conversion.h" />
+		<Unit filename="../../../../src/math/distance.h" />
+		<Unit filename="../../../../src/math/intersection.h" />
+		<Unit filename="../../../../src/math/io.h" />
+		<Unit filename="../../../../src/math/main.h" />
+		<Unit filename="../../../../src/math/matrix.cpp" />
+		<Unit filename="../../../../src/math/matrix.h" />
+		<Unit filename="../../../../src/math/plane.h" />
+		<Unit filename="../../../../src/math/polygon.cpp" />
+		<Unit filename="../../../../src/math/polygon.h" />
+		<Unit filename="../../../../src/math/probability.h" />
+		<Unit filename="../../../../src/math/quaternion.h" />
+		<Unit filename="../../../../src/math/random.h" />
+		<Unit filename="../../../../src/math/samples.h" />
+		<Unit filename="../../../../src/math/solver.h" />
+		<Unit filename="../../../../src/math/stats.h" />
+		<Unit filename="../../../../src/math/transform.h" />
+		<Unit filename="../../../../src/math/types.h" />
+		<Unit filename="../../../../src/math/vector.h" />
+		<Unit filename="../../../../src/mesh/main.h" />
+		<Unit filename="../../../../src/mesh/mesh.cpp" />
+		<Unit filename="../../../../src/mesh/mesh.h" />
+		<Unit filename="../../../../src/mesh/mesh_ase.cpp" />
+		<Unit filename="../../../../src/mesh/mesh_obj.cpp" />
+		<Unit filename="../../../../src/mesh/mesh_unity_exported.cpp" />
+		<Unit filename="../../../../src/mesh/types.h" />
+		<Unit filename="../../../../src/namespaces.h" />
+		<Unit filename="../../../../src/net/connections_manager.cpp" />
+		<Unit filename="../../../../src/net/connections_manager.h" />
+		<Unit filename="../../../../src/net/main.h" />
+		<Unit filename="../../../../src/net/packet_manager.h" />
+		<Unit filename="../../../../src/net/web_socket.h" />
+		<Unit filename="../../../../src/physics/main.h" />
+		<Unit filename="../../../../src/physics/rigid_body.h" />
+		<Unit filename="../../../../src/system/application.cpp" />
+		<Unit filename="../../../../src/system/application.h" />
+		<Unit filename="../../../../src/system/common.h" />
+		<Unit filename="../../../../src/system/file.h" />
+		<Unit filename="../../../../src/system/keys.h" />
+		<Unit filename="../../../../src/system/main.cpp" />
+		<Unit filename="../../../../src/system/main.h" />
+		<Unit filename="../../../../src/system/sockets.h" />
+		<Unit filename="../../../../src/system/threads.h" />
+		<Unit filename="../../src/main.cpp" />
 		<Extensions>
 			<code_completion />
 			<debugger />
