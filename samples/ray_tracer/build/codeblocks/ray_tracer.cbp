@@ -35,6 +35,7 @@
 		</Compiler>
 		<Linker>
 			<Add library="libSDL2" />
+			<Add library="libGL" />		
 			<Add library="libfreeimage" />
 			<Add library="libsquish" />
 			<Add library="libpthread" />
@@ -128,7 +129,12 @@
 		<Unit filename="../../../../src/system/main.h" />
 		<Unit filename="../../../../src/system/sockets.h" />
 		<Unit filename="../../../../src/system/threads.h" />
+		<Unit filename="../../src/brdf.h" />
+		<Unit filename="../../src/camera.h" />
 		<Unit filename="../../src/main.cpp" />
+		<Unit filename="../../src/ray_tracer.cpp" />
+		<Unit filename="../../src/ray_tracer.h" />
+		<Unit filename="../../src/types.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
