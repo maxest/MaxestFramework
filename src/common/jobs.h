@@ -61,6 +61,19 @@ namespace NMaxestFramework { namespace NCommon
 	class CJobSystem
 	{
 	public:
+        struct SThread
+        {
+            CJobSystem* jobSystem;
+            NSystem::TThreadHandle handle;
+            bool stopWork;
+
+            SThread()
+            {
+                stopWork = false;
+            }
+        };
+
+	public:
 		void Create(int threadsCount);
 		void Destroy();
 
@@ -70,7 +83,7 @@ namespace NMaxestFramework { namespace NCommon
 	public:
 		NSystem::TSemaphoreHandle activeJobsSemaphore;
 		NSystem::TMutexHandle jobsQueueMutex;
-		vector<NSystem::TThreadHandle> threads;
+		vector<SThread*> threads;
 		queue<CJob*> jobs;
 	};
 } }

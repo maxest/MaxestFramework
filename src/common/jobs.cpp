@@ -36,11 +36,15 @@ void NCommon::CJobGroup::OnJobDone()
 
 THREAD_FUNCTION_RETURN_VALUE JobThread(void* data)
 {
-	NCommon::CJobSystem* jobSystem = (NCommon::CJobSystem*)data;
+	NCommon::CJobSystem::SThread* thread = (NCommon::CJobSystem::SThread*)data;
+	NCommon::CJobSystem* jobSystem = thread->jobSystem;
 
 	for (;;)
 	{
 		SemaphoreAcquire(jobSystem->activeJobsSemaphore);
+
+        if (thread->stopWork)
+            return 0;
 
 		MutexLock(jobSystem->jobsQueueMutex);
 		NCommon::CJob* job = jobSystem->jobs.front();
@@ -67,7 +71,9 @@ void NCommon::CJobSystem::Create(int threadsCount)
 
 	for (int i = 0; i < threadsCount; i++)
 	{
-		TThreadHandle thread = ThreadCreate(JobThread, this);
+        SThread* thread = new SThread();
+        thread->jobSystem = this;
+		thread->handle = ThreadCreate(JobThread, thread);
 		threads.push_back(thread);
 	}
 }
@@ -75,8 +81,18 @@ void NCommon::CJobSystem::Create(int threadsCount)
 
 void NCommon::CJobSystem::Destroy()
 {
+    for (uint i = 0; i < threads.size(); i++)
+    {
+        threads[i]->stopWork = true;
+    }
+    SemaphoreRelease(activeJobsSemaphore, threads.size());
 	for (uint i = 0; i < threads.size(); i++)
-		ThreadDestroy(threads[i]);
+	{
+        //SemaphoreRelease(activeJobsSemaphore, 1); // can't do that because we don't know which thread will first acquire the semaphore. Hence we release the semaphore before the loop with a value equal to the number of threads
+        ThreadJoin(threads[i]->handle);
+		ThreadDestroy(threads[i]->handle);
+		delete threads[i];
+    }
 	threads.clear();
 
 	MutexDestroy(jobsQueueMutex);
