@@ -129,7 +129,7 @@ namespace NMaxestFramework { namespace NEssentials
 			return "";
 
 		int offset = 0;
-		int newSize;
+		int newSize = (int)s.length();
 
 		for (int i = 0; i < (int)s.length(); i++)
 		{
@@ -149,7 +149,7 @@ namespace NMaxestFramework { namespace NEssentials
 		if (s.length() == 0)
 			return "";
 
-		int newSize;
+		int newSize = (int)s.length();
 
 		for (int i = (int)s.length() - 1; i >= 0; i--)
 		{

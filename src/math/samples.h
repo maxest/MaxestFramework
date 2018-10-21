@@ -91,7 +91,7 @@ namespace NMaxestFramework { namespace NMath
 
 		return samples;
 	}
-	
+
 	inline vector<SVector2> BlueNoiseRectSamples2D(uint n)
 	{
 		// https://blog.demofox.org/2017/10/20/generating-blue-noise-sample-points-with-mitchells-best-candidate-algorithm/
@@ -117,7 +117,7 @@ namespace NMaxestFramework { namespace NMath
 				}
 
 				if (candidateMinDistToExistingSamples > bestMinDist)
-				{					
+				{
 					bestPos.x = candidatePos.x;
 					bestPos.y = candidatePos.y;
 					bestMinDist = candidateMinDistToExistingSamples;
@@ -157,7 +157,6 @@ namespace NMaxestFramework { namespace NMath
 		// http://graphics.pixar.com/library/MultiJitteredSampling/paper.pdf
 
 		int n = sqrtN * sqrtN;
-		float oneOverN = 1.0f / (float)n;
 		float oneOverSqrtN = 1.0f / (float)sqrtN;
 
 		vector<SVector2> samples;
@@ -284,7 +283,7 @@ namespace NMaxestFramework { namespace NMath
 		NSystem::CFile file;
 		MF_ASSERT(file.Open(path, NSystem::CFile::EOpenMode::WriteText));
 
-		for (int i = 0; i < samples.size(); i++)
+		for (uint i = 0; i < samples.size(); i++)
 		{
 			string xs = NEssentials::ToString(samples[i].x);
 			string ys = NEssentials::ToString(samples[i].y);

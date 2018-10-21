@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_WINDOWS
 
 
 #include "types.h"
@@ -36,7 +37,7 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 		NMath::SVector2 texCoord0;
 		NMath::SVector2 texCoord1;
 	};
-	
+
 	//
 
 	class CTexture
@@ -306,7 +307,7 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 	public: // readonly
 		CMesh boxMesh;
 	};
-	
+
 	//
 
 	void SetPSSamplers();
@@ -346,3 +347,6 @@ extern NMaxestFramework::NGPU::NUtils::CResources gGPUUtilsResources;
 extern NMaxestFramework::NGPU::NUtils::CPostprocessor gGPUUtilsPostprocessor;
 extern NMaxestFramework::NGPU::NUtils::CFontRenderer gGPUUtilsFontRenderer;
 extern NMaxestFramework::NGPU::NUtils::CDebugRenderer gGPUUtilsDebugRenderer;
+
+
+#endif

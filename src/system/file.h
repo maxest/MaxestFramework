@@ -172,6 +172,7 @@ namespace NMaxestFramework { namespace NSystem
 		return (result == 0 ? false : true);
 	#else
 		MF_ASSERT(false);
+		return false;
 	#endif
 	}
 
@@ -272,6 +273,7 @@ namespace NMaxestFramework { namespace NSystem
 		return t1 > t2;
 	#else
 		MF_ASSERT(false);
+		return false;
 	#endif
 	}
 } }

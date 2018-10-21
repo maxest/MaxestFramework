@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_WINDOWS
 
 
 #include "../math/vector.h"
@@ -42,7 +43,7 @@ namespace NMaxestFramework { namespace NGPU
 
 		ID3D11Buffer* buffer;
 		ID3D11UnorderedAccessView* uav;
-		ID3D11ShaderResourceView* srv;	
+		ID3D11ShaderResourceView* srv;
 	};
 
 	enum class ESamplerFilter { Point, Linear, Anisotropic };
@@ -52,3 +53,6 @@ namespace NMaxestFramework { namespace NGPU
 	typedef STexture TRenderTarget;
 	typedef STexture TDepthStencilTarget;
 } }
+
+
+#endif

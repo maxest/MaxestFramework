@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_WINDOWS
 
 
 #include "d3d11.h"
@@ -88,3 +89,6 @@ namespace NMaxestFramework { namespace NGPU
 
 
 extern NMaxestFramework::NGPU::CProfiler gGPUProfiler;
+
+
+#endif

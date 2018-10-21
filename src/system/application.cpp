@@ -14,7 +14,7 @@ using namespace NEssentials;
 
 NSystem::CApplication::CApplication()
 {
-	for (int i = 0; i < ARRAY_SIZE(keysPressed); i++)
+	for (size_t i = 0; i < ARRAY_SIZE(keysPressed); i++)
 	{
 		keysPressed[i] = false;
 		keysDown[i] = false;
@@ -69,7 +69,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 	x += displayIndex * screenWidth;
 
 	window = SDL_CreateWindow(
-		"MaxestFrameworkWindow", 
+		"MaxestFrameworkWindow",
 		x,
 		y,
 		width,
@@ -78,7 +78,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 	);
 
 #ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true); 
+	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
@@ -119,14 +119,12 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
-	int screenCenterX = displayMode.w / 2;
-	int screenCenterY = displayMode.h / 2;
 
 	while (true)
 	{
 		runStartTime = TickCount();
 
-		for (int i = 0; i < ARRAY_SIZE(keysPressed); i++)
+		for (size_t i = 0; i < ARRAY_SIZE(keysPressed); i++)
 		{
 			keysDown[i] = false;
 			keysUp[i] = false;
@@ -208,7 +206,7 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 
 			if (mouseWrapping)
 			{
-				int minX, maxX, minY, maxY;
+				int minX = 0, maxX = displayMode.w, minY = 0, maxY = displayMode.h;
 				for (int i = 0; i < SDL_GetNumVideoDisplays(); i++)
 				{
 					SDL_Rect rect;

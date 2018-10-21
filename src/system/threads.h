@@ -116,7 +116,7 @@ namespace NMaxestFramework { namespace NSystem
 		MF_ASSERT(state == WAIT_OBJECT_0 || state == WAIT_TIMEOUT);
 		return state == WAIT_OBJECT_0;
 	#else
-		return pthread_join(threadHandle, nullptr) == 0;
+		return pthread_join(*threadHandle, nullptr) == 0;
 	#endif
 	}
 

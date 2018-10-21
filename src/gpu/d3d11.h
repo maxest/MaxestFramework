@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_WINDOWS
 
 
 #include "types.h"
@@ -128,3 +129,6 @@ namespace NMaxestFramework { namespace NGPU
 	bool CreateComputeShaderFromBlobFile(const string& path, const string& shaderMacros, ID3D11ComputeShader*& shader);
 	bool CreateComputeShaderFromBlobFile(const string& path, ID3D11ComputeShader*& shader);
 } }
+
+
+#endif

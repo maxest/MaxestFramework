@@ -200,7 +200,7 @@ namespace NMaxestFramework { namespace NMath
 			points.push_back(p);
 		}
 
-		a, b, c = 0.0f;
+		a = b = c = 0.0f;
 		float error = 0.0f;
 		SolveQuadraticFromPoints(a, b, c, error, &points[0], (uint)points.size(), 10, 10);
 

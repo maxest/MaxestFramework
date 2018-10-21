@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+
+
 #include "profiler.h"
 
 
@@ -263,3 +266,6 @@ NGPU::CProfilerScopedQuery::~CProfilerScopedQuery()
 {
 	gGPUProfiler.End(queryIndex);
 }
+
+
+#endif

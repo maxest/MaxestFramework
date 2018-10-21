@@ -30,7 +30,7 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 		}
 		int Size(int dim) const
 		{
-			MF_ASSERT(dim < shape.size());
+			MF_ASSERT(dim < (int)shape.size());
 
 			return shape[dim];
 		}

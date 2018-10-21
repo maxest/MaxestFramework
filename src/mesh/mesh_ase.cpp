@@ -36,7 +36,7 @@ bool NMesh::ImportASE(const string& path, SMesh& mesh)
 	string s1, s2;
 	float f1, f2, f3;
 	int i1, i2, i3, i4;
-	SVector3 nodeNormalTransform[3];
+	SVector3 nodeNormalTransform[3] = { cVector3Zero, cVector3Zero, cVector3Zero };
 
 	mesh.lightmapsCount = 0;
 
@@ -102,7 +102,7 @@ bool NMesh::ImportASE(const string& path, SMesh& mesh)
 			geomobjects[currentGeomobjectIndex].faces.resize(i1);
 		}
 	}
-	
+
 	file.Seek(0);
 
 	// get data

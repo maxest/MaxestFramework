@@ -73,7 +73,7 @@ map<uint32, SDynamicBitArray> NCommon::Huffman(const vector<uint32>& pdf)
 
 		int lowestIndex2 = -1;
 		int lowestP2 = cIntMax;
-		for (uint i = 0; i < nodes.size(); i++)
+		for (int i = 0; i < (int)nodes.size(); i++)
 		{
 			if (nodes[i].isRoot)
 			{
@@ -212,7 +212,7 @@ uint16 NCommon::CANSCoder32::ReadRaw(uint8 bitsCount)
 
 	uint32 value = _x & NBit::Mask64(bitsCount);
 	_x >>= bitsCount;
-	
+
 	if (_x <= 0xFFFF)
 	{
 		if (_words.size() > 0)
@@ -221,7 +221,7 @@ uint16 NCommon::CANSCoder32::ReadRaw(uint8 bitsCount)
 			_words.pop_back();
 		}
 	}
-	
+
 	return value;
 }
 
@@ -436,8 +436,6 @@ void NCommon::LosslessCompression_UnitTest()
 			ans32.WriteRaw(tab[i], bitsCounts[i]);
 	}
 
-	int bitsCount2 = ((int)ans32._words.size() + 2) * 16;
-
 	for (int i = 0; i < n; i++)
 	{
 		CANSDistribution& d = (i < n/2 ? d2 : d1);
@@ -472,8 +470,6 @@ void NCommon::LosslessCompression_UnitTest()
 		else
 			ans64.WriteRaw(tab[i], bitsCounts[i]);
 	}
-
-	int bitsCount3 = ((int)ans64._words.size() + 2) * 32;
 
 	for (int i = 0; i < n; i++)
 	{

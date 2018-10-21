@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+
+
 #include "d3d11.h"
 #include "../system/file.h"
 #include "../math/common.h"
@@ -88,7 +91,7 @@ void NGPU::CreateD3D11(int width, int height, bool fullScreen, float fpsGuess, c
 
 	bool useDefaultAdapter = (adapterNameGuess == "");
 
-	vector<IDXGIAdapter*> dxgiAdapters; 
+	vector<IDXGIAdapter*> dxgiAdapters;
 	{
 		IDXGIAdapter* dxgiAdapter = nullptr;
 		IDXGIFactory* dxgiFactory = nullptr;
@@ -127,7 +130,7 @@ void NGPU::CreateD3D11(int width, int height, bool fullScreen, float fpsGuess, c
 
 		uint displayModesCount;
 		dxgiOutput->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &displayModesCount, 0);
-		DXGI_MODE_DESC* displayModes = new DXGI_MODE_DESC[displayModesCount]; 
+		DXGI_MODE_DESC* displayModes = new DXGI_MODE_DESC[displayModesCount];
 		dxgiOutput->GetDisplayModeList( DXGI_FORMAT_R8G8B8A8_UNORM, 0, &displayModesCount, displayModes);
 
 		int displayModeIndex = -1;
@@ -139,7 +142,7 @@ void NGPU::CreateD3D11(int width, int height, bool fullScreen, float fpsGuess, c
 				displayModes[i].Height == height)
 			{
 				float fps = (float)displayModes[i].RefreshRate.Numerator / (float)displayModes[i].RefreshRate.Denominator;
-				
+
 				if (Abs(fps - fpsGuess) < Abs(displayModeClosestMatchingFPS - fpsGuess))
 				{
 					displayModeIndex = i;
@@ -277,7 +280,7 @@ bool NGPU::CompileShaderFromSourceFile(const string& path, const string& entryPo
 		return false;
 	}
 	delete[] shaderMacros_D3D11;
-	
+
 /*	ID3D11ShaderReflection* shaderReflection = nullptr;
 	D3DReflect(unstrippedBlob->GetBufferPointer(), unstrippedBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&shaderReflection);
 	D3D11_SHADER_DESC desc;
@@ -1446,3 +1449,6 @@ bool NGPU::CreateComputeShaderFromBlobFile(const string& path, ID3D11ComputeShad
 {
 	return CreateComputeShaderFromBlobFile(path, "", shader);
 }
+
+
+#endif

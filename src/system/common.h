@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../essentials/types.h"
+#include "../essentials/main.h"
 
 #include "../../dependencies/SDL2-2.0.5/include/SDL.h"
 #ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -16,7 +16,7 @@ namespace NMaxestFramework { namespace NSystem
 {
 	int DisplaysCount();
 	void ScreenSize(int& width, int& height);
-	
+
 	void Sleep(int ms);
 
 	uint64 TickCount(); // high-precision

@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+
+
 #include "utils.h"
 #include "d3d11.h"
 #include "../system/file.h"
@@ -120,7 +123,7 @@ void NGPU::NUtils::CTexture::DestroyCPUData()
 {
 	for (uint i = 0; i < mipmaps.size(); i++)
 		delete[] mipmaps[i].data;
-	
+
 	mipmaps.clear();
 }
 
@@ -1476,3 +1479,6 @@ void NGPU::NUtils::CUnityLightmapGroup::Destroy()
 
 	lightmaps.clear();
 }
+
+
+#endif
