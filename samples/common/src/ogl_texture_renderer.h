@@ -3,8 +3,10 @@
 
 #include "../../../src/essentials/types.h"
 
-#include <Windows.h>
-#include <gl/GL.h>
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+    #include <Windows.h>
+#endif
+#include <GL/gl.h>
 
 
 using namespace NMaxestFramework::NEssentials;

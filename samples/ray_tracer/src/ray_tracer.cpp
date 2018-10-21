@@ -71,7 +71,7 @@ bool NRayTracer::SceneIntersection_Shadow(const SScene& scene, const SVector3& r
 
 	for (uint i = 0; i < scene.triangles.size(); i++)
 	{
-		if (i == triangleIndex)
+		if ((int)i == triangleIndex)
 			continue;
 
 		if (IntersectionRayTriangle(rayStart, rayDir, scene.triangles[i].p1, scene.triangles[i].p2, scene.triangles[i].p3, tempIntersectionPoint, tempDistance))
@@ -119,7 +119,6 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 	{
 		const SMaterial& material = scene.materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
-		SMatrix tangentToWorld = Transpose(worldToTangent);
 		SVector3& point = sir.point;
 		SVector3 wo = -Normalize(rayDir);
 		SVector3 wo_tangent = wo * worldToTangent;
@@ -130,7 +129,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 
 		MF_ASSERT(material.diffuseBRDF != nullptr);
 		MF_ASSERT(material.specularBRDF != nullptr);
-		
+
 		// ambient
 	/*	{
 			SVector3 ambient = cVector3Zero;
@@ -228,7 +227,6 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 		if (reflectivity > 0.0f)
 		{
 			SVector3 wi = Reflect(-wo, normal);
-			float NdotL = Saturate(Dot(wi, normal));
 
 			radiance +=
 				reflectivity *

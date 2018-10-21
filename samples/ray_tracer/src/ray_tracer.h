@@ -57,9 +57,6 @@ namespace NRayTracer
 
 		bool Standard()
 		{
-			double v1 = 0.0;
-			double v2 = 0.0;
-
 			for (int y = heightMin; y < heightMax; y++)
 			{
 				for (int x = 0; x < width; x++)
@@ -137,12 +134,14 @@ namespace NRayTracer
 				{
 					SVector3 radiance = cVector3Zero;
 
+                    float dofDX = RandomFloat(-0.16f, 0.16f);
+                    float dofDY = RandomFloat(-0.16f, 0.16f);
 					SVector3 rayStart, rayDir;
 					for (int j = 0; j < samplesCountY; j++)
 					{
 						for (int i = 0; i < samplesCountY; i++)
 						{
-							RayPerspectiveDOF(*camera, (float)x, (float)y, RandomFloat(-0.16f, 0.16f), RandomFloat(-0.16f, 0.16f), 8.0f, rayStart, rayDir);
+							RayPerspectiveDOF(*camera, (float)x+ i*sampleOffsetX, (float)y + j*sampleOffsetY, dofDX, dofDY, 8.0f, rayStart, rayDir);
 							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0, MAX_DEPTH) * oneOverSamplesCount;
 						}
 					}

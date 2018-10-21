@@ -1,4 +1,6 @@
-#define USE_APPLICATION
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+    #define USE_APPLICATION
+#endif
 
 
 #include "ray_tracer.h"
@@ -126,7 +128,7 @@ void Create()
 
 	//
 
-	camera.UpdateFixed(VectorCustom(0.0f, 5.0f, 7.5f), VectorCustom(0.0f, 0.0f, 0.0f));
+	camera.UpdateFixed(VectorCustom(0.0f, 5.0f, 17.5f), VectorCustom(0.0f, 0.0f, 0.0f));
 }
 
 
@@ -207,7 +209,7 @@ bool Run()
 		delete jobs[i];
 
 	uint64 after = TickCount();
-	printf("%d\n", (after - before));
+	printf("%llu\n", (after - before));
 
 #ifdef USE_APPLICATION
 	oglTextureRenderer.Render(data);
@@ -215,7 +217,12 @@ bool Run()
 	if (application.IsKeyPressed(EKey::Escape))
 		return false;
 #else
-	NImage::Save("/home/maxest/plik.png", data, width, height, NImage::Format::RGBA8);
+    NImage::SImage image;
+    image.width = width;
+    image.height = height;
+    image.format = NImage::EFormat::RGBA8;
+    image.data = data;
+	NImage::Save("/home/maxest/ray_tracer_dump.png", image);
 #endif
 
 	return true;

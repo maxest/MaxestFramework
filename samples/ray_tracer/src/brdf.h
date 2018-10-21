@@ -60,6 +60,8 @@ namespace NRayTracer
 	class CBRDF
 	{
 	public:
+        virtual ~CBRDF() {}
+
 		virtual SVector3 f(const SVector3& wi, const SVector3& wo, const SVector3& normal) = 0;
 		virtual SVector3 rho() = 0;
 	};
@@ -95,7 +97,7 @@ namespace NRayTracer
 			_A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
 			_B = 0.45f * sigma2 / (sigma2 + 0.09f);
 		}
-		COrenNayarBRDF(float sigma, const SVector3& albedo): COrenNayarBRDF(sigma)	
+		COrenNayarBRDF(float sigma, const SVector3& albedo): COrenNayarBRDF(sigma)
 		{
 			this->albedo = albedo;
 		}
@@ -153,7 +155,6 @@ namespace NRayTracer
 		{
 			if (exponent > 0.0f)
 			{
-				float NdotWi = Dot(normal, wi);
 				SVector3 r = Reflect(-wi, normal);
 				float RdotWo = Dot(r, wo);
 
