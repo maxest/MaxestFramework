@@ -1,0 +1,1073 @@
+# depslib dependency file v1.0
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/common/jobs.cpp
+	"jobs.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/common/jobs.h
+	"../essentials/main.h"
+	"../system/threads.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/main.h
+	"stl.h"
+	"types.h"
+	"common.h"
+	"macros.h"
+	"assert.h"
+	"string.h"
+	"bit.h"
+	"array.h"
+	"coding.h"
+	"hash.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/stl.h
+	<string>
+	<iostream>
+	<fstream>
+	<sstream>
+	<vector>
+	<queue>
+	<set>
+	<map>
+	<algorithm>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/types.h
+	<cfloat>
+	<climits>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/common.h
+	"types.h"
+	"stl.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/macros.h
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/assert.h
+	<signal.h>
+
+1540078053 /home/maxest/Projects/MaxestFramework/src/essentials/string.h
+	"types.h"
+	"stl.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/bit.h
+	"types.h"
+	"common.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/array.h
+	"macros.h"
+	"stl.h"
+	<cstring>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/coding.h
+	"bit.h"
+	"assert.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/essentials/hash.h
+	"bit.h"
+	"assert.h"
+
+1540074386 /home/maxest/Projects/MaxestFramework/src/system/threads.h
+	"../essentials/assert.h"
+	"../essentials/types.h"
+	<Windows.h>
+	<pthread.h>
+	<semaphore.h>
+
+1540074594 source:/home/maxest/Projects/MaxestFramework/src/common/lossless_compression.cpp
+	"lossless_compression.h"
+	"../math/main.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/common/lossless_compression.h
+	"../essentials/bit.h"
+	"../essentials/array.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/main.h
+	"types.h"
+	"constants.h"
+	"common.h"
+	"vector.h"
+	"matrix.h"
+	"quaternion.h"
+	"plane.h"
+	"bounding_box.h"
+	"distance.h"
+	"intersection.h"
+	"conversion.h"
+	"transform.h"
+	"random.h"
+	"solver.h"
+	"samples.h"
+	"polygon.h"
+	"probability.h"
+	"stats.h"
+	"color.h"
+	"camera.h"
+	"io.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/types.h
+	"../essentials/types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/constants.h
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/common.h
+	"constants.h"
+	"../essentials/types.h"
+	"../essentials/common.h"
+	<cmath>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/vector.h
+	"types.h"
+	"common.h"
+	"../essentials/common.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/matrix.h
+	"types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/quaternion.h
+	"types.h"
+	"common.h"
+	"vector.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/plane.h
+	"types.h"
+	"common.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/bounding_box.h
+	"types.h"
+	"vector.h"
+	"quaternion.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/distance.h
+	"types.h"
+	"vector.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/intersection.h
+	"types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/conversion.h
+	"constants.h"
+	"common.h"
+	"matrix.h"
+	"quaternion.h"
+	"../essentials/coding.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/transform.h
+	"types.h"
+	"vector.h"
+	"quaternion.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/random.h
+	"vector.h"
+	"../essentials/types.h"
+	<cstdlib>
+	<ctime>
+
+1540074420 /home/maxest/Projects/MaxestFramework/src/math/solver.h
+	"types.h"
+	"vector.h"
+	"matrix.h"
+	"../essentials/assert.h"
+
+1540074514 /home/maxest/Projects/MaxestFramework/src/math/samples.h
+	"types.h"
+	"vector.h"
+	"../essentials/main.h"
+	"../system/file.h"
+
+1540074552 /home/maxest/Projects/MaxestFramework/src/system/file.h
+	"../essentials/main.h"
+	<Windows.h>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/polygon.h
+	"types.h"
+	"vector.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/probability.h
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/stats.h
+	"../essentials/common.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/color.h
+	"../essentials/main.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/camera.h
+	"vector.h"
+	"matrix.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/math/io.h
+	"types.h"
+	"../essentials/stl.h"
+	<iomanip>
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/common/neural_network.cpp
+	"neural_network.h"
+	"../math/common.h"
+
+1540074984 /home/maxest/Projects/MaxestFramework/src/common/neural_network.h
+	"../essentials/main.h"
+	"../system/main.h"
+	"../image/image.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/system/main.h
+	"threads.h"
+	"file.h"
+	"application.h"
+	"keys.h"
+	"sockets.h"
+	"common.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/system/application.h
+	"keys.h"
+	"../essentials/types.h"
+	"../../dependencies/SDL2-2.0.5/include/SDL.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/system/keys.h
+	"../../dependencies/SDL2-2.0.5/include/SDL.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<sal.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_config.h
+	"SDL_platform.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/begin_code.h
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/close_code.h
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<mbarrier.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<mmintrin.h>
+	<mm3dnow.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_scancode.h
+	"SDL_stdinc.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2-2.0.5/include/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/system/sockets.h
+	"../essentials/main.h"
+	<Windows.h>
+	<cstdio>
+	<sys/types.h>
+	<sys/socket.h>
+	<netinet/in.h>
+	<arpa/inet.h>
+	<netdb.h>
+	<unistd.h>
+	"../../dependencies/SDL2_net-2.0.1/include/SDL_net.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_net.h
+	<stdint.h>
+	"SDL.h"
+	"SDL_endian.h"
+	"SDL_version.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL.h
+	"SDL_main.h"
+	"SDL_stdinc.h"
+	"SDL_assert.h"
+	"SDL_atomic.h"
+	"SDL_audio.h"
+	"SDL_clipboard.h"
+	"SDL_cpuinfo.h"
+	"SDL_endian.h"
+	"SDL_error.h"
+	"SDL_events.h"
+	"SDL_filesystem.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_haptic.h"
+	"SDL_hints.h"
+	"SDL_loadso.h"
+	"SDL_log.h"
+	"SDL_messagebox.h"
+	"SDL_mutex.h"
+	"SDL_power.h"
+	"SDL_render.h"
+	"SDL_rwops.h"
+	"SDL_system.h"
+	"SDL_thread.h"
+	"SDL_timer.h"
+	"SDL_version.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_main.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_stdinc.h
+	"SDL_config.h"
+	<sys/types.h>
+	<stdio.h>
+	<stdlib.h>
+	<stddef.h>
+	<stdarg.h>
+	<stdlib.h>
+	<malloc.h>
+	<stddef.h>
+	<stdarg.h>
+	<memory.h>
+	<string.h>
+	<strings.h>
+	<inttypes.h>
+	<stdint.h>
+	<ctype.h>
+	<math.h>
+	<float.h>
+	<sal.h>
+	"begin_code.h"
+	<alloca.h>
+	<malloc.h>
+	<malloc.h>
+	<malloc.h>
+	<stdlib.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_config.h
+	"SDL_platform.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_platform.h
+	"AvailabilityMacros.h"
+	"TargetConditionals.h"
+	<winapifamily.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/begin_code.h
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/close_code.h
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_assert.h
+	"SDL_config.h"
+	"begin_code.h"
+	<signal.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_atomic.h
+	"SDL_stdinc.h"
+	"SDL_platform.h"
+	"begin_code.h"
+	<mbarrier.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_audio.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_endian.h"
+	"SDL_mutex.h"
+	"SDL_thread.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_error.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_endian.h
+	"SDL_stdinc.h"
+	<endian.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_mutex.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_thread.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_atomic.h"
+	"SDL_mutex.h"
+	"begin_code.h"
+	<process.h>
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_rwops.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_clipboard.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_cpuinfo.h
+	"SDL_stdinc.h"
+	<intrin.h>
+	<intrin.h>
+	<altivec.h>
+	<mmintrin.h>
+	<mm3dnow.h>
+	<xmmintrin.h>
+	<emmintrin.h>
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_events.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_keyboard.h"
+	"SDL_mouse.h"
+	"SDL_joystick.h"
+	"SDL_gamecontroller.h"
+	"SDL_quit.h"
+	"SDL_gesture.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_video.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_surface.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_pixels.h
+	"SDL_stdinc.h"
+	"SDL_endian.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_rect.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_pixels.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_surface.h
+	"SDL_stdinc.h"
+	"SDL_pixels.h"
+	"SDL_rect.h"
+	"SDL_blendmode.h"
+	"SDL_rwops.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_blendmode.h
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_keyboard.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_keycode.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_keycode.h
+	"SDL_stdinc.h"
+	"SDL_scancode.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_scancode.h
+	"SDL_stdinc.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_mouse.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_joystick.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_gamecontroller.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_rwops.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_quit.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_gesture.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"SDL_touch.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_touch.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_filesystem.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_haptic.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"SDL_joystick.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_hints.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_loadso.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_log.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_messagebox.h
+	"SDL_stdinc.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_power.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_render.h
+	"SDL_stdinc.h"
+	"SDL_rect.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_system.h
+	"SDL_stdinc.h"
+	"SDL_keyboard.h"
+	"SDL_render.h"
+	"SDL_video.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_timer.h
+	"SDL_stdinc.h"
+	"SDL_error.h"
+	"begin_code.h"
+	"close_code.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/SDL2_net-2.0.1/include/SDL_version.h
+	"SDL_stdinc.h"
+	"begin_code.h"
+	"close_code.h"
+
+1540074966 /home/maxest/Projects/MaxestFramework/src/system/common.h
+	"../essentials/main.h"
+	"../../dependencies/SDL2-2.0.5/include/SDL.h"
+	<Windows.h>
+	<sys/time.h>
+	<unistd.h>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/image.h
+	"types.h"
+	"../essentials/main.h"
+	"../math/types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/types.h
+	"../essentials/main.h"
+	"../common/lossless_compression.h"
+
+1540074778 source:/home/maxest/Projects/MaxestFramework/src/gpu/d3d11.cpp
+	"d3d11.h"
+	"../system/file.h"
+	"../math/common.h"
+	"../image/main.h"
+
+1540074740 /home/maxest/Projects/MaxestFramework/src/gpu/d3d11.h
+	"types.h"
+	"../essentials/main.h"
+	<d3d11_1.h>
+	<d3dcompiler.h>
+
+1540074843 /home/maxest/Projects/MaxestFramework/src/gpu/types.h
+	"../math/vector.h"
+	<d3d11_1.h>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/main.h
+	"types.h"
+	"image.h"
+	"filtering.h"
+	"conversion.h"
+	"fourier.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/filtering.h
+	"types.h"
+	"../math/types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/conversion.h
+	"types.h"
+	"../math/types.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/image/fourier.h
+	"types.h"
+	"../essentials/main.h"
+
+1540074820 source:/home/maxest/Projects/MaxestFramework/src/gpu/profiler.cpp
+	"profiler.h"
+
+1540074800 /home/maxest/Projects/MaxestFramework/src/gpu/profiler.h
+	"d3d11.h"
+	"../essentials/stl.h"
+	"../../src/system/file.h"
+
+1540074874 source:/home/maxest/Projects/MaxestFramework/src/gpu/utils.cpp
+	"utils.h"
+	"d3d11.h"
+	"../system/file.h"
+	"../math/main.h"
+	"../mesh/main.h"
+	"../image/main.h"
+
+1540074857 /home/maxest/Projects/MaxestFramework/src/gpu/utils.h
+	"types.h"
+	"../essentials/main.h"
+	"../math/main.h"
+	"../image/types.h"
+	<d3d11_1.h>
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/mesh/main.h
+	"types.h"
+	"mesh.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/mesh/types.h
+	"../essentials/stl.h"
+	"../math/types.h"
+	"../math/vector.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/mesh/mesh.h
+	"types.h"
+	"../essentials/stl.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/image/conversion.cpp
+	"conversion.h"
+	"image.h"
+	"../essentials/assert.h"
+	"../math/main.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/image/filtering.cpp
+	"image.h"
+	"filtering.h"
+	"conversion.h"
+	"../essentials/macros.h"
+	"../math/main.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/image/fourier.cpp
+	"fourier.h"
+	"image.h"
+	"../math/common.h"
+	"../math/types.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/image/image.cpp
+	"image.h"
+	"filtering.h"
+	"conversion.h"
+	"../essentials/macros.h"
+	"../math/main.h"
+	"../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
+	"../../dependencies/squish-1.11/include/squish.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/FreeImage-3.17.0/include/FreeImage.h
+	<wchar.h>
+	<inttypes.h>
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/squish-1.11/include/squish.h
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/image/main.cpp
+	"main.h"
+	"../essentials/main.h"
+	"../system/common.h"
+	"../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/math/matrix.cpp
+	"matrix.h"
+	"types.h"
+	"constants.h"
+	"vector.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/math/polygon.cpp
+	"polygon.h"
+	"plane.h"
+	"distance.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/mesh/mesh.cpp
+	"mesh.h"
+	"../math/main.h"
+
+1540077940 source:/home/maxest/Projects/MaxestFramework/src/mesh/mesh_ase.cpp
+	"mesh.h"
+	"../system/file.h"
+	"../math/main.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/mesh/mesh_obj.cpp
+	"mesh.h"
+	"../essentials/string.h"
+	"../system/file.h"
+	"../math/main.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/mesh/mesh_unity_exported.cpp
+	"mesh.h"
+	"../essentials/string.h"
+	"../system/file.h"
+	"../math/main.h"
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/net/connections_manager.cpp
+	"connections_manager.h"
+
+1539511840 /home/maxest/Projects/MaxestFramework/src/net/connections_manager.h
+	"../essentials/main.h"
+	"../system/main.h"
+	"../math/main.h"
+
+1540078228 source:/home/maxest/Projects/MaxestFramework/src/system/application.cpp
+	"application.h"
+	"common.h"
+	"../essentials/common.h"
+	"../essentials/macros.h"
+	"../../dependencies/glew-2.0.0/include/GL/glew.h"
+
+1539511838 /home/maxest/Projects/MaxestFramework/dependencies/glew-2.0.0/include/GL/glew.h
+	<stddef.h>
+	<inttypes.h>
+	<stdint.h>
+	<inttypes.h>
+	<Availability.h>
+	<OpenGL/glu.h>
+	<GL/glu.h>
+
+1539511840 source:/home/maxest/Projects/MaxestFramework/src/system/main.cpp
+	"main.h"
+	"../../dependencies/SDL2-2.0.5/include/SDL.h"
+
+1540079309 source:/home/maxest/Projects/MaxestFramework/samples/fourier/src/main.cpp
+	"../../../src/essentials/main.h"
+	"../../../src/math/main.h"
+	"../../../src/image/main.h"
+
