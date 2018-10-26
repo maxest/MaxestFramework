@@ -61,17 +61,17 @@ namespace NMaxestFramework { namespace NCommon
 	class CJobSystem
 	{
 	public:
-        struct SThread
-        {
-            CJobSystem* jobSystem;
-            NSystem::TThreadHandle handle;
-            bool stopWork;
+		struct SThread
+		{
+			CJobSystem* jobSystem;
+			NSystem::TThreadHandle handle;
+			bool requestStop;
 
-            SThread()
-            {
-                stopWork = false;
-            }
-        };
+			SThread()
+			{
+				requestStop = false;
+			}
+		};
 
 	public:
 		void Create(int threadsCount);

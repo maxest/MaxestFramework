@@ -23,12 +23,12 @@
 namespace NMaxestFramework { namespace NSystem
 {
 #ifdef MAXEST_FRAMEWORK_WINDOWS
-    typedef SOCKET TSystemSocket;
+	typedef SOCKET TSystemSocket;
 #else
-    typedef int TSystemSocket;
+	typedef int TSystemSocket;
 #endif
 
-    //
+	//
 
 	struct SIPAddress;
 	class CTCPServer;
@@ -76,11 +76,11 @@ namespace NMaxestFramework { namespace NSystem
 		string Host() { return string(inet_ntoa(address.sin_addr)); }
 		uint16 Port() { return ntohs(address.sin_port); }
 
-    #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		bool operator == (const SIPAddress2& other) { return (address.sin_addr.S_un.S_addr == other.address.sin_addr.S_un.S_addr && address.sin_port == other.address.sin_port); }
-    #else
+	#else
 		bool operator == (const SIPAddress2& other) { return (address.sin_addr.s_addr == other.address.sin_addr.s_addr && address.sin_port == other.address.sin_port); }
-    #endif
+	#endif
 		bool operator != (const SIPAddress2& other) { return !(*this == other); }
 	};
 
@@ -170,17 +170,17 @@ namespace NMaxestFramework { namespace NSystem
 
 	inline void InitializeSockets2()
 	{
-    #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		WSAData data;
 		WSAStartup(MAKEWORD(2, 2), &data);
-    #endif
+	#endif
 	}
 
 	inline void DeinitializeSockets2()
 	{
-    #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		WSACleanup();
-    #endif
+	#endif
 	}
 
 	//
@@ -397,11 +397,11 @@ namespace NMaxestFramework { namespace NSystem
 
 	FORCE_INLINE void CUDPSocket2::Close()
 	{
-    #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		closesocket(sock);
-    #else
-        close(sock);
-    #endif
+	#else
+		close(sock);
+	#endif
 	}
 
 	FORCE_INLINE bool CUDPSocket2::Recv(SIPAddress2& ipAddress, uint8* data, int& dataSize)
@@ -410,19 +410,19 @@ namespace NMaxestFramework { namespace NSystem
 
 		MF_ASSERT(dataSize > 0);
 
-    #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		int fromLength = sizeof(ipAddress.address);
-    #else
-        socklen_t fromLength = sizeof(ipAddress.address);
-    #endif
+	#else
+		socklen_t fromLength = sizeof(ipAddress.address);
+	#endif
 
 		dataSize = recvfrom(sock, (char*)data, dataSize, 0, (sockaddr*)&ipAddress.address, &fromLength);
 		if (dataSize == -1)
 		{
-        #ifdef MAXEST_FRAMEWORK_WINDOWS
+		#ifdef MAXEST_FRAMEWORK_WINDOWS
 			if (WSAGetLastError() == WSAECONNRESET)
 				return false;
-        #endif
+		#endif
 		}
 
 		MF_ASSERT(dataSize >= 0);

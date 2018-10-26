@@ -15,11 +15,11 @@ namespace NMaxestFramework { namespace NEssentials
 	{	
 		if (!(condition))
 		{
-        #ifdef MAXEST_FRAMEWORK_WINDOWS
+		#ifdef MAXEST_FRAMEWORK_WINDOWS
 			__debugbreak();
-        #else
+		#else
 			raise(SIGTRAP);
-        #endif
+		#endif
 		}
 	}
 } }

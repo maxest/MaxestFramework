@@ -85,7 +85,7 @@ SVector3 NImage::BicubicHermite(const SImage& image, const SVector2& uv)
 
 	MF_ASSERT(image.format == EFormat::RGB32);
 
-    SVector2 uv_image = uv*VectorCustom((float)image.width, (float)image.height) - VectorCustom(0.5f, 0.5f);
+	SVector2 uv_image = uv*VectorCustom((float)image.width, (float)image.height) - VectorCustom(0.5f, 0.5f);
 	int x = (int)uv_image.x;
 	int y = (int)uv_image.y;
 	float fracX = Frac(uv_image.x);
@@ -109,7 +109,7 @@ SVector3 NImage::BicubicHermite(const SImage& image, const SVector2& uv)
 	SVector3 c23 = data[Idx(CX(x+1), CY(y+2), image.width)];
 	SVector3 c33 = data[Idx(CX(x+2), CY(y+2), image.width)];
 
-    return utils.CubicHermite(
+	return utils.CubicHermite(
 		utils.CubicHermite(c00, c10, c20, c30, fracX),
 		utils.CubicHermite(c01, c11, c21, c31, fracX),
 		utils.CubicHermite(c02, c12, c22, c32, fracX),
