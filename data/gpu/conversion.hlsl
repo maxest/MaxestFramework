@@ -1,3 +1,7 @@
+// BT color conversion functions were extracted from NVidia decode sample's CUDA conversion program
+// see also here: https://trac.ffmpeg.org/wiki/colorspace
+
+
 #ifndef CONVERSION_HLSL
 #define CONVERSION_HLSL
 
