@@ -26,7 +26,9 @@ namespace NMaxestFramework { namespace NCommon
 
 		virtual bool Do() = 0;
 
-	public:
+		bool IsDone();
+
+	public: // readonly
 		bool done;
 		CJobGroup* owner;
 	};
@@ -51,7 +53,7 @@ namespace NMaxestFramework { namespace NCommon
 	public:
 		void OnJobDone();
 
-	public:
+	public: // readonly
 		NSystem::TSemaphoreHandle waitingSemaphore;
 		int32 jobsCount;
 		int32 jobsDoneCount;
@@ -60,7 +62,7 @@ namespace NMaxestFramework { namespace NCommon
 
 	class CJobSystem
 	{
-	public:
+	private:
 		struct SThread
 		{
 			CJobSystem* jobSystem;
@@ -73,6 +75,9 @@ namespace NMaxestFramework { namespace NCommon
 			}
 		};
 
+	private:
+		static THREAD_FUNCTION_RETURN_VALUE JobThread(void* data);
+
 	public:
 		void Create(int threadsCount);
 		void Destroy();
@@ -80,7 +85,7 @@ namespace NMaxestFramework { namespace NCommon
 		void AddJob(CJob* job);
 		void AddJobGroup(const CJobGroup& jobGroup);
 
-	public:
+	public: // readonly
 		NSystem::TSemaphoreHandle activeJobsSemaphore;
 		NSystem::TMutexHandle jobsQueueMutex;
 		vector<SThread*> threads;

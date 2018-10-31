@@ -8,6 +8,15 @@ using namespace NSystem;
 //
 
 
+bool NCommon::CJob::IsDone()
+{
+	return done;
+}
+
+
+//
+
+
 void NCommon::CJobGroup::AddJob(CJob* job)
 {
 	job->owner = this;
@@ -34,7 +43,7 @@ void NCommon::CJobGroup::OnJobDone()
 //
 
 
-THREAD_FUNCTION_RETURN_VALUE JobThread(void* data)
+THREAD_FUNCTION_RETURN_VALUE NCommon::CJobSystem::JobThread(void* data)
 {
 	NCommon::CJobSystem::SThread* thread = (NCommon::CJobSystem::SThread*)data;
 	NCommon::CJobSystem* jobSystem = thread->jobSystem;
