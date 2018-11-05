@@ -16,7 +16,11 @@ namespace NMaxestFramework { namespace NEssentials
 		if (!(condition))
 		{
 			FILE* file;
+		#ifdef MAXEST_FRAMEWORK_WINDOWS
 			fopen_s(&file, "assert.txt", "w");
+		#else
+			file = fopen("assert.txt", "w");
+		#endif
 			fprintf(file, "%s  %d\n", fileName, line);
 			fclose(file);
 
