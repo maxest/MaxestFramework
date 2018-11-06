@@ -52,6 +52,7 @@ namespace NMaxestFramework { namespace NGPU
 
 	void ClearRenderTargets();
 	void ClearPSShaderResources(int offset, int count);
+	void ClearCSShaderResources(int offset, int count);
 
 	void CreateRenderTarget(int width, int height, DXGI_FORMAT format, int samplesCount, TRenderTarget& renderTarget);
 	void CreateDepthStencilTarget(int width, int height, int samplesCount, TDepthStencilTarget& depthStencilTarget);

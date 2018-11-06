@@ -326,6 +326,18 @@ void NGPU::ClearPSShaderResources(int offset, int count)
 }
 
 
+void NGPU::ClearCSShaderResources(int offset, int count)
+{
+	ID3D11ShaderResourceView** nullSRVs = new ID3D11ShaderResourceView*[count];
+	for (int i = 0; i < count; i++)
+		nullSRVs[i] = nullptr;
+
+	deviceContext->CSSetShaderResources(offset, count, nullSRVs);
+
+	delete[] nullSRVs;
+}
+
+
 void NGPU::CreateRenderTarget(int width, int height, DXGI_FORMAT format, int samplesCount, TRenderTarget& renderTarget)
 {
 	renderTarget.type = STexture::EType::RenderTarget;
