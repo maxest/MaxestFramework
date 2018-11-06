@@ -5,7 +5,11 @@
 #include "../math/main.h"
 
 #include "../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
-#include "../../dependencies/squish-1.11/include/squish.h"
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+	#include "../../dependencies/squish-1.11/include/squish.h"
+#else
+	#include "../../dependencies/squish-1.15/include/squish.h"
+#endif
 
 
 using namespace NMaxestFramework;

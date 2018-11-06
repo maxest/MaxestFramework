@@ -1,6 +1,4 @@
-#ifdef MAXEST_FRAMEWORK_WINDOWS
-    #define USE_APPLICATION
-#endif
+#define USE_APPLICATION
 
 
 #include "ray_tracer.h"

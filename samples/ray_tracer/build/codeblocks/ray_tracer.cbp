@@ -29,18 +29,22 @@
 			</Target>
 		</Build>
 		<Compiler>
-			<Add option="-std=c++11" />
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
+			<Add option="-DMAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL" />
 		</Compiler>
 		<Linker>
 			<Add library="libSDL2" />
-			<Add library="libGL" />		
+			<Add library="libGL" />
+			<Add library="libGLEW" />
 			<Add library="libfreeimage" />
 			<Add library="libsquish" />
 			<Add library="libpthread" />
 			<Add directory="../../../../dependencies/SDL2-2.0.5/lib" />
-			<Add directory="../../../../dependencies/squish-1.11/lib" />
+			<Add directory="../../../../dependencies/glew-2.0.0/lib" />
+			<Add directory="../../../../dependencies/FreeImage-3.17.0/lib" />
+			<Add directory="../../../../dependencies/squish-1.15/lib" />
 		</Linker>
 		<Unit filename="../../../../src/common/config_file.h" />
 		<Unit filename="../../../../src/common/jobs.cpp" />
