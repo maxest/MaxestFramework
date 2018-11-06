@@ -4,7 +4,11 @@
 #include "../essentials/macros.h"
 
 #ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-	#include "../../dependencies/glew-2.0.0/include/GL/glew.h"
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		#include "../../dependencies/glew-2.0.0/include/GL/glew.h"
+	#else
+		#include "../../dependencies/glew-2.1.0/include/GL/glew.h"
+	#endif
 #endif
 
 
