@@ -25,7 +25,7 @@ namespace NMaxestFramework { namespace NEssentials
 			fclose(file);
 
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
-			__debugbreak();
+			debugbreak();
 		#else
 			raise(SIGTRAP);
 		#endif

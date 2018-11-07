@@ -55,7 +55,7 @@ namespace NRayTracer
 			data[4 * index + 3] = 255;
 		}
 
-		bool Standard()
+		int Standard()
 		{
 			for (int y = heightMin; y < heightMax; y++)
 			{
@@ -71,10 +71,10 @@ namespace NRayTracer
 				}
 			}
 
-			return true;
+			return 0;
 		}
 
-		bool DOF()
+		int DOF()
 		{
 			for (int y = heightMin; y < heightMax; y++)
 			{
@@ -90,10 +90,10 @@ namespace NRayTracer
 				}
 			}
 
-			return true;
+			return 0;
 		}
 
-		bool AA(int samplesCountX, int samplesCountY)
+		int AA(int samplesCountX, int samplesCountY)
 		{
 			float sampleOffsetX = 1.0f / (float)samplesCountX;
 			float sampleOffsetY = 1.0f / (float)samplesCountY;
@@ -119,10 +119,10 @@ namespace NRayTracer
 				}
 			}
 
-			return true;
+			return 0;
 		}
 
-		bool DOFAndAA(int samplesCountX, int samplesCountY)
+		int DOFAndAA(int samplesCountX, int samplesCountY)
 		{
 			float sampleOffsetX = 1.0f / (float)samplesCountX;
 			float sampleOffsetY = 1.0f / (float)samplesCountY;
@@ -150,10 +150,10 @@ namespace NRayTracer
 				}
 			}
 
-			return true;
+			return 0;
 		}
 
-		bool Do()
+		int Do()
 		{
 			if (!dof)
 			{

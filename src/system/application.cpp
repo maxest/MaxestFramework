@@ -95,11 +95,9 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 
 	SDL_GL_SetSwapInterval(0);
 
-	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-		glewExperimental = GL_TRUE;
-		if (glewInit() != GLEW_OK)
-			return false;
-	#endif
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK)
+		return false;
 #endif
 
 	return true;

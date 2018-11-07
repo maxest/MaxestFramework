@@ -8,9 +8,15 @@ using namespace NSystem;
 //
 
 
+int NCommon::CJob::DoneStatus()
+{
+	return doneStatus;
+}
+
+
 bool NCommon::CJob::IsDone()
 {
-	return done;
+	return doneStatus >= 0;
 }
 
 
@@ -60,13 +66,9 @@ THREAD_FUNCTION_RETURN_VALUE NCommon::CJobSystem::JobThread(void* data)
 		jobSystem->jobs.pop();
 		MutexUnlock(jobSystem->jobsQueueMutex);
 
-		if (job->Do())
-		{
-			job->done = true;
-
-			if (job->owner)
-				job->owner->OnJobDone();
-		}
+		job->doneStatus = job->Do();
+		if (job->owner)
+			job->owner->OnJobDone();
 	}
 
 	return 0;

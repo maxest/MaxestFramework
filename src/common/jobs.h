@@ -19,17 +19,18 @@ namespace NMaxestFramework { namespace NCommon
 	public:
 		CJob()
 		{
-			done = false;
+			doneStatus = -1;
 			owner = nullptr;
 		}
 		virtual ~CJob() {}
 
-		virtual bool Do() = 0;
+		virtual int Do() = 0;
 
+		int DoneStatus();
 		bool IsDone();
 
 	public: // readonly
-		bool done;
+		int doneStatus;
 		CJobGroup* owner;
 	};
 
