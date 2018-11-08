@@ -220,7 +220,7 @@ bool Run()
     image.height = height;
     image.format = NImage::EFormat::RGBA8;
     image.data = data;
-	NImage::Save("/home/maxest/ray_tracer_dump.png", image);
+	NImage::Save("ray_tracer_dump.png", image);
 #endif
 
 	return true;

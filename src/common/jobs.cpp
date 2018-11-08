@@ -39,7 +39,7 @@ void NCommon::CJobGroup::Wait()
 
 void NCommon::CJobGroup::OnJobDone()
 {
-	AtomicIncrement32(&jobsDoneCount);
+	AtomicIncrement32(&jobsDoneCount); // this has to be atomic because all job threads call OnJobDone
 
 	if (jobsDoneCount == jobsCount)
 		SemaphoreRelease(waitingSemaphore, 1);
