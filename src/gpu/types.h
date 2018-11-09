@@ -27,6 +27,16 @@ namespace NMaxestFramework { namespace NGPU
 		ID3D11DepthStencilView* dsv;
 		ID3D11ShaderResourceView* srv;
 
+		void Zero()
+		{
+			type = EType::Unknown;
+			texture = nullptr;
+			rtv = nullptr;
+			uav = nullptr;
+			dsv = nullptr;
+			srv = nullptr;
+		}
+
 		NMath::SVector2 PixelSize() const
 		{
 			return NMath::VectorCustom(1.0f / (float)width, 1.0f / (float)height);
@@ -35,7 +45,7 @@ namespace NMaxestFramework { namespace NGPU
 
 	struct SBuffer
 	{
-		enum class EType { Vertex, Index, Constant, Read, ReadWrite };
+		enum class EType { Vertex, Index, Constant, Read, ReadWrite, Unknown };
 
 		EType type;
 		int size;
@@ -44,6 +54,14 @@ namespace NMaxestFramework { namespace NGPU
 		ID3D11Buffer* buffer;
 		ID3D11UnorderedAccessView* uav;
 		ID3D11ShaderResourceView* srv;
+
+		void Zero()
+		{
+			type = EType::Unknown;
+			buffer = nullptr;
+			uav = nullptr;
+			srv = nullptr;
+		}
 	};
 
 	enum class ESamplerFilter { Point, Linear, Anisotropic };
