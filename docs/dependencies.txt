@@ -1,0 +1,11 @@
+Windows:
+	SDL2-2.0.5 - uses SDL2_net-2.0.1
+	glew-2.0.0
+	FreeImage-3.17.0
+	squish-1.11
+	
+Ubuntu:
+	SDL2-2.0
+	glew-2.1.0
+	FreeImage-3.17.0
+	squish-1.15
