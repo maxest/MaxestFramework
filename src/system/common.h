@@ -3,10 +3,11 @@
 
 #include "../essentials/main.h"
 
-#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
 #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
 	#include <Windows.h>
 #else
+	#include "../../dependencies/SDL2-2.0/include/SDL.h"
 	#include <sys/time.h>
 	#include <unistd.h>
 #endif

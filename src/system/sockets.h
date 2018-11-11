@@ -7,8 +7,10 @@
 #include "../essentials/main.h"
 
 #ifdef MAXEST_FRAMEWORK_WINDOWS
+	#include "../../dependencies/SDL2_net-2.0.1/include/SDL_net.h"
 	#include <Windows.h>
 #else
+	#include "../../dependencies/SDL2-2.0/include/SDL_net.h"
 	#include <cstdio>
 	#include <sys/types.h>
 	#include <sys/socket.h>
@@ -17,7 +19,6 @@
 	#include <netdb.h>
 	#include <unistd.h>
 #endif
-#include "../../dependencies/SDL2_net-2.0.1/include/SDL_net.h"
 
 
 namespace NMaxestFramework { namespace NSystem

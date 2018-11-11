@@ -4,7 +4,11 @@
 #include "keys.h"
 #include "../essentials/types.h"
 
-#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
+#ifdef MAXEST_FRAMEWORK_WINDOWS
+	#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
+#else
+	#include "../../dependencies/SDL2-2.0/include/SDL.h"
+#endif
 
 
 #undef main // because of SDL
