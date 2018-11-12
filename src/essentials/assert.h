@@ -6,15 +6,8 @@
 	#include <signal.h>
 #endif
 
-#define MF_ASSERT(condition)	NMaxestFramework::NEssentials::Assert(condition, __FILE__, __LINE__)
-
-// this macro is just a dummy so that we can actually call the function
-#define MF_ASSERT_INT_FUNCTION_EQUAL_PRIVATE(function, referenceValue, file, line) \
-	{ \
-		int returnValue = function; \
-		NMaxestFramework::NEssentials::Assert(returnValue, referenceValue, file, line); \
-	}
-#define MF_ASSERT_INT_FUNCTION_EQUAL(function, referenceValue)	MF_ASSERT_INT_FUNCTION_EQUAL_PRIVATE(function, referenceValue, __FILE__, __LINE__)
+#define MF_ASSERT(condition)					NMaxestFramework::NEssentials::Assert(condition, __FILE__, __LINE__)
+#define MF_ASSERT_INTS_EQUAL(value1, value2)	NMaxestFramework::NEssentials::AssertIntsEqual(value1, value2, __FILE__, __LINE__)
 
 
 namespace NMaxestFramework { namespace NEssentials
@@ -40,9 +33,9 @@ namespace NMaxestFramework { namespace NEssentials
 		}
 	}
 
-	inline void Assert(int returnValue, int referenceValue, const char* fileName, int line)
+	inline void AssertIntsEqual(int value1, int value2, const char* fileName, int line)
 	{
-		if (returnValue != referenceValue)
+		if (!(value1 == value2))
 		{
 			FILE* file;
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -51,8 +44,8 @@ namespace NMaxestFramework { namespace NEssentials
 			file = fopen("assert.txt", "w");
 		#endif
 			fprintf(file, "%s:%d\n", fileName, line);
-			fprintf(file, "return value: %d\n", returnValue, line);
-			fprintf(file, "reference value: %d\n", referenceValue, line);
+			fprintf(file, "value1: %d\n", value1, line);
+			fprintf(file, "value2: %d\n", value2, line);
 			fclose(file);
 
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
