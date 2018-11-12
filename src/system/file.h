@@ -19,6 +19,8 @@ namespace NMaxestFramework { namespace NSystem
 			ReadBinary,
 			WriteText,
 			WriteBinary,
+			AppendText,
+			AppendBinary,
 		};
 
 	public:
@@ -34,6 +36,10 @@ namespace NMaxestFramework { namespace NSystem
 				openMode_stl = ios::out;
 			if (openMode == EOpenMode::WriteBinary)
 				openMode_stl = ios::out | ios::binary;
+			if (openMode == EOpenMode::AppendText)
+				openMode_stl = ios::app;
+			if (openMode == EOpenMode::AppendBinary)
+				openMode_stl = ios::app | ios::binary;
 
 			file.open(path.c_str(), openMode_stl);
 
@@ -219,10 +225,40 @@ namespace NMaxestFramework { namespace NSystem
 		return false;
 	}
 
+	inline bool FileOpenAndAppend(const string& path, const uint8* data, int dataSize)
+	{
+		CFile file;
+		if (file.Open(path, CFile::EOpenMode::AppendBinary))
+		{
+			file.WriteBin((char*)data, dataSize);
+			file.Close();
+			return true;
+		}
+
+		return false;
+	}
+
 	inline bool FileOpenAndWrite(const string& path, const vector<string>& lines)
 	{
 		CFile file;
 		if (file.Open(path, CFile::EOpenMode::WriteBinary))
+		{
+			for (uint i = 0; i < lines.size(); i++)
+			{
+				file.WriteText(lines[i]);
+				file.WriteTextNewline();
+			}
+			file.Close();
+			return true;
+		}
+
+		return false;
+	}
+
+	inline bool FileOpenAndAppend(const string& path, const vector<string>& lines)
+	{
+		CFile file;
+		if (file.Open(path, CFile::EOpenMode::AppendBinary))
 		{
 			for (uint i = 0; i < lines.size(); i++)
 			{
