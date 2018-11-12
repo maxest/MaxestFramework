@@ -8,6 +8,7 @@
 
 #define MF_ASSERT(condition)					NMaxestFramework::NEssentials::Assert(condition, __FILE__, __LINE__)
 #define MF_ASSERT_INTS_EQUAL(value1, value2)	NMaxestFramework::NEssentials::AssertIntsEqual(value1, value2, __FILE__, __LINE__)
+#define MF_ASSERT_INTS_GREATER(value1, value2)	NMaxestFramework::NEssentials::AssertIntsGreater(value1, value2, __FILE__, __LINE__) // value1 greater than value2
 
 
 namespace NMaxestFramework { namespace NEssentials
@@ -36,6 +37,29 @@ namespace NMaxestFramework { namespace NEssentials
 	inline void AssertIntsEqual(int value1, int value2, const char* fileName, int line)
 	{
 		if (!(value1 == value2))
+		{
+			FILE* file;
+		#ifdef MAXEST_FRAMEWORK_WINDOWS
+			fopen_s(&file, "assert.txt", "w");
+		#else
+			file = fopen("assert.txt", "w");
+		#endif
+			fprintf(file, "%s:%d\n", fileName, line);
+			fprintf(file, "value1: %d\n", value1, line);
+			fprintf(file, "value2: %d\n", value2, line);
+			fclose(file);
+
+		#ifdef MAXEST_FRAMEWORK_WINDOWS
+			__debugbreak();
+		#else
+			raise(SIGTRAP);
+		#endif
+		}
+	}
+
+	inline void AssertIntsGreater(int value1, int value2, const char* fileName, int line)
+	{
+		if (!(value1 > value2))
 		{
 			FILE* file;
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
