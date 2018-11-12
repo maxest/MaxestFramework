@@ -238,6 +238,34 @@ namespace NMaxestFramework { namespace NSystem
 		return false;
 	}
 
+	inline bool FileOpenAndWrite(const string& path, const string& line)
+	{
+		CFile file;
+		if (file.Open(path, CFile::EOpenMode::WriteBinary))
+		{
+			file.WriteText(line);
+			file.WriteTextNewline();
+			file.Close();
+			return true;
+		}
+
+		return false;
+	}
+
+	inline bool FileOpenAndAppend(const string& path, const string& line)
+	{
+		CFile file;
+		if (file.Open(path, CFile::EOpenMode::AppendBinary))
+		{
+			file.WriteText(line);
+			file.WriteTextNewline();
+			file.Close();
+			return true;
+		}
+
+		return false;
+	}
+
 	inline bool FileOpenAndWrite(const string& path, const vector<string>& lines)
 	{
 		CFile file;
