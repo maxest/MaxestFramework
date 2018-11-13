@@ -4,9 +4,6 @@
 using namespace NMaxestFramework;
 
 
-const uint64 cTimeout = 5000000;
-
-
 THREAD_FUNCTION_RETURN_VALUE NMaxestFramework::NNet::CConnectionsManager::RecvThread(void* threadData)
 {
 	CConnectionsManager* connectionsManager = (CConnectionsManager*)threadData;
@@ -85,7 +82,7 @@ void NNet::CConnectionsManager::Destroy()
 }
 
 
-void NNet::CConnectionsManager::DestroyClient(TConnectionId connectionId)
+void NNet::CConnectionsManager::Close(TConnectionId connectionId)
 {
 	for (uint i = 0; i < connectionIds.size(); i++)
 	{
@@ -95,12 +92,6 @@ void NNet::CConnectionsManager::DestroyClient(TConnectionId connectionId)
 			connectionIds.erase(connectionIds.begin() + i);
 		}
 	}
-}
-
-
-bool NNet::CConnectionsManager::IsTimeoutted(uint64 tickCount, TConnectionId connectionId)
-{
-	return (tickCount - connectionId->lastRecvPacketTimestamp > cTimeout);
 }
 
 

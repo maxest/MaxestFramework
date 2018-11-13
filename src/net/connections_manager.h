@@ -35,8 +35,7 @@ namespace NMaxestFramework { namespace NNet
 		void Create(uint16 port);
 		void Destroy();
 
-		void DestroyClient(TConnectionId connectionId);
-		bool IsTimeoutted(uint64 tickCount, TConnectionId connectionId);
+		void Close(TConnectionId connectionId);
 
 		void Send(TConnectionId connectionId, uint8* data, int dataSize);
 		bool PopRecvPacket(SPacket* packet);
