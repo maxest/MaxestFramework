@@ -29,6 +29,8 @@ namespace NMaxestFramework { namespace NEssentials
 		vector<string> entries;
 
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		// taken from http://blog.aaronballman.com/2011/04/generating-a-stack-crawl/
+
 		::SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_INCLUDE_32BIT_MODULES | SYMOPT_UNDNAME);
 
 		if (!::SymInitialize(::GetCurrentProcess(), "http://msdl.microsoft.com/download/symbols", TRUE))
@@ -39,19 +41,25 @@ namespace NMaxestFramework { namespace NEssentials
 
 		for (WORD i = 0; i < framesCount; i++)
 		{
-			SYMBOL_INFO *info = (SYMBOL_INFO*)malloc(sizeof(SYMBOL_INFO));
+			SYMBOL_INFO* info = (SYMBOL_INFO*)malloc(sizeof(SYMBOL_INFO) + 1024);
 			info->SizeOfStruct = sizeof(SYMBOL_INFO);
 			info->MaxNameLen = 1024;
-			IMAGEHLP_LINE64 *line = (IMAGEHLP_LINE64 *)malloc(sizeof(IMAGEHLP_LINE64));
+
+			IMAGEHLP_LINE64* line = (IMAGEHLP_LINE64*)malloc(sizeof(IMAGEHLP_LINE64));
 			line->SizeOfStruct = sizeof(IMAGEHLP_LINE64);
 
 			DWORD64 displacement1 = 0;
 			DWORD displacement2 = 0;
-			if (::SymFromAddr(::GetCurrentProcess(), (DWORD64)addrs[i], &displacement1, info) &&
-				::SymGetLineFromAddr64(::GetCurrentProcess(), (DWORD64)addrs[i], &displacement2, line))
+			if (::SymFromAddr(::GetCurrentProcess(), (DWORD64)addrs[i], &displacement1, info))
 			{
-				entries.push_back(string(line->FileName) + ":" + ToString(line->LineNumber) + " (called in " + string(info->Name) + ")");
+				if (::SymGetLineFromAddr64(::GetCurrentProcess(), (DWORD64)addrs[i], &displacement2, line))
+				{
+					entries.push_back(string(line->FileName) + ":" + ToString(line->LineNumber) + " (called in " + string(info->Name) + ")");
+				}
 			}
+
+			free(info);
+			free(line);
 		}
 
 		::SymCleanup(::GetCurrentProcess());
