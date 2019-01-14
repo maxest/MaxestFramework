@@ -1,5 +1,7 @@
 - ogl_texture_renderer - z samples/common gdzies do gpu
 - tools/neural_network do scripts raczej
+- assert
+	- nie jest thread-safe
 - job system: powinny byc dependencies ktore mozna zrobic tak ze jak dodajemy job'a z dependem to sprawdzamy
 	- jesli parent sie nie skonczyl to dodajemy do jego listy dependow i jak parent job sie skonczy dodajemy elementy z tej listy do listy jobow
 	- jesli parent sie juz skonczyl to mozna dodac po prostu do listy jobow
