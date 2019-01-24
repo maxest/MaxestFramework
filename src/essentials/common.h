@@ -4,6 +4,8 @@
 #include "types.h"
 #include "stl.h"
 
+#include <ctime>
+
 
 namespace NMaxestFramework { namespace NEssentials
 {
@@ -19,6 +21,9 @@ namespace NMaxestFramework { namespace NEssentials
 
 	template<typename TYPE, int COUNT> vector<TYPE> ArrayToVector(TYPE array[COUNT]);
 	template<typename TYPE, int COUNT> void VectorToArray(const vector<TYPE>& vec, TYPE array[COUNT]);
+
+	void CurrentTime(int* year, int* month, int* day, int* hour, int* minute, int* second);
+	string CurrentTime();
 
 	//
 
@@ -74,5 +79,61 @@ namespace NMaxestFramework { namespace NEssentials
 	{
 		for (int i = 0; i < COUNT; i++)
 			array[i] = vec[i];
+	}
+
+	inline void CurrentTime(int* year, int* month, int* day, int* hour, int* minute, int* second)
+	{
+		time_t rawTime = time(0);
+
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		tm time;
+		localtime_s(&time, &rawTime);
+
+		if (year)
+			*year = time.tm_year;
+		if (month)
+			*month = time.tm_mon;
+		if (day)
+			*day = time.tm_mday;
+		if (hour)
+			*hour = time.tm_hour;
+		if (minute)
+			*minute = time.tm_min;
+		if (second)
+			*second = time.tm_sec;
+	#else
+		tm* time = localtime(&rawTime);
+
+		if (year)
+			*year = time->tm_year;
+		if (month)
+			*month = time->tm_mon;
+		if (day)
+			*day = time->tm_mday;
+		if (hour)
+			*hour = time->tm_hour;
+		if (minute)
+			*minute = time->tm_min;
+		if (second)
+			*second = time->tm_sec;
+	#endif
+	}
+
+	inline string CurrentTime()
+	{
+		time_t rawTime = time(0);
+
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		tm time;
+		localtime_s(&time, &rawTime);
+
+		char timeStr[512];
+		asctime_s(timeStr, &time);
+
+		return string(timeStr);
+	#else
+		tm* time = localtime(&rawTime);
+		return string(asctime(time));
+	#endif
 	}
 } }

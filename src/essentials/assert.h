@@ -1,6 +1,8 @@
 #pragma once
 
 
+#include "string.h"
+
 #include <cstdio>
 #ifdef MAXEST_FRAMEWORK_WINDOWS
 	#include <Windows.h>
@@ -8,8 +10,6 @@
 #else
 	#include <signal.h>
 #endif
-
-#include "string.h"
 
 
 #ifdef MAXEST_FRAMEWORK_WINDOWS
