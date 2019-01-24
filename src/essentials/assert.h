@@ -2,6 +2,7 @@
 
 
 #include "string.h"
+#include "common.h"
 
 #include <cstdio>
 #ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -24,8 +25,9 @@
 
 namespace NMaxestFramework { namespace NEssentials
 {
-	inline std::vector<std::string> Callstack()
+	inline std::vector<std::string> Callstack(bool& callstackValid)
 	{
+		callstackValid = true;
 		vector<string> entries;
 
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -34,7 +36,10 @@ namespace NMaxestFramework { namespace NEssentials
 		::SymSetOptions(SYMOPT_DEFERRED_LOADS | SYMOPT_INCLUDE_32BIT_MODULES | SYMOPT_UNDNAME);
 
 		if (!::SymInitialize(::GetCurrentProcess(), "http://msdl.microsoft.com/download/symbols", TRUE))
-			__debugbreak();
+		{
+			callstackValid = false;
+			return entries;
+		}
 
 		void* addrs[25] = { 0 };
 		WORD framesCount = CaptureStackBackTrace(0, 25, addrs, NULL);
@@ -63,6 +68,8 @@ namespace NMaxestFramework { namespace NEssentials
 		}
 
 		::SymCleanup(::GetCurrentProcess());
+	#else
+		callstackValid = false;
 	#endif
 
 		return entries;
@@ -78,10 +85,16 @@ namespace NMaxestFramework { namespace NEssentials
 		#else
 			file = fopen("assert.txt", "w");
 		#endif
-			fprintf(file, "%s:%d\n", fileName, line);
-			vector<string> callstackEntries = Callstack();
-			for (uint i = 0; i < callstackEntries.size(); i++)
-				fprintf(file, "%s\n", callstackEntries[i].c_str());
+			fprintf(file, "%s\n", CurrentTime().c_str());
+			fprintf(file, "%s:%d\n\n", fileName, line);
+			{
+				bool callstackValid;
+				vector<string> callstackEntries = Callstack(callstackValid);
+
+				fprintf(file, "callstack valid: %d\n", (int)callstackValid);
+				for (uint i = 0; i < callstackEntries.size(); i++)
+					fprintf(file, "%s\n", callstackEntries[i].c_str());
+			}
 			fclose(file);
 
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -102,12 +115,18 @@ namespace NMaxestFramework { namespace NEssentials
 		#else
 			file = fopen("assert.txt", "w");
 		#endif
+			fprintf(file, "%s\n", CurrentTime().c_str());
 			fprintf(file, "%s:%d\n", fileName, line);
 			fprintf(file, "value1: %d\n", value1, line);
-			fprintf(file, "value2: %d\n", value2, line);
-			vector<string> callstackEntries = Callstack();
-			for (uint i = 0; i < callstackEntries.size(); i++)
-				fprintf(file, "%s\n", callstackEntries[i].c_str());
+			fprintf(file, "value2: %d\n\n", value2, line);
+			{
+				bool callstackValid;
+				vector<string> callstackEntries = Callstack(callstackValid);
+
+				fprintf(file, "callstack valid: %d\n", (int)callstackValid);
+				for (uint i = 0; i < callstackEntries.size(); i++)
+					fprintf(file, "%s\n", callstackEntries[i].c_str());
+			}
 			fclose(file);
 
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
@@ -128,12 +147,18 @@ namespace NMaxestFramework { namespace NEssentials
 		#else
 			file = fopen("assert.txt", "w");
 		#endif
+			fprintf(file, "%s\n", CurrentTime().c_str());
 			fprintf(file, "%s:%d\n", fileName, line);
 			fprintf(file, "value1: %d\n", value1, line);
-			fprintf(file, "value2: %d\n", value2, line);
-			vector<string> callstackEntries = Callstack();
-			for (uint i = 0; i < callstackEntries.size(); i++)
-				fprintf(file, "%s\n", callstackEntries[i].c_str());
+			fprintf(file, "value2: %d\n\n", value2, line);
+			{
+				bool callstackValid;
+				vector<string> callstackEntries = Callstack(callstackValid);
+
+				fprintf(file, "callstack valid: %d\n", (int)callstackValid);
+				for (uint i = 0; i < callstackEntries.size(); i++)
+					fprintf(file, "%s\n", callstackEntries[i].c_str());
+			}
 			fclose(file);
 
 		#ifdef MAXEST_FRAMEWORK_WINDOWS
