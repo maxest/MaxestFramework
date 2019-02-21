@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "image.h"
 #include "filtering.h"
 #include "conversion.h"
@@ -147,3 +150,6 @@ vector<NImage::SImage> NImage::Simulate_BicubicHermiteDownscaleAndUpscale(const 
 
 	return images;
 }
+
+
+#endif

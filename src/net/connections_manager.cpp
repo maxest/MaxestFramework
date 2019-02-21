@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "connections_manager.h"
 
 
@@ -115,3 +118,6 @@ bool NNet::CConnectionsManager::PopRecvPacket(SPacket* packet)
 
 	return true;
 }
+
+
+#endif

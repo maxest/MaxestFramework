@@ -342,9 +342,11 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 	STensor Conv2D(const SConv2DLayer& layer, STensor& inChannels);
 	void BatchNorm2D(const SBatchNorm2DLayer& layer, STensor& tensor);
 
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	void ImageToTensors(const NImage::SImage& image, STensor& red, STensor& green, STensor& blue);
 	NImage::SImage TensorsToImage(int width, int height, STensor& red, STensor& green, STensor& blue);
 	void ProcessImage(const string& residualModelPath, const string& inputImagePath, const string& outputImagePath);
+#endif
 
 	void UnitTest(const string& path);
 } } }

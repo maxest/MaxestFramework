@@ -50,6 +50,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 {
 	this->fullScreen = fullScreen;
 
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
 	int screenWidth = displayMode.w;
@@ -64,9 +65,9 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 	Uint32 windowCreationFlags = 0;
 	if (fullScreen)
 		windowCreationFlags |= SDL_WINDOW_FULLSCREEN;
-#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-	windowCreationFlags |= SDL_WINDOW_OPENGL;
-#endif
+	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+		windowCreationFlags |= SDL_WINDOW_OPENGL;
+	#endif
 
 	int x = screenWidth/2 - width/2;
 	int y = screenHeight/2 - height/2;
@@ -81,23 +82,24 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 		windowCreationFlags
 	);
 
-#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-	SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true);
-	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, true);
+	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true);
+		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+		SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+		SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, true);
 
-	glContext = SDL_GL_CreateContext(window);
+		glContext = SDL_GL_CreateContext(window);
 
-	SDL_GL_SetSwapInterval(0);
+		SDL_GL_SetSwapInterval(0);
 
-	glewExperimental = GL_TRUE;
-	if (glewInit() != GLEW_OK)
-		return false;
+		glewExperimental = GL_TRUE;
+		if (glewInit() != GLEW_OK)
+			return false;
+	#endif
 #endif
 
 	return true;
@@ -106,11 +108,13 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 
 void NSystem::CApplication::Destroy()
 {
-#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-	SDL_GL_DeleteContext(glContext);
-#endif
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+		SDL_GL_DeleteContext(glContext);
+	#endif
 
 	SDL_DestroyWindow(window);
+#endif
 }
 
 
@@ -119,8 +123,10 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 	int prevMouseX;
 	int prevMouseY;
 
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
+#endif
 
 	while (true)
 	{
@@ -132,6 +138,7 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 			keysUp[i] = false;
 		}
 
+	#ifdef MAXEST_FRAMEWORK_DESKTOP
 		SDL_Event event;
 		while (SDL_PollEvent(&event))
 		{
@@ -245,6 +252,7 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 				SDL_WarpMouseGlobal(mouseDesktopX, mouseDesktopY);
 			}
 		}
+	#endif
 
 		if (runFunction)
 		{
@@ -252,8 +260,10 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 				return;
 		}
 
-	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
-		SDL_GL_SwapWindow(window);
+	#ifdef MAXEST_FRAMEWORK_DESKTOP
+		#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+			SDL_GL_SwapWindow(window);
+		#endif
 	#endif
 
 		runStopTime = TickCount();
@@ -264,7 +274,9 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 
 void NSystem::CApplication::SetWindowTitle(const char* text)
 {
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_SetWindowTitle(window, text);
+#endif
 }
 
 
@@ -349,7 +361,9 @@ int NSystem::CApplication::MouseRelY()
 void NSystem::CApplication::ShowCursor(bool show)
 {
 	cursorVisible = show;
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_ShowCursor(show);
+#endif
 }
 
 

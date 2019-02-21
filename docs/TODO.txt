@@ -1,3 +1,4 @@
+- threaddestroy nigdzie najlepiej nie uzywac
 - ogl_texture_renderer - z samples/common gdzies do gpu
 - tools/neural_network do scripts raczej
 - assert

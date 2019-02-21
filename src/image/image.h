@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "types.h"
@@ -66,3 +67,6 @@ namespace NMaxestFramework { namespace NImage
 		image = function; \
 		delete[] temp.data; \
 	}
+
+
+#endif

@@ -2,6 +2,7 @@
 
 
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "../essentials/main.h"
@@ -437,3 +438,6 @@ namespace NMaxestFramework { namespace NSystem
 		MF_ASSERT(s != -1);
 	}
 } }
+
+
+#endif

@@ -183,7 +183,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>
@@ -201,7 +201,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>
@@ -221,7 +221,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>
@@ -243,7 +243,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>

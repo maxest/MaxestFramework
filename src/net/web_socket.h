@@ -6,6 +6,7 @@
 
 
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "../essentials/types.h"
@@ -177,3 +178,6 @@ namespace NMaxestFramework { namespace NNet { namespace NWebSocket
 		return outData;
 	}
 } } }
+
+
+#endif

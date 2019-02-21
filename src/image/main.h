@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "types.h"
@@ -13,3 +14,6 @@ namespace NMaxestFramework { namespace NImage
 	void Initialize();
 	void Deinitialize();
 } }
+
+
+#endif

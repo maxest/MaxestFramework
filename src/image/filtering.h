@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "types.h"
@@ -17,3 +18,6 @@ namespace NMaxestFramework { namespace NImage
 	NMath::SVector3 BicubicHermite(const SImage& image, const NMath::SVector2& uv);
 	vector<SImage> Simulate_BicubicHermiteDownscaleAndUpscale(const SImage& image, int scale);
 } }
+
+
+#endif

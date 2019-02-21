@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "main.h"
 #include "../essentials/main.h"
 #include "../system/common.h"
@@ -18,3 +21,6 @@ void NImage::Deinitialize()
 {
 	FreeImage_DeInitialise();
 }
+
+
+#endif

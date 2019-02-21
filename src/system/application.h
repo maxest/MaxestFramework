@@ -4,10 +4,13 @@
 #include "keys.h"
 #include "../essentials/types.h"
 
-#ifdef MAXEST_FRAMEWORK_WINDOWS
-	#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
-#else
-	#include "../../dependencies/SDL2-2.0/include/SDL.h"
+
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		#include "../../dependencies/SDL2-2.0.5/include/SDL.h"
+	#else
+		#include "../../dependencies/SDL2-2.0/include/SDL.h"
+	#endif
 #endif
 
 
@@ -71,8 +74,10 @@ namespace NMaxestFramework { namespace NSystem
 		uint64 runStartTime, runStopTime;
 		float lastFrameTime;
 
+	#ifdef MAXEST_FRAMEWORK_DESKTOP
 		SDL_Window* window;
 		SDL_GLContext glContext;
+	#endif
 
 		void (*keyDownFunction)(EKey key);
 		void (*mouseMotionFunction)(int x, int y);

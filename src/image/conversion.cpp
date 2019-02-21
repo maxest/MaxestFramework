@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "conversion.h"
 #include "image.h"
 #include "../essentials/assert.h"
@@ -238,3 +241,6 @@ NImage::SImage NImage::Convert(const SImage& image, EFormat conversionFormat)
 
 	return convertedImage;
 }
+
+
+#endif

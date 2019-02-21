@@ -117,8 +117,8 @@ namespace NMaxestFramework { namespace NEssentials
 		#endif
 			fprintf(file, "%s\n", CurrentTime().c_str());
 			fprintf(file, "%s:%d\n", fileName, line);
-			fprintf(file, "value1: %d\n", value1, line);
-			fprintf(file, "value2: %d\n\n", value2, line);
+			fprintf(file, "value1: %d\n", value1);
+			fprintf(file, "value2: %d\n\n", value2);
 			{
 				bool callstackValid;
 				vector<string> callstackEntries = Callstack(callstackValid);
@@ -149,8 +149,8 @@ namespace NMaxestFramework { namespace NEssentials
 		#endif
 			fprintf(file, "%s\n", CurrentTime().c_str());
 			fprintf(file, "%s:%d\n", fileName, line);
-			fprintf(file, "value1: %d\n", value1, line);
-			fprintf(file, "value2: %d\n\n", value2, line);
+			fprintf(file, "value1: %d\n", value1);
+			fprintf(file, "value2: %d\n\n", value2);
 			{
 				bool callstackValid;
 				vector<string> callstackEntries = Callstack(callstackValid);

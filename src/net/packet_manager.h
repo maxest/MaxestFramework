@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "../essentials/main.h"
@@ -288,3 +289,6 @@ inline void NMaxestFramework::NNet::CPacketManager::Update()
 		}
 	}
 }
+
+
+#endif

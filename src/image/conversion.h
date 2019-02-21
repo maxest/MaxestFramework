@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "types.h"
@@ -19,3 +20,6 @@ namespace NMaxestFramework { namespace NImage
 
 	SImage Convert(const SImage& image, EFormat conversionFormat);
 } }
+
+
+#endif

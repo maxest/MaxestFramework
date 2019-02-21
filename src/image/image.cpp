@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "image.h"
 #include "filtering.h"
 #include "conversion.h"
@@ -903,3 +906,6 @@ void NImage::PowIn(SImage& image, float value)
 		}
 	}
 }
+
+
+#endif

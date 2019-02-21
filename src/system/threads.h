@@ -90,6 +90,8 @@ namespace NMaxestFramework { namespace NSystem
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		TerminateThread(threadHandle, 0);
 		CloseHandle(threadHandle);
+	#elif MAXEST_FRAMEWORK_ANDROID
+		delete threadHandle;
 	#else
 		pthread_cancel(*threadHandle);
 		delete threadHandle;

@@ -241,83 +241,85 @@ void NNeuralNetwork::BatchNorm2D(const SBatchNorm2DLayer& layer, STensor& tensor
 }
 
 
-void NNeuralNetwork::ImageToTensors(const NImage::SImage& image, STensor& red, STensor& green, STensor& blue)
-{
-	MF_ASSERT(image.format == NImage::EFormat::RGB8);
-
-	red.Create(1, image.width * image.height);
-	green.Create(1, image.width * image.height);
-	blue.Create(1, image.width * image.height);
-
-	for (int i = 0; i < image.width * image.height; i++)
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	void NNeuralNetwork::ImageToTensors(const NImage::SImage& image, STensor& red, STensor& green, STensor& blue)
 	{
-		red(0, i) = (double)image.data[3 * i + 0] / 255.0;
-		green(0, i) = (double)image.data[3 * i + 1] / 255.0;
-		blue(0, i) = (double)image.data[3 * i + 2] / 255.0;
-	}
-}
+		MF_ASSERT(image.format == NImage::EFormat::RGB8);
 
+		red.Create(1, image.width * image.height);
+		green.Create(1, image.width * image.height);
+		blue.Create(1, image.width * image.height);
 
-NImage::SImage NNeuralNetwork::TensorsToImage(int width, int height, STensor& red, STensor& green, STensor& blue)
-{
-	NImage::SImage image = Create(width, height, NImage::EFormat::RGB8);
-
-	for (int i = 0; i < width * height; i++)
-	{
-		uint8 r = (uint8)(255.0 * NMath::Saturate(red(0, i)));
-		uint8 g = (uint8)(255.0 * NMath::Saturate(green(0, i)));
-		uint8 b = (uint8)(255.0 * NMath::Saturate(blue(0, i)));
-
-		image.data[3 * i + 0] = r;
-		image.data[3 * i + 1] = g;
-		image.data[3 * i + 2] = b;
+		for (int i = 0; i < image.width * image.height; i++)
+		{
+			red(0, i) = (double)image.data[3 * i + 0] / 255.0;
+			green(0, i) = (double)image.data[3 * i + 1] / 255.0;
+			blue(0, i) = (double)image.data[3 * i + 2] / 255.0;
+		}
 	}
 
-	return image;
-}
+
+	NImage::SImage NNeuralNetwork::TensorsToImage(int width, int height, STensor& red, STensor& green, STensor& blue)
+	{
+		NImage::SImage image = Create(width, height, NImage::EFormat::RGB8);
+
+		for (int i = 0; i < width * height; i++)
+		{
+			uint8 r = (uint8)(255.0 * NMath::Saturate(red(0, i)));
+			uint8 g = (uint8)(255.0 * NMath::Saturate(green(0, i)));
+			uint8 b = (uint8)(255.0 * NMath::Saturate(blue(0, i)));
+
+			image.data[3 * i + 0] = r;
+			image.data[3 * i + 1] = g;
+			image.data[3 * i + 2] = b;
+		}
+
+		return image;
+	}
 
 
-void NNeuralNetwork::ProcessImage(const string& residualModelPath, const string& inputImagePath, const string& outputImagePath)
-{
-	SModel model;
-	MF_ASSERT(model.Create(residualModelPath));
+	void NNeuralNetwork::ProcessImage(const string& residualModelPath, const string& inputImagePath, const string& outputImagePath)
+	{
+		SModel model;
+		MF_ASSERT(model.Create(residualModelPath));
 
-	NImage::SImage inputImage;
-	MF_ASSERT(NImage::Load(inputImagePath, inputImage, true, true, NImage::EFormat::RGB8));
-	STensor red;
-	STensor green;
-	STensor blue;
-	ImageToTensors(inputImage, red, green, blue);
-	red.Reshape(1, inputImage.height, inputImage.width);
-	green.Reshape(1, inputImage.height, inputImage.width);
-	blue.Reshape(1, inputImage.height, inputImage.width);
+		NImage::SImage inputImage;
+		MF_ASSERT(NImage::Load(inputImagePath, inputImage, true, true, NImage::EFormat::RGB8));
+		STensor red;
+		STensor green;
+		STensor blue;
+		ImageToTensors(inputImage, red, green, blue);
+		red.Reshape(1, inputImage.height, inputImage.width);
+		green.Reshape(1, inputImage.height, inputImage.width);
+		blue.Reshape(1, inputImage.height, inputImage.width);
 
-	uint64 bef = NSystem::TickCount();
-	STensor redDiff = model.Eval(red);
-	STensor greenDiff = model.Eval(green);
-	STensor blueDiff = model.Eval(blue);
-	uint64 aft = NSystem::TickCount();
-	cout << 0.000001 * (aft - bef) << endl;
+		uint64 bef = NSystem::TickCount();
+		STensor redDiff = model.Eval(red);
+		STensor greenDiff = model.Eval(green);
+		STensor blueDiff = model.Eval(blue);
+		uint64 aft = NSystem::TickCount();
+		cout << 0.000001 * (aft - bef) << endl;
 
-	red.Reshape(1, inputImage.width * inputImage.height);
-	green.Reshape(1, inputImage.width * inputImage.height);
-	blue.Reshape(1, inputImage.width * inputImage.height);
-	AddIn(red, redDiff);
-	AddIn(green, greenDiff);
-	AddIn(blue, blueDiff);
-	NImage::SImage outputImage = TensorsToImage(inputImage.width, inputImage.height, red, green, blue);
-	NImage::Save(outputImagePath, outputImage, true, true);
+		red.Reshape(1, inputImage.width * inputImage.height);
+		green.Reshape(1, inputImage.width * inputImage.height);
+		blue.Reshape(1, inputImage.width * inputImage.height);
+		AddIn(red, redDiff);
+		AddIn(green, greenDiff);
+		AddIn(blue, blueDiff);
+		NImage::SImage outputImage = TensorsToImage(inputImage.width, inputImage.height, red, green, blue);
+		NImage::Save(outputImagePath, outputImage, true, true);
 
-	model.Destroy();
-	NImage::Destroy(inputImage);
-	NImage::Destroy(outputImage);
-	red.Destroy();
-	green.Destroy();
-	blue.Destroy();
-	redDiff.Destroy();
-	greenDiff.Destroy();
-	blueDiff.Destroy();
-}
+		model.Destroy();
+		NImage::Destroy(inputImage);
+		NImage::Destroy(outputImage);
+		red.Destroy();
+		green.Destroy();
+		blue.Destroy();
+		redDiff.Destroy();
+		greenDiff.Destroy();
+		blueDiff.Destroy();
+	}
+#endif
 
 
 void NNeuralNetwork::UnitTest(const string& path)

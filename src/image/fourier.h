@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "types.h"
@@ -43,3 +44,6 @@ namespace NMaxestFramework { namespace NImage
 	SImage Blocks_Vertical(const SImage& image, int blockWidth, int blockHeight, TBlockFunction_Separable function);
 	SImage Blocks(const SImage& image, int blockWidth, int blockHeight, TBlockFunction_Separable horizontalFunction, TBlockFunction_Separable verticalFunction);
 } }
+
+
+#endif

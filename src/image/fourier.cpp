@@ -1,3 +1,6 @@
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+
+
 #include "fourier.h"
 #include "image.h"
 #include "../math/common.h"
@@ -516,3 +519,6 @@ NImage::SImage NImage::Blocks(const SImage& image, int blockWidth, int blockHeig
 	delete[] tempImage.data;
 	return resultImage;
 }
+
+
+#endif

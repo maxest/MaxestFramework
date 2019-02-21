@@ -1,4 +1,5 @@
 #pragma once
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 #include "../essentials/main.h"
@@ -49,3 +50,6 @@ namespace NMaxestFramework { namespace NNet
 		deque<SPacket> recvPackets;
 	};
 } }
+
+
+#endif
