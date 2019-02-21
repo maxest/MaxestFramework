@@ -5,7 +5,9 @@ using namespace NMaxestFramework;
 using namespace NEssentials;
 using namespace NSystem;
 using namespace NMath;
-using namespace NImage;
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	using namespace NImage;
+#endif
 using namespace NMesh;
 #ifdef MAXEST_FRAMEWORK_WINDOWS
 	using namespace NGPU;
