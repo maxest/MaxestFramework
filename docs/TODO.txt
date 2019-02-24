@@ -1,6 +1,5 @@
 - threaddestroy nigdzie najlepiej nie uzywac
 - ogl_texture_renderer - z samples/common gdzies do gpu
-- tools/neural_network do scripts raczej
 - assert
 	- nie jest thread-safe
 - job system: powinny byc dependencies ktore mozna zrobic tak ze jak dodajemy job'a z dependem to sprawdzamy
