@@ -388,7 +388,7 @@ namespace NMaxestFramework { namespace NMath
 
 	inline SVector2 Clamp(const SVector2& v, const SVector2& min, const SVector2& max)
 	{
-		return VectorCustom(Clamp(v.x, min.x, max.x), Clamp(v.y, min.y, max.y));
+		return VectorCustom(NEssentials::Clamp(v.x, min.x, max.x), NEssentials::Clamp(v.y, min.y, max.y));
 	}
 
 	inline SVector2 Average(const SVector2* points, int pointsCount)
@@ -740,7 +740,7 @@ namespace NMaxestFramework { namespace NMath
 
 	inline SVector3 Clamp(const SVector3& v, const SVector3& min, const SVector3& max)
 	{
-		return VectorCustom(Clamp(v.x, min.x, max.x), Clamp(v.y, min.y, max.y), Clamp(v.z, min.z, max.z));
+		return VectorCustom(NEssentials::Clamp(v.x, min.x, max.x), NEssentials::Clamp(v.y, min.y, max.y), NEssentials::Clamp(v.z, min.z, max.z));
 	}
 
 	inline SVector3 Average(const SVector3* points, int pointsCount)
@@ -959,7 +959,7 @@ namespace NMaxestFramework { namespace NMath
 
 	inline SVector4 Clamp(const SVector4& v, const SVector4& min, const SVector4& max)
 	{
-		return VectorCustom(Clamp(v.x, min.x, max.x), Clamp(v.y, min.y, max.y), Clamp(v.z, min.z, max.z), Clamp(v.w, min.w, max.w));
+		return VectorCustom(NEssentials::Clamp(v.x, min.x, max.x), NEssentials::Clamp(v.y, min.y, max.y), NEssentials::Clamp(v.z, min.z, max.z), NEssentials::Clamp(v.w, min.w, max.w));
 	}
 
 	inline SVector4 DivideByW(const SVector4& v)

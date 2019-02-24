@@ -19,6 +19,9 @@ namespace NMaxestFramework { namespace NEssentials
 	uint32 Encode_R32SInt_In_R32UInt(int32 value, uint8 bitsCount);
 	int32 Decode_R32SInt_From_R32UInt(uint32 value_encoded, uint8 bitsCount);
 
+	uint16 FloatToHalf(float flt);
+	float HalfToFloat(uint16 half);
+
 	//
 
 	inline uint8 Encode_R8SInt_In_R8UInt(int8 r)
@@ -86,5 +89,52 @@ namespace NMaxestFramework { namespace NEssentials
 			value = -value;
 
 		return value;
+	}
+
+	inline uint16 FloatToHalf(float flt)
+	{
+		// float: exp - 8 bits, mantissa - 23 bits
+		// half: exp - 5 bits, mantissa - 10 bits
+
+		uint32 flt_data;
+		memcpy(&flt_data, &flt, sizeof(flt));
+
+		uint32 sign = (flt_data >> 31) & 1;
+		uint32 exp = (flt_data >> 23) & 255;
+		uint32 mantissa = flt_data & 0x7FFFFF;
+
+		int newExp_signed = 16 + (exp - 127);
+		newExp_signed = Clamp(newExp_signed, 0, 31);
+		uint32 newExp = (uint32)newExp_signed;
+		uint32 newMantissa = mantissa >> 13;
+
+		uint16 half = (sign << 15);
+		half |= (newExp << 10);
+		half |= newMantissa;
+
+		return half;
+	}
+
+	inline float HalfToFloat(uint16 half)
+	{
+		// float: exp - 8 bits, mantissa - 23 bits
+		// half: exp - 5 bits, mantissa - 10 bits
+
+		uint32 sign = (half >> 15) & 1;
+		uint32 exp = (half >> 10) & 31;
+		uint32 mantissa = half & 1023;
+
+		int newExp_signed = (exp + 127) - 16;
+		newExp_signed = Clamp(newExp_signed, 0, 255);
+		uint32 newExp = (uint32)newExp_signed;
+		uint32 newMantissa = mantissa << 13;
+
+		uint32 flt_data = (sign << 31);
+		flt_data |= (newExp << 23);
+		flt_data |= newMantissa;
+
+		float flt;
+		memcpy(&flt, &flt_data, sizeof(flt));
+		return flt;
 	}
 } }

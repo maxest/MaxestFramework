@@ -11,7 +11,12 @@ namespace NMaxestFramework { namespace NEssentials
 {
 	template<typename TYPE> TYPE Max(TYPE x, TYPE y);
 	template<typename TYPE> TYPE Min(TYPE x, TYPE y);
+	template<typename TYPE> TYPE Clamp(TYPE x, TYPE min, TYPE max);
 	template<typename TYPE> TYPE Abs(TYPE x);
+
+	int Clamp256(int x);
+	float Saturate(float x);
+	double Saturate(double x);
 
 	uint32 Idx(uint32 x, uint32 y, uint32 width);
 	uint32 Idx(uint32 x, uint32 y, uint32 z, uint32 width, uint32 height);
@@ -37,12 +42,32 @@ namespace NMaxestFramework { namespace NEssentials
 		return x < y ? x : y;
 	}
 
+	template<typename TYPE> TYPE Clamp(TYPE x, TYPE min, TYPE max)
+	{
+		return Max(Min(x, max), min);
+	}
+
 	template<typename TYPE> TYPE Abs(TYPE x)
 	{
 		if (x < 0)
 			return -x;
 		else
 			return x;
+	}
+
+	inline int Clamp256(int x)
+	{
+		return Clamp(x, 0, 255);
+	}
+
+	inline float Saturate(float x)
+	{
+		return Clamp(x, 0.0f, 1.0f);
+	}
+
+	inline double Saturate(double x)
+	{
+		return Clamp(x, 0.0, 1.0);
 	}
 
 	inline uint32 Idx(uint32 x, uint32 y, uint32 width)

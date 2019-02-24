@@ -23,11 +23,9 @@ namespace NMaxestFramework { namespace NMath
 	float ACos_Clamped(float x);
 	float ATan2(float y, float x);
 	int Wrap(int x, int min, int max);
-	int Clamp256(int x);
 	int Pad(int x, int valueToPadTo);
 	template<typename TYPE> TYPE Lerp(TYPE a, TYPE b, float t);
 	template<typename TYPE> TYPE Sqr(TYPE x);
-	template<typename TYPE> TYPE Clamp(TYPE x, TYPE min, TYPE max);
 	template<typename TYPE> bool IsPowerOfTwo(TYPE x);
 	template<typename TYPE> void Swap(TYPE& x, TYPE& y);
 	template<typename TYPE> TYPE FlipFlop(TYPE value, TYPE flip, TYPE flop);
@@ -36,8 +34,6 @@ namespace NMaxestFramework { namespace NMath
 	float Ceil(float x);
 	float Round(float x);
 	float Frac(float x);
-	float Saturate(float x);
-	double Saturate(double x);
 	float Log(float x);
 	float Log2(float x);
 	double Log2(double x);
@@ -122,11 +118,6 @@ namespace NMaxestFramework { namespace NMath
 		return x;
 	}
 
-	inline int Clamp256(int x)
-	{
-		return Clamp(x, 0, 255);
-	}
-
 	inline int Pad(int x, int valueToPadTo)
 	{
 		return valueToPadTo * ( (x + (valueToPadTo - 1)) / valueToPadTo );
@@ -140,11 +131,6 @@ namespace NMaxestFramework { namespace NMath
 	template<typename TYPE> TYPE Sqr(TYPE x)
 	{
 		return x * x;
-	}
-
-	template<typename TYPE> TYPE Clamp(TYPE x, TYPE min, TYPE max)
-	{
-		return NEssentials::Max(NEssentials::Min(x, max), min);
 	}
 
 	template<typename TYPE> bool IsPowerOfTwo(TYPE x)
@@ -198,16 +184,6 @@ namespace NMaxestFramework { namespace NMath
 	inline float Frac(float x)
 	{
 		return x - Floor(x);
-	}
-
-	inline float Saturate(float x)
-	{
-		return Clamp(x, 0.0f, 1.0f);
-	}
-
-	inline double Saturate(double x)
-	{
-		return Clamp(x, 0.0, 1.0);
 	}
 
 	inline float Log(float x)

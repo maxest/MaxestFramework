@@ -51,10 +51,10 @@ namespace NMaxestFramework { namespace NMath
 	inline uint32 Vector4ToUInt32(const SVector4& v)
 	{
 		return NEssentials::Encode_R8G8G8A8UInt_In_R32UInt(
-			(uint8)(255.0f * Saturate(v.x)),
-			(uint8)(255.0f * Saturate(v.y)),
-			(uint8)(255.0f * Saturate(v.z)),
-			(uint8)(255.0f * Saturate(v.w)));
+			(uint8)(255.0f * NEssentials::Saturate(v.x)),
+			(uint8)(255.0f * NEssentials::Saturate(v.y)),
+			(uint8)(255.0f * NEssentials::Saturate(v.z)),
+			(uint8)(255.0f * NEssentials::Saturate(v.w)));
 	}
 
 	inline SVector3 RGBToLumaChroma(SVector3 value)

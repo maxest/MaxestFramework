@@ -565,7 +565,7 @@ void NImage::Saturate(SImage& image)
 			int channelsCount = ChannelsCount(image.format);
 
 			for (int i = 0; i < channelsCount; i++)
-				data[idx*channelsCount + i] = NMath::Saturate(data[idx*channelsCount + i]);
+				data[idx*channelsCount + i] = NEssentials::Saturate(data[idx*channelsCount + i]);
 		}
 	}
 }

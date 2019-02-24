@@ -3,7 +3,8 @@
 
 
 using namespace NMaxestFramework;
-using namespace NMaxestFramework::NCommon;
+using namespace NEssentials;
+using namespace NCommon;
 
 
 bool NNeuralNetwork::SModel::Create(const string& path)
@@ -265,9 +266,9 @@ void NNeuralNetwork::BatchNorm2D(const SBatchNorm2DLayer& layer, STensor& tensor
 
 		for (int i = 0; i < width * height; i++)
 		{
-			uint8 r = (uint8)(255.0 * NMath::Saturate(red(0, i)));
-			uint8 g = (uint8)(255.0 * NMath::Saturate(green(0, i)));
-			uint8 b = (uint8)(255.0 * NMath::Saturate(blue(0, i)));
+			uint8 r = (uint8)(255.0 * Saturate(red(0, i)));
+			uint8 g = (uint8)(255.0 * Saturate(green(0, i)));
+			uint8 b = (uint8)(255.0 * Saturate(blue(0, i)));
 
 			image.data[3 * i + 0] = r;
 			image.data[3 * i + 1] = g;
