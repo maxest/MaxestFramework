@@ -3,7 +3,7 @@
 #include "../essentials/common.h"
 #include "../essentials/macros.h"
 
-#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+#ifdef MAXEST_FRAMEWORK_OPENGL
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		#include "../../dependencies/glew-2.0.0/include/GL/glew.h"
 	#else
@@ -65,7 +65,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 	Uint32 windowCreationFlags = 0;
 	if (fullScreen)
 		windowCreationFlags |= SDL_WINDOW_FULLSCREEN;
-	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+	#ifdef MAXEST_FRAMEWORK_OPENGL
 		windowCreationFlags |= SDL_WINDOW_OPENGL;
 	#endif
 
@@ -82,7 +82,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 		windowCreationFlags
 	);
 
-	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+	#ifdef MAXEST_FRAMEWORK_OPENGL
 		SDL_GL_SetAttribute(SDL_GL_ACCELERATED_VISUAL, true);
 		SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 		SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -109,7 +109,7 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 void NSystem::CApplication::Destroy()
 {
 #ifdef MAXEST_FRAMEWORK_DESKTOP
-	#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+	#ifdef MAXEST_FRAMEWORK_OPENGL
 		SDL_GL_DeleteContext(glContext);
 	#endif
 
@@ -261,7 +261,7 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 		}
 
 	#ifdef MAXEST_FRAMEWORK_DESKTOP
-		#ifdef MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL
+		#ifdef MAXEST_FRAMEWORK_OPENGL
 			SDL_GL_SwapWindow(window);
 		#endif
 	#endif

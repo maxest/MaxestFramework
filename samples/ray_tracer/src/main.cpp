@@ -3,9 +3,6 @@
 
 #include "ray_tracer.h"
 #include "camera.h"
-#ifdef USE_APPLICATION
-	#include "../../common/src/ogl_texture_renderer.h"
-#endif
 
 #include "../../../src/main.h"
 #include "../../../src/namespaces.h"
@@ -251,6 +248,7 @@ int main()
 
 	jobSystem.Destroy();
 #ifdef USE_APPLICATION
+	oglTextureRenderer.Destroy();
 	application.Destroy();
 #endif
 

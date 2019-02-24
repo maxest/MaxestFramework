@@ -55,7 +55,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_OPENGL;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
@@ -73,7 +73,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_OPENGL;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

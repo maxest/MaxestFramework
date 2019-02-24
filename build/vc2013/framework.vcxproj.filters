@@ -227,6 +227,9 @@
     <ClInclude Include="..\..\src\physics\rigid_body.h">
       <Filter>physics</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\gpu\ogl.h">
+      <Filter>gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\common\jobs.cpp">

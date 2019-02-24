@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\src\essentials\types.h" />
     <ClInclude Include="..\..\src\gpu\d3d11.h" />
     <ClInclude Include="..\..\src\gpu\main.h" />
+    <ClInclude Include="..\..\src\gpu\ogl.h" />
     <ClInclude Include="..\..\src\gpu\profiler.h" />
     <ClInclude Include="..\..\src\gpu\types.h" />
     <ClInclude Include="..\..\src\gpu\utils.h" />
@@ -201,7 +202,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DEBUG;MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_OPENGL;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>
@@ -243,7 +244,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>MAXEST_FRAMEWORK_DESKTOP;MAXEST_FRAMEWORK_WINDOWS;MAXEST_FRAMEWORK_OPENGL;WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ObjectFileName>$(IntDir)\dummy\dummy\%(RelativeDir)\</ObjectFileName>
     </ClCompile>
