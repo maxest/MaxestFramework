@@ -19,6 +19,8 @@ namespace NMaxestFramework { namespace NEssentials
 	uint32 Encode_R32SInt_In_R32UInt(int32 value, uint8 bitsCount);
 	int32 Decode_R32SInt_From_R32UInt(uint32 value_encoded, uint8 bitsCount);
 
+	// float: exp - 8 bits, mantissa - 23 bits
+	// half: exp - 5 bits, mantissa - 10 bits
 	uint16 FloatToHalf(float flt);
 	float HalfToFloat(uint16 half);
 
@@ -93,9 +95,6 @@ namespace NMaxestFramework { namespace NEssentials
 
 	inline uint16 FloatToHalf(float flt)
 	{
-		// float: exp - 8 bits, mantissa - 23 bits
-		// half: exp - 5 bits, mantissa - 10 bits
-
 		uint32 flt_data;
 		memcpy(&flt_data, &flt, sizeof(flt));
 
@@ -117,9 +116,6 @@ namespace NMaxestFramework { namespace NEssentials
 
 	inline float HalfToFloat(uint16 half)
 	{
-		// float: exp - 8 bits, mantissa - 23 bits
-		// half: exp - 5 bits, mantissa - 10 bits
-
 		uint32 sign = (half >> 15) & 1;
 		uint32 exp = (half >> 10) & 31;
 		uint32 mantissa = half & 1023;

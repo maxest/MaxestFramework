@@ -70,7 +70,7 @@ SVector3 NImage::BicubicHermite(const SImage& image, const SVector2& uv)
 	#define CX(x) (Clamp(x, 0, image.width - 1))
 	#define CY(x) (Clamp(x, 0, image.height - 1))
 
-	struct Utils
+	struct SUtils
 	{
 		SVector3 CubicHermite(const SVector3& p1, const SVector3& p2, const SVector3& p3, const SVector3& p4, float t)
 		{

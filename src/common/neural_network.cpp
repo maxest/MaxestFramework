@@ -169,7 +169,7 @@ NNeuralNetwork::STensor NNeuralNetwork::Linear(const SLinearLayer& layer, STenso
 
 NNeuralNetwork::STensor NNeuralNetwork::Conv2D(const SConv2DLayer& layer, STensor& inChannels)
 {
-	struct Utils
+	struct SUtils
 	{
 		double Conv2D(const SConv2DLayer& layer, int outChannelIndex, int j, int i, STensor& inChannels)
 		{

@@ -9,7 +9,7 @@ using namespace NMath;
 
 map<uint32, SDynamicBitArray> NCommon::Huffman(const vector<uint32>& pdf)
 {
-	struct Node
+	struct SNode
 	{
 		bool isRoot;
 		int symbol;
@@ -18,9 +18,9 @@ map<uint32, SDynamicBitArray> NCommon::Huffman(const vector<uint32>& pdf)
 		int rightChildIndex;
 	};
 
-	struct Utils
+	struct SUtils
 	{
-		void Traverse_Recursive(const vector<Node>& nodes, int nodeIndex, map<uint32, SDynamicBitArray>& symbolToCodeMap, SDynamicBitArray& runningDBA)
+		void Traverse_Recursive(const vector<SNode>& nodes, int nodeIndex, map<uint32, SDynamicBitArray>& symbolToCodeMap, SDynamicBitArray& runningDBA)
 		{
 			if (nodes[nodeIndex].symbol != cIntMax)
 			{
@@ -41,11 +41,11 @@ map<uint32, SDynamicBitArray> NCommon::Huffman(const vector<uint32>& pdf)
 
 	MF_ASSERT(pdf.size() > 1);
 
-	vector<Node> nodes;
+	vector<SNode> nodes;
 
 	for (uint32 i = 0; i < pdf.size(); i++)
 	{
-		Node node;
+		SNode node;
 		node.isRoot = true;
 		node.symbol = i;
 		node.p = pdf[i];
@@ -94,7 +94,7 @@ map<uint32, SDynamicBitArray> NCommon::Huffman(const vector<uint32>& pdf)
 			nodes[lowestIndex1].isRoot = false;
 			nodes[lowestIndex2].isRoot = false;
 
-			Node node;
+			SNode node;
 			node.isRoot = true;
 			node.symbol = cIntMax;
 			node.p = nodes[lowestIndex1].p + nodes[lowestIndex2].p;

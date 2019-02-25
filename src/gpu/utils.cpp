@@ -1222,7 +1222,7 @@ void NGPU::NUtils::CFontRenderer::Destroy()
 
 void NGPU::NUtils::CFontRenderer::Print(const string& text, float posX, float posY, float charWidth, float charHeight, const NMath::SVector4& color)
 {
-	struct Utils
+	struct SUtils
 	{
 		SVector4 ASCIIToTexCoord(uint8 theChar)
 		{
