@@ -16,6 +16,7 @@
 namespace NMaxestFramework { namespace NMath
 {
 	SVector2 SolveLineCoeffs(const SVector2& p1, const SVector2& p2);
+	float SolveLineCoeffs(const SVector2& p1, const SVector2& p2, float x);
 	bool SolveQuadraticRoots(float a, float b, float c, float& t1, float &t2);
 
 	SVector2 SolveLeastSquaresLineDirection(const SVector2& linePoint, const SVector2* points, uint pointsCount, uint iterationsCount);
@@ -34,6 +35,12 @@ namespace NMaxestFramework { namespace NMath
 		float b = p1.y - a*p1.x;
 
 		return VectorCustom(a, b);
+	}
+
+	inline float SolveLineCoeffs(const SVector2& p1, const SVector2& p2, float x)
+	{
+		SVector2 coeffs = SolveLineCoeffs(p1, p2);
+		return x*coeffs.x + coeffs.y;
 	}
 
 	inline bool SolveQuadraticRoots(float a, float b, float c, float& x1, float &x2)
@@ -133,7 +140,7 @@ namespace NMaxestFramework { namespace NMath
 	// uses stochastic gradient descent
 	inline void SolveQuadraticFromPoints(float& a, float& b, float &c, float& error, const SVector2* points, uint pointsCount, uint batchesCount, uint batchSize, uint iterationsCount, float learnRate)
 	{
-		struct Utils
+		struct SUtils
 		{
 			float Cost(float x, float y, float a, float b, float c)
 			{

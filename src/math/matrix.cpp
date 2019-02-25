@@ -101,6 +101,24 @@ NMath::SMatrix NMath::Mul(const SMatrix& m1, const SMatrix& m2)
 }
 
 
+void NMath::AddIn(SMatrix& m1, const SMatrix& m2)
+{
+	m1 = Add(m1, m2);
+}
+
+
+void NMath::SubIn(SMatrix& m1, const SMatrix& m2)
+{
+	m1 = Sub(m1, m2);
+}
+
+
+void NMath::MulIn(SMatrix& m1, const SMatrix& m2)
+{
+	m1 = Mul(m1, m2);
+}
+
+
 NMath::SMatrix NMath::Transpose(const SMatrix& m)
 {
 	SMatrix temp = m;
@@ -122,12 +140,6 @@ NMath::SMatrix NMath::Orthogonalize3x3(const SMatrix& m)
 	SMatrix temp = m;
 	Orthogonalize3x3In(temp);
 	return temp;
-}
-
-
-void NMath::MulIn(SMatrix& m1, const SMatrix& m2)
-{
-	m1 = Mul(m1, m2);
 }
 
 
@@ -299,6 +311,27 @@ NMath::SMatrix NMath::operator - (const SMatrix& m1, const SMatrix& m2)
 NMath::SMatrix NMath::operator * (const SMatrix& m1, const SMatrix& m2)
 {
 	return Mul(m1, m2);
+}
+
+
+NMath::SMatrix& NMath::operator += (SMatrix & m1, const SMatrix & m2)
+{
+	AddIn(m1, m2);
+	return m1;
+}
+
+
+NMath::SMatrix& NMath::operator -= (SMatrix & m1, const SMatrix & m2)
+{
+	SubIn(m1, m2);
+	return m1;
+}
+
+
+NMath::SMatrix& NMath::operator *= (SMatrix & m1, const SMatrix & m2)
+{
+	MulIn(m1, m2);
+	return m1;
 }
 
 
