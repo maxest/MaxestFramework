@@ -7,16 +7,14 @@
 
 namespace NMaxestFramework { namespace NMath
 {
-	SMatrix MatrixPerspectiveFovRH_Zoom(float fovY, float aspectRatio, float zNear, float zFar, float zoom, const SVector2 startPos_ndc, const SVector2& targetPos_ndc, float targetFOV);
+	SMatrix MatrixPerspectiveFovRH_Zoom(EZRange zRange, float fovY, float aspectRatio, float zNear, float zFar, float zoom, const SVector2 startPos_ndc, const SVector2& targetPos_ndc, float targetFOV);
 
 	//
 
-	inline SMatrix MatrixPerspectiveFovRH_Zoom(float fovY, float aspectRatio, float zNear, float zFar, float zoom, const SVector2 startPos_ndc, const SVector2& targetPos_ndc, float targetFOV)
+	inline SMatrix MatrixPerspectiveFovRH_Zoom(EZRange zRange, float fovY, float aspectRatio, float zNear, float zFar, float zoom, const SVector2 startPos_ndc, const SVector2& targetPos_ndc, float targetFOV)
 	{
 		struct SUtils
 		{
-			// the functions below are likely for Z in [-1, 1] range but I'm not sure
-
 			SMatrix MatrixPerspectiveRH_Z(float zNear, float zFar)
 			{
 				return MatrixCustom(
@@ -26,18 +24,26 @@ namespace NMaxestFramework { namespace NMath
 					0.0f, 0.0f, zNear * zFar, 0.0f);
 			}
 
-			SMatrix MatrixPerspectiveRH_XY(float left, float right, float bottom, float top, float zNear, float zFar)
+			SMatrix MatrixPerspectiveRH_XY(EZRange zRange, float left, float right, float bottom, float top, float zNear, float zFar)
 			{
-				return MatrixCustom(
+				// taken from http://maxest.gct-game.net/content/vainmoinen/bachelor_thesis.pdf
+				if (zRange == EZRange::MinusOneToPlusOne)
+					return NMath::MatrixCustom(
 					2.0f / (right - left), 0.0f, 0.0f, 0.0f,
 					0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,
 					0.0f, 0.0f, -2.0f / (zFar - zNear), 0.0f,
 					-(right + left) / (right - left), -(top + bottom) / (top - bottom), -(zNear + zFar) / (zFar - zNear), 1.0f);
+				else
+					return MatrixCustom(
+						2.0f / (right - left), 0.0f, 0.0f, 0.0f,
+						0.0f, 2.0f / (top - bottom), 0.0f, 0.0f,
+						0.0f, 0.0f, -1.0f / (zFar - zNear), 0.0f,
+						-(right + left) / (right - left), -(top + bottom) / (top - bottom), -zNear / (zFar - zNear), 1.0f);
 			}
 
-			SMatrix MatrixPerspectiveRH_XY(SVector2 nearPlaneSize, float zNear, float zFar)
+			SMatrix MatrixPerspectiveRH_XY(EZRange zRange, SVector2 nearPlaneSize, float zNear, float zFar)
 			{
-				return MatrixPerspectiveRH_XY(-0.5f*nearPlaneSize.x, 0.5f*nearPlaneSize.x, -0.5f*nearPlaneSize.y, 0.5f*nearPlaneSize.y, zNear, zFar);
+				return MatrixPerspectiveRH_XY(zRange, -0.5f*nearPlaneSize.x, 0.5f*nearPlaneSize.x, -0.5f*nearPlaneSize.y, 0.5f*nearPlaneSize.y, zNear, zFar);
 			}
 
 			SVector2 NearPlaneSize(float fovY, float aspectRatio, float zNear)
@@ -48,7 +54,7 @@ namespace NMaxestFramework { namespace NMath
 			}
 		} utils;
 		
-		SVector2 nearPlaneSize_startFOV = utils.NearPlaneSize(fovY, aspectRatio, 1.0f);
+		SVector2 nearPlaneSize_startFOV = utils.NearPlaneSize(fovY, aspectRatio, zNear);
 	
 		float fovDivider = SolveLineCoeffs(
 			VectorCustom(0.0f, 1.0f),
@@ -57,9 +63,11 @@ namespace NMaxestFramework { namespace NMath
 
 		SVector2 posLerp_ndc = Lerp(targetPos_ndc, startPos_ndc, zoom);
 
-		SMatrix temp = utils.MatrixPerspectiveRH_Z(1.0f, 1000.0f);
+		SMatrix temp = utils.MatrixPerspectiveRH_Z(zNear, zFar);
+		temp *= MatrixScale(1.0f / (0.5f * nearPlaneSize_startFOV.x), 1.0f / (0.5f * nearPlaneSize_startFOV.y), 1.0f); // normalize near plane size to [0, 1]
 		temp *= MatrixTranslate(-targetPos_ndc.x, -targetPos_ndc.y, 0.0f);
-		temp *= utils.MatrixPerspectiveRH_XY(nearPlaneSize_startFOV / fovDivider, 1.0f, 1000.0f);
+		temp *= utils.MatrixPerspectiveRH_XY(zRange, nearPlaneSize_startFOV / fovDivider, zNear, zFar);
+		temp *= MatrixScale(0.5f * nearPlaneSize_startFOV.x, 0.5f * nearPlaneSize_startFOV.y, 1.0f); // de-normalize from [0, 1]
 		temp *= MatrixTranslate(posLerp_ndc.x, posLerp_ndc.y, 0.0f);
 
 		return temp;
