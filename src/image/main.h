@@ -2,6 +2,12 @@
 #ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
+namespace NMaxestFramework
+{
+	namespace NImage {}
+}
+
+
 #include "types.h"
 #include "image.h"
 #include "filtering.h"

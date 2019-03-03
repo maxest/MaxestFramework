@@ -1,6 +1,12 @@
 #pragma once
 
 
+namespace NMaxestFramework
+{
+	namespace NMath {}
+}
+
+
 #include "types.h"
 #include "constants.h"
 #include "common.h"

@@ -32,7 +32,8 @@
 			<Add option="-Wall" />
 			<Add option="-std=c++11" />
 			<Add option="-fexceptions" />
-			<Add option="-DMAXEST_FRAMEWORK_SYSTEM_APPLICATION_OPENGL" />
+			<Add option="-DMAXEST_FRAMEWORK_DESKTOP" />
+			<Add option="-DMAXEST_FRAMEWORK_OPENGL" />
 		</Compiler>
 		<Linker>
 			<Add library="libSDL2" />
@@ -68,6 +69,7 @@
 		<Unit filename="../../../../src/gpu/d3d11.cpp" />
 		<Unit filename="../../../../src/gpu/d3d11.h" />
 		<Unit filename="../../../../src/gpu/main.h" />
+		<Unit filename="../../../../src/gpu/ogl.h" />
 		<Unit filename="../../../../src/gpu/profiler.cpp" />
 		<Unit filename="../../../../src/gpu/profiler.h" />
 		<Unit filename="../../../../src/gpu/types.h" />

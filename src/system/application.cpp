@@ -120,10 +120,10 @@ void NSystem::CApplication::Destroy()
 
 void NSystem::CApplication::Run(bool(*runFunction)())
 {
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	int prevMouseX;
 	int prevMouseY;
 
-#ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
 #endif

@@ -4,6 +4,8 @@
 #include "bit.h"
 #include "assert.h"
 
+#include <cstring>
+
 
 namespace NMaxestFramework { namespace NEssentials
 {
@@ -74,7 +76,7 @@ namespace NMaxestFramework { namespace NEssentials
 		uint32 value_abs = Abs(value);
 
 		MF_ASSERT(value_abs <= mask);
-	
+
 		uint32 value_encoded = value_abs & mask;
 		if (value > 0)
 			NBit::Set((uint8*)&value_encoded, bitsCount - 1, true);

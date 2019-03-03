@@ -1,6 +1,12 @@
 #pragma once
 
 
+namespace NMaxestFramework
+{
+	namespace NSystem {}
+}
+
+
 #include "threads.h"
 #include "file.h"
 #include "application.h"

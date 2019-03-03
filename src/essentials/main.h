@@ -1,6 +1,12 @@
 #pragma once
 
 
+namespace NMaxestFramework
+{
+	namespace NEssentials {}
+}
+
+
 #include "stl.h"
 #include "types.h"
 #include "common.h"

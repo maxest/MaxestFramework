@@ -13,7 +13,7 @@ using namespace NRayTracer;
 
 #ifdef USE_APPLICATION
 	CApplication application;
-	COGLTextureRenderer oglTextureRenderer;
+	NMaxestFramework::NGPU::COGLTextureRenderer oglTextureRenderer;
 #endif
 CJobSystem jobSystem;
 
