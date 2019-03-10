@@ -42,12 +42,7 @@ void Create()
 	//
 
 	scene.ambientConst = 0.2f;
-	scene.samples_hemisphere1.resize(width * height);
-	for (int i = 0; i < width * height; i++)
-	{
-		vector<SVector2> samples = MultiJitteredRectSamples2D(4);
-		scene.samples_hemisphere1[i] = MapRectSamplesToHemisphere(samples, 1.0f);
-	}
+	scene.Create(width, height);
 
 	// floor
 	{

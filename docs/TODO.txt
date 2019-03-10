@@ -22,7 +22,6 @@
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
 	- dokonczyc pokoj (zrobic z modeli 3D)
-	- generowanie probek do samples.h i moze nie na stl::vector; wczytywanie wygenerowanych probek z pliku
 	- ambient
 	- lepszy glossy specular
 	- GI

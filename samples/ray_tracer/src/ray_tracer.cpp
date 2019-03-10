@@ -125,6 +125,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 	{
 		const SMaterial& material = scene.materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
+		SMatrix tangentToWorld = Transpose(worldToTangent); //!! Invert doesn't work. Why?
 		SVector3& point = sir.point;
 		SVector3 wo = -Normalize(rayDir);
 		SVector3 wo_tangent = wo * worldToTangent;
