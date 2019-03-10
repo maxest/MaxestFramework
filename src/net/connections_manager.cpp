@@ -53,9 +53,9 @@ THREAD_FUNCTION_RETURN_VALUE NMaxestFramework::NNet::CConnectionsManager::RecvTh
 			memcpy(packet.data, data, dataSize);
 			packet.dataSize = dataSize;
 
-			NSystem::MutexLock(connectionsManager->recvMutex);
+			NEssentials::MutexLock(connectionsManager->recvMutex);
 			connectionsManager->recvPackets.push_back(packet);
-			NSystem::MutexUnlock(connectionsManager->recvMutex);
+			NEssentials::MutexUnlock(connectionsManager->recvMutex);
 		}
 	}
 
@@ -66,18 +66,18 @@ THREAD_FUNCTION_RETURN_VALUE NMaxestFramework::NNet::CConnectionsManager::RecvTh
 void NNet::CConnectionsManager::Create(uint16 port)
 {
 	mySocket.Open(port);
-	recvThreadHandle = NSystem::ThreadCreate(RecvThread, this);
+	recvThreadHandle = NEssentials::ThreadCreate(RecvThread, this);
 
-	recvMutex = NSystem::MutexCreate();
+	recvMutex = NEssentials::MutexCreate();
 }
 
 
 void NNet::CConnectionsManager::Destroy()
 {
 	mySocket.Close();
-	NSystem::ThreadDestroy(recvThreadHandle);
+	NEssentials::ThreadDestroy(recvThreadHandle);
 
-	NSystem::MutexDestroy(recvMutex);
+	NEssentials::MutexDestroy(recvMutex);
 	for (uint i = 0; i < connectionIds.size(); i++)
 		delete connectionIds[i];
 	connectionIds.clear();
@@ -111,10 +111,10 @@ bool NNet::CConnectionsManager::PopRecvPacket(SPacket* packet)
 	if (recvPackets.size() == 0)
 		return false;
 
-	NSystem::MutexLock(recvMutex);
+	NEssentials::MutexLock(recvMutex);
 	*packet = recvPackets.front();
 	recvPackets.pop_front();
-	NSystem::MutexUnlock(recvMutex);
+	NEssentials::MutexUnlock(recvMutex);
 
 	return true;
 }

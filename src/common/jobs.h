@@ -2,7 +2,7 @@
 
 
 #include "../essentials/main.h"
-#include "../system/threads.h"
+#include "../essentials/threads.h"
 
 
 #undef AddJob // because it may happen that shitty Windows will include some file that defines AddJob to something else...
@@ -39,13 +39,13 @@ namespace NMaxestFramework { namespace NCommon
 	public:
 		CJobGroup()
 		{
-			waitingSemaphore = NSystem::SemaphoreCreate(0, 1);
+			waitingSemaphore = NEssentials::SemaphoreCreate(0, 1);
 			jobsCount = 0;
 			jobsDoneCount = 0;
 		}
 		~CJobGroup()
 		{
-			NSystem::SemaphoreDestroy(waitingSemaphore);
+			NEssentials::SemaphoreDestroy(waitingSemaphore);
 		}
 
 		void AddJob(CJob* job);
@@ -55,7 +55,7 @@ namespace NMaxestFramework { namespace NCommon
 		void OnJobDone();
 
 	public: // readonly
-		NSystem::TSemaphoreHandle waitingSemaphore;
+		NEssentials::TSemaphoreHandle waitingSemaphore;
 		int32 jobsCount;
 		int32 jobsDoneCount;
 		vector<CJob*> jobs;
@@ -67,7 +67,7 @@ namespace NMaxestFramework { namespace NCommon
 		struct SThread
 		{
 			CJobSystem* jobSystem;
-			NSystem::TThreadHandle handle;
+			NEssentials::TThreadHandle handle;
 			bool requestStop;
 
 			SThread()
@@ -87,8 +87,8 @@ namespace NMaxestFramework { namespace NCommon
 		void AddJobGroup(const CJobGroup& jobGroup);
 
 	public: // readonly
-		NSystem::TSemaphoreHandle activeJobsSemaphore;
-		NSystem::TMutexHandle jobsQueueMutex;
+		NEssentials::TSemaphoreHandle activeJobsSemaphore;
+		NEssentials::TMutexHandle jobsQueueMutex;
 		vector<SThread*> threads;
 		queue<CJob*> jobs;
 	};

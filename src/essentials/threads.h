@@ -12,7 +12,7 @@
 #endif
 
 
-namespace NMaxestFramework { namespace NSystem
+namespace NMaxestFramework { namespace NEssentials
 {
 #ifdef MAXEST_FRAMEWORK_WINDOWS
 	typedef HANDLE TThreadHandle;

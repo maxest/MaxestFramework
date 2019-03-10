@@ -43,9 +43,9 @@ namespace NMaxestFramework { namespace NNet
 
 	private:
 		NSystem::CUDPSocket2 mySocket;
-		NSystem::TThreadHandle recvThreadHandle;
+		NEssentials::TThreadHandle recvThreadHandle;
 
-		NSystem::TMutexHandle recvMutex;
+		NEssentials::TMutexHandle recvMutex;
 		vector<TConnectionId> connectionIds;
 		deque<SPacket> recvPackets;
 	};

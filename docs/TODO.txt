@@ -1,5 +1,4 @@
 - threaddestroy nigdzie najlepiej nie uzywac
-- threadsy do essentials
 - assert
 	- nie jest thread-safe
 - job system: powinny byc dependencies ktore mozna zrobic tak ze jak dodajemy job'a z dependem to sprawdzamy
