@@ -41,7 +41,7 @@ void Create()
 
 	//
 
-	scene.ambientLightingScale = 0.2f;
+	scene.ambientConst = 0.2f;
 	scene.samples_hemisphere1.resize(width * height);
 	for (int i = 0; i < width * height; i++)
 	{
@@ -85,9 +85,9 @@ void Create()
 
 	material.diffuseBRDF = new CLambertianBRDF(0.0f * VectorCustom(1.0f, 1.0f, 1.0f));
 	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 1.0f;
-	material.transmittanceEta = 0.75f;
-	material.reflectivity = 0.5f;
+	material.transmittance = 0.75f;
+	material.transmittanceEta = 0.5f;
+	material.reflectivity = 0.0f;
 	scene.materials.push_back(material);
 
 	material.diffuseBRDF = new CLambertianBRDF(VectorCustom(1.0f, 1.0f, 0.0f));
@@ -101,7 +101,7 @@ void Create()
 	material.specularBRDF = new CGlossySpecularBRDF(32.0f);
 	material.transmittance = 0.0f;
 	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.5f;
+	material.reflectivity = 0.0f;
 	scene.materials.push_back(material);
 
 	//

@@ -67,7 +67,7 @@ namespace NRayTracer
 		vector<SPointLight> pointLights;
 		vector< vector<SSpherical> > samples_hemisphere1;
 
-		float ambientLightingScale;
+		float ambientConst;
 	};
 
 	struct SSceneIntersectionResult

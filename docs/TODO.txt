@@ -1,3 +1,4 @@
+- file operations do essentials
 - threaddestroy nigdzie najlepiej nie uzywac
 - assert
 	- nie jest thread-safe
@@ -22,15 +23,15 @@
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
 	- dokonczyc pokoj (zrobic z modeli 3D)
-	- czy transmittance nie jest zjebany?
 	- generowanie probek do samples.h i moze nie na stl::vector; wczytywanie wygenerowanych probek z pliku
-	- moze bardziej obiektowo jednak
-	- area lights
+	- ambient
 	- lepszy glossy specular
-	- double do przeciec
+	- GI
 	- normalny dof
+	- area lights
+	- double do przeciec
 	- implicit surfaces
-	* czy uzywanie pdf'a z cosine distribution jest rownowazne z takimi sample'ami
+	* czy uzywanie pdf'a z cosine distribution jest rownowazne z takimi sample'ami (to jest ze soba zwiazane)
 	* czy uzycie PDF nie uniform z area light nie bedzie lepsze?
 - meshe
 	- FBX
