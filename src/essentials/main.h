@@ -8,6 +8,7 @@ namespace NMaxestFramework
 
 
 #include "stl.h"
+#include "file.h"
 #include "types.h"
 #include "common.h"
 #include "macros.h"

@@ -1,13 +1,12 @@
 #include "mesh.h"
 #include "../essentials/string.h"
-#include "../system/file.h"
+#include "../essentials/file.h"
 #include "../math/main.h"
 
 
 using namespace NMaxestFramework;
 using namespace NEssentials;
 using namespace NMath;
-using namespace NSystem;
 
 
 bool LoadMaterials(const string& path, vector<NMesh::SMaterial>& materials)

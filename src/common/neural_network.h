@@ -153,7 +153,7 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 			type = Type::Linear;
 		}
 
-		void Load(NSystem::CFile& file)
+		void Load(NEssentials::CFile& file)
 		{
 			string line;
 
@@ -212,7 +212,7 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 			type = Type::Conv2D;
 		}
 
-		void Load(NSystem::CFile& file)
+		void Load(NEssentials::CFile& file)
 		{
 			string line;
 
@@ -270,7 +270,7 @@ namespace NMaxestFramework { namespace NCommon { namespace NNeuralNetwork
 			type = Type::BatchNorm2D;
 		}
 
-		void Load(NSystem::CFile& file)
+		void Load(NEssentials::CFile& file)
 		{
 			string line;
 

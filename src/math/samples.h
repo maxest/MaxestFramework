@@ -4,7 +4,6 @@
 #include "types.h"
 #include "vector.h"
 #include "../essentials/main.h"
-#include "../system/file.h"
 
 
 namespace NMaxestFramework { namespace NMath
@@ -280,8 +279,8 @@ namespace NMaxestFramework { namespace NMath
 
 	inline void DumpSamples(const string& path, const vector<SVector2>& samples)
 	{
-		NSystem::CFile file;
-		MF_ASSERT(file.Open(path, NSystem::CFile::EOpenMode::WriteText));
+		NEssentials::CFile file;
+		MF_ASSERT(file.Open(path, NEssentials::CFile::EOpenMode::WriteText));
 
 		for (uint i = 0; i < samples.size(); i++)
 		{

@@ -1,14 +1,15 @@
 #pragma once
 
 
-#include "../essentials/main.h"
+#include "types.h"
+#include "assert.h"
 
 #ifdef MAXEST_FRAMEWORK_WINDOWS
 	#include <Windows.h>
 #endif
 
 
-namespace NMaxestFramework { namespace NSystem
+namespace NMaxestFramework { namespace NEssentials
 {
 	class CFile
 	{

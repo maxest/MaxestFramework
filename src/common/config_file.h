@@ -1,5 +1,5 @@
 #include "../essentials/string.h"
-#include "../system/file.h"
+#include "../essentials/file.h"
 
 
 namespace NMaxestFramework { namespace NCommon
@@ -16,7 +16,7 @@ namespace NMaxestFramework { namespace NCommon
 		{
 			this->path = path;
 
-			if (file.Open(path, NSystem::CFile::EOpenMode::ReadText))
+			if (file.Open(path, NEssentials::CFile::EOpenMode::ReadText))
 			{
 				fileOpened = true;
 
@@ -43,7 +43,7 @@ namespace NMaxestFramework { namespace NCommon
 				file.Close();
 			fileOpened = false;
 
-			MF_ASSERT(file.Open(path, NSystem::CFile::EOpenMode::WriteText));
+			MF_ASSERT(file.Open(path, NEssentials::CFile::EOpenMode::WriteText));
 			for (uint i = 0; i < options.size(); i++)
 				file.WriteText(options[i].first + " " + options[i].second + "\n");
 			file.Close();
@@ -69,7 +69,7 @@ namespace NMaxestFramework { namespace NCommon
 
 	private:
 		string path;
-		NSystem::CFile file;
+		NEssentials::CFile file;
 		bool fileOpened;
 		vector< pair<string, string> > options;
 	};

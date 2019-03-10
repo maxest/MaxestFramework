@@ -12,8 +12,8 @@ bool NNeuralNetwork::SModel::Create(const string& path)
 	Destroy();
 
 	string line;
-	NSystem::CFile file;
-	if (file.Open(path, NSystem::CFile::EOpenMode::ReadText))
+	NEssentials::CFile file;
+	if (file.Open(path, NEssentials::CFile::EOpenMode::ReadText))
 	{
 		file.ReadLine(line);
 		int layersCount = NEssentials::ToInt(line);
