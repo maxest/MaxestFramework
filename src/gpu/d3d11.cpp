@@ -363,7 +363,7 @@ void NGPU::CreateRenderTarget(int width, int height, DXGI_FORMAT format, int sam
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
 	td.CPUAccessFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, NULL, &renderTarget.texture);
+	HRESULT hr = device->CreateTexture2D(&td, NULL, (ID3D11Texture2D**)&renderTarget.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -417,7 +417,7 @@ void NGPU::CreateDepthStencilTarget(int width, int height, int samplesCount, TDe
 	td.CPUAccessFlags = 0;
 	td.MiscFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, nullptr, &depthStencilTarget.texture);
+	HRESULT hr = device->CreateTexture2D(&td, nullptr, (ID3D11Texture2D**)&depthStencilTarget.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -471,7 +471,7 @@ void NGPU::CreateDepthStencilTarget64(int width, int height, int samplesCount, T
 	td.CPUAccessFlags = 0;
 	td.MiscFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, nullptr, &depthStencilTarget.texture);
+	HRESULT hr = device->CreateTexture2D(&td, nullptr, (ID3D11Texture2D**)&depthStencilTarget.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -504,6 +504,7 @@ void NGPU::CreateTexture(int width, int height, int mipmapsCount, DXGI_FORMAT fo
 	texture.type = STexture::EType::Read2D;
 	texture.width = width;
 	texture.height = height;
+	texture.depth = 1;
 	texture.mipmapsCount = (mipmapsCount == 0 ? MipmapsCount(width, height) : mipmapsCount);
 	texture.arraysCount = 1;
 	texture.samplesCount = 1;
@@ -524,7 +525,7 @@ void NGPU::CreateTexture(int width, int height, int mipmapsCount, DXGI_FORMAT fo
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 	td.CPUAccessFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, nullptr, &texture.texture);
+	HRESULT hr = device->CreateTexture2D(&td, nullptr, (ID3D11Texture2D**)&texture.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -552,6 +553,7 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 	texture.type = STexture::EType::ReadWrite2D;
 	texture.width = width;
 	texture.height = height;
+	texture.depth = 1;
 	texture.mipmapsCount = (mipmapsCount == 0 ? MipmapsCount(width, height) : mipmapsCount);
 	texture.arraysCount = 1;
 	texture.samplesCount = 1;
@@ -572,7 +574,7 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 	td.CPUAccessFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, NULL, &texture.texture);
+	HRESULT hr = device->CreateTexture2D(&td, NULL, (ID3D11Texture2D**)&texture.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -600,11 +602,66 @@ void NGPU::CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT 
 }
 
 
+void NGPU::CreateRWTexture3D(int width, int height, int depth, int mipmapsCount, DXGI_FORMAT format, STexture& texture)
+{
+	texture.type = STexture::EType::ReadWrite2D;
+	texture.width = width;
+	texture.height = height;
+	texture.depth = depth;
+	texture.mipmapsCount = (mipmapsCount == 0 ? MipmapsCount(width, height) : mipmapsCount);
+	texture.arraysCount = 1;
+	texture.samplesCount = 1;
+	texture.format = format;
+
+	//
+
+	D3D11_TEXTURE3D_DESC td;
+	ZeroMemory(&td, sizeof(td));
+	td.Width = width;
+	td.Height = height;
+	td.Depth = depth;
+	td.MipLevels = texture.mipmapsCount;
+	td.Format = texture.format;
+	td.Usage = D3D11_USAGE_DEFAULT;
+	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
+	td.CPUAccessFlags = 0;
+
+	HRESULT hr = device->CreateTexture3D(&td, NULL, (ID3D11Texture3D**)&texture.texture);
+	MF_ASSERT(hr == S_OK);
+
+	//
+
+	D3D11_UNORDERED_ACCESS_VIEW_DESC uavd;
+	ZeroMemory(&uavd, sizeof(uavd));
+	uavd.Format = format;
+	uavd.ViewDimension = D3D11_UAV_DIMENSION_TEXTURE3D;
+	uavd.Texture3D.MipSlice = 0;
+	uavd.Texture3D.FirstWSlice = 0;
+	uavd.Texture3D.WSize = depth;
+
+	hr = device->CreateUnorderedAccessView(texture.texture, &uavd, &texture.uav);
+	MF_ASSERT(hr == S_OK);
+
+	//
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+	ZeroMemory(&srvd, sizeof(srvd));
+	srvd.Format = format;
+	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE3D;
+	srvd.Texture3D.MipLevels = texture.mipmapsCount;
+	srvd.Texture3D.MostDetailedMip = 0;
+
+	hr = device->CreateShaderResourceView(texture.texture, &srvd, &texture.srv);
+	MF_ASSERT(hr == S_OK);
+}
+
+
 void NGPU::CreateRWTextureArray(int width, int height, int arraysCount, DXGI_FORMAT format, STexture& texture)
 {
 	texture.type = STexture::EType::ReadWrite2D;
 	texture.width = width;
 	texture.height = height;
+	texture.depth = 1;
 	texture.mipmapsCount = 1;
 	texture.arraysCount = arraysCount;
 	texture.samplesCount = 1;
@@ -625,7 +682,7 @@ void NGPU::CreateRWTextureArray(int width, int height, int arraysCount, DXGI_FOR
 	td.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS;
 	td.CPUAccessFlags = 0;
 
-	HRESULT hr = device->CreateTexture2D(&td, NULL, &texture.texture);
+	HRESULT hr = device->CreateTexture2D(&td, NULL, (ID3D11Texture2D**)&texture.texture);
 	MF_ASSERT(hr == S_OK);
 
 	//
@@ -662,6 +719,7 @@ void NGPU::CreateStagingTexture(const STexture& srcTexture, STexture& texture)
 	texture.type = STexture::EType::Unknown;
 	texture.width = srcTexture.width;
 	texture.height = srcTexture.height;
+	texture.depth = srcTexture.depth;
 	texture.mipmapsCount = srcTexture.mipmapsCount;
 	texture.arraysCount = srcTexture.arraysCount;
 	texture.samplesCount = srcTexture.samplesCount;
@@ -682,7 +740,7 @@ void NGPU::CreateStagingTexture(const STexture& srcTexture, STexture& texture)
 	td.BindFlags = 0;
 	td.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
 
-	HRESULT hr = device->CreateTexture2D(&td, NULL, &texture.texture);
+	HRESULT hr = device->CreateTexture2D(&td, NULL, (ID3D11Texture2D**)&texture.texture);
 	MF_ASSERT(hr == S_OK);
 }
 

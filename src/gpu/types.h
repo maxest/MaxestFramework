@@ -14,14 +14,14 @@ namespace NMaxestFramework { namespace NGPU
 		enum class EType { Read2D, ReadWrite2D, RenderTarget, DepthStencilTarget, Unknown };
 
 		EType type;
-		int width, height;
+		int width, height, depth;
 		int mipmapsCount;
 		int arraysCount;
 		int samplesCount;
 		DXGI_FORMAT format;
 		uint32 tag;
 
-		ID3D11Texture2D* texture;
+		ID3D11Resource* texture;
 		ID3D11RenderTargetView* rtv;
 		ID3D11UnorderedAccessView* uav;
 		ID3D11DepthStencilView* dsv;

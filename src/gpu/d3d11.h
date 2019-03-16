@@ -60,6 +60,7 @@ namespace NMaxestFramework { namespace NGPU
 	void CreateTexture(int width, int height, int mipmapsCount, DXGI_FORMAT format, STexture& texture);
 	void CreateTexture(int width, int height, STexture& texture);
 	void CreateRWTexture(int width, int height, int mipmapsCount, DXGI_FORMAT format, STexture& texture);
+	void CreateRWTexture3D(int width, int height, int depth, int mipmapsCount, DXGI_FORMAT format, STexture& texture);
 	void CreateRWTextureArray(int width, int height, int arraysCount, DXGI_FORMAT format, STexture& texture);
 	void CreateStagingTexture(const STexture& srcTexture, STexture& texture);
 	void CreateStructuredBuffer(int dataSize, int dataStride, SBuffer& buffer);
