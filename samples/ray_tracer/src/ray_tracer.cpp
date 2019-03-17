@@ -150,7 +150,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 			int samplesCount = (int)scene.samples_hemisphere1_cartesian[samplesSetIndex].size();
 			for (int i = 0; i < samplesCount; i++)
 			{
-				SVector3 wi_tangent = DecodeHemisphericalCartesian(scene.samples_hemisphere1_cartesian[samplesSetIndex][i]);
+				SVector3 wi_tangent = scene.samples_hemisphere1_cartesian[samplesSetIndex][i].Get();
 				SVector3 wi = wi_tangent * tangentToWorld;
 
 				if (!SceneIntersection_Shadow(scene, point + 0.001f*wi, wi, cFloatMax, triangleIndex))

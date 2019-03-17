@@ -21,7 +21,6 @@
 - w common zrobic szablon aplikacji do sampli
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
-	- samples_hemisphere1_cartesian; mozna uzyc half'ow i z odtwarzac
 	- klasa CRayTracer
 	- dokonczyc pokoj (zrobic z modeli 3D)
 	- GI

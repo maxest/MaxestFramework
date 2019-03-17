@@ -3,11 +3,15 @@
 
 #include "../../../src/essentials/stl.h"
 #include "../../../src/essentials/string.h"
+#include "../../../src/essentials/coding.h"
 #include "../../../src/math/main.h"
 
 
 using namespace NMaxestFramework;
 using namespace NMath;
+
+
+//#define USE_SAMPLES_HALF_PRECISION // remember to remove cached samples file
 
 
 namespace NRayTracer
@@ -59,6 +63,58 @@ namespace NRayTracer
 		SVector3 position;
 	};
 
+	struct SSceneIntersectionResult
+	{
+		int32 materialIndex;
+		SVector3 point;
+		SVector3 normal;
+		bool backside;
+		int32 triangleIndex;
+	};
+	
+	struct SHemisphericalCartesian
+	{
+	#ifndef USE_SAMPLES_HALF_PRECISION
+		float x, y;
+
+		void Set(const SVector3& v)
+		{
+			x = v.x;
+			y = v.y;
+		}
+
+		SVector3 Get() const
+		{
+			SVector3 temp;
+
+			temp.x = x;
+			temp.y = y;
+			temp.z = Sqrt(1.0f - (x*x + y*y));
+
+			return temp;
+		}
+	#else
+		uint16 x, y;
+
+		void Set(const SVector3& v)
+		{
+			x = NEssentials::FloatToHalf(v.x);
+			y = NEssentials::FloatToHalf(v.y);
+		}
+
+		SVector3 Get() const
+		{
+			SVector3 temp;
+
+			temp.x = NEssentials::HalfToFloat(x);
+			temp.y = NEssentials::HalfToFloat(y);
+			temp.z = Sqrt(1.0f - (temp.x*temp.x + temp.y*temp.y));
+
+			return temp;
+		}
+	#endif
+	};
+
 	struct SScene //!! (sample i ten Create do klasy CRayTracer)
 	{
 		vector<STrianglePrimitive> triangles;
@@ -66,7 +122,7 @@ namespace NRayTracer
 		vector<SMaterial> materials;
 		vector<SDirLight> dirLights;
 		vector<SPointLight> pointLights;
-		vector< vector<SVector2> > samples_hemisphere1_cartesian;
+		vector< vector<SHemisphericalCartesian> > samples_hemisphere1_cartesian;
 
 		float ambientConst;
 		float ambientOcclusionFactor;
@@ -85,7 +141,7 @@ namespace NRayTracer
 					file.ReadBin((char*)&samplesCount, sizeof(uint));
 
 					samples_hemisphere1_cartesian[i].resize(samplesCount);
-					file.ReadBin((char*)&samples_hemisphere1_cartesian[i][0], sizeof(SVector2) * samplesCount);
+					file.ReadBin((char*)&samples_hemisphere1_cartesian[i][0], sizeof(SHemisphericalCartesian) * samplesCount);
 				}
             	file.Close();
             }
@@ -112,8 +168,9 @@ namespace NRayTracer
 
 					for (uint j = 0; j < samples_hemispherical.size(); j++)
 					{
-						SVector3 sample_cartesian = SphericalToCartesian(samples_hemispherical[j]);
-						samples_hemisphere1_cartesian[i].push_back(VectorCustom(sample_cartesian.x, sample_cartesian.y));
+						SHemisphericalCartesian sample;
+						sample.Set(SphericalToCartesian(samples_hemispherical[j]));
+						samples_hemisphere1_cartesian[i].push_back(sample);
 					}
 				}
 
@@ -122,19 +179,10 @@ namespace NRayTracer
 				{
 					uint samplesCount = (uint)samples_hemisphere1_cartesian[i].size();
 					file.WriteBin((char*)&samplesCount, sizeof(uint));
-					file.WriteBin((char*)&samples_hemisphere1_cartesian[i][0], sizeof(SVector2) * samplesCount);
+					file.WriteBin((char*)&samples_hemisphere1_cartesian[i][0], sizeof(SHemisphericalCartesian) * samplesCount);
 				}
 				file.Close();
             }
 		}
-	};
-
-	struct SSceneIntersectionResult
-	{
-		int32 materialIndex;
-		SVector3 point;
-		SVector3 normal;
-		bool backside;
-		int32 triangleIndex;
 	};
 }

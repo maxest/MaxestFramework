@@ -44,17 +44,6 @@ namespace NRayTracer
 			return 1.0f;
 		return Clamp(v.y / sinTheta, -1.0f, 1.0f);
 	}
-	
-	inline SVector3 DecodeHemisphericalCartesian(const SVector2& v)
-	{
-		SVector3 temp;
-
-		temp.x = v.x;
-		temp.y = v.y;
-		temp.z = Sqrt(1.0f - (v.x*v.x + v.y*v.y));
-
-		return temp;
-	}
 
 	inline SMatrix WorldToTangent(const SVector3& normal)
 	{
