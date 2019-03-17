@@ -5,7 +5,7 @@
 #include "d3d11.h"
 
 #include "../essentials/stl.h"
-#include "../../src/system/file.h"
+#include "../essentials/file.h"
 
 
 #define FRAMES_COUNT_IN_ONE_MEASUREMENT		100
@@ -73,7 +73,7 @@ namespace NMaxestFramework { namespace NGPU
 		vector<SQuery> queries;
 		ID3D11Query* timestampDisjointQuery[BUFFERS_COUNT];
 
-		NSystem::CFile file;
+		NEssentials::CFile file;
 	};
 
 	class CProfilerScopedQuery

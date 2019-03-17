@@ -42,7 +42,7 @@ namespace NMaxestFramework { namespace NMath
 		return cartesian;
 	}
 
-	inline SSpherical CartesianToSSpherical(const SVector3& cartesian)
+	inline SSpherical CartesianToSpherical(const SVector3& cartesian)
 	{
 		SSpherical spherical;
 

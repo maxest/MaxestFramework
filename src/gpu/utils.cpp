@@ -3,7 +3,7 @@
 
 #include "utils.h"
 #include "d3d11.h"
-#include "../system/file.h"
+#include "../essentials/file.h"
 #include "../math/main.h"
 #include "../mesh/main.h"
 #include "../image/main.h"
@@ -12,7 +12,6 @@
 using namespace NMaxestFramework;
 using namespace NEssentials;
 using namespace NMath;
-using namespace NSystem;
 using namespace NImage;
 
 
