@@ -1,6 +1,3 @@
-#define USE_APPLICATION
-
-
 #include "ray_tracer.h"
 #include "camera.h"
 
@@ -11,11 +8,9 @@
 using namespace NRayTracer;
 
 
-#ifdef USE_APPLICATION
-	CApplication application;
-	NMaxestFramework::NGPU::COGLTextureRenderer oglTextureRenderer;
-#endif
+CApplication application;
 CJobSystem jobSystem;
+COGLTextureRenderer oglTextureRenderer;
 
 uint8* data;
 int width = 640;
@@ -139,14 +134,11 @@ bool Run()
 {
 	SVector3 eye;
 
-#ifdef USE_APPLICATION
 	float speed = 0.02f;
 	if (application.IsKeyPressed(EKey::LShift))
 		speed = 10.0f * 0.08f;
-#endif
 
 	eye = camera.eye;
-#ifdef USE_APPLICATION
 	if (application.IsKeyPressed(EKey::W))
 		eye = eye + speed*camera.forwardVector;
 	if (application.IsKeyPressed(EKey::S))
@@ -158,7 +150,6 @@ bool Run()
 
 	camera.horizontalAngle -= application.MouseRelX() / 1000.0f;
 	camera.verticalAngle -= application.MouseRelY() / 1000.0f;
-#endif
 
 //	camera.UpdateFree(eye);
 
@@ -202,19 +193,10 @@ bool Run()
 	uint64 after = TickCount();
 	printf("%llu\n", (after - before));
 
-#ifdef USE_APPLICATION
 	oglTextureRenderer.Render(data);
 
 	if (application.IsKeyPressed(EKey::Escape))
 		return false;
-#else
-    NImage::SImage image;
-    image.width = width;
-    image.height = height;
-    image.format = NImage::EFormat::RGBA8;
-    image.data = data;
-	NImage::Save("ray_tracer_dump.png", image);
-#endif
 
 	return true;
 }
@@ -225,28 +207,20 @@ int main()
 	NSystem::Initialize();
 	NImage::Initialize();
 
-#ifdef USE_APPLICATION
 	if (!application.Create(width, height, false))
 		return 1;
 	application.SetMouseWrapping(true);
 	application.ShowCursor(false);
-	oglTextureRenderer.Create(width, height);
-#endif
 	jobSystem.Create(16);
+	oglTextureRenderer.Create(width, height);
 
 	Create();
-#ifdef USE_APPLICATION
 	application.Run(Run);
-#else
-	Run();
-#endif
 	Destroy();
 
-	jobSystem.Destroy();
-#ifdef USE_APPLICATION
 	oglTextureRenderer.Destroy();
+	jobSystem.Destroy();
 	application.Destroy();
-#endif
 
 	NSystem::Deinitialize();
 	NImage::Deinitialize();
