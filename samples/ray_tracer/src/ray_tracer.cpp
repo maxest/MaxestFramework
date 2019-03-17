@@ -147,9 +147,10 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
 
 			float ambientOcclusion = 0.0f;
-			for (uint i = 0; i < scene.samples_hemisphere1[samplesSetIndex].size(); i++)
+			int samplesCount = (int)scene.samples_hemisphere1[samplesSetIndex].size();
+			for (int i = 0; i < samplesCount; i++)
 			{
-				SVector3 wi_tangent = SphericalToCartesian(scene.samples_hemisphere1[samplesSetIndex][i]);
+				SVector3 wi_tangent = scene.samples_hemisphere1[samplesSetIndex][i];
 				SVector3 wi = wi_tangent * tangentToWorld;
 
 				if (!SceneIntersection_Shadow(scene, point + 0.001f*wi, wi, cFloatMax, triangleIndex))
@@ -160,7 +161,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 					ambientOcclusion += NdotL / pdf;
 				}
 			}
-			ambientOcclusion /= (float)scene.samples_hemisphere1[samplesSetIndex].size();
+			ambientOcclusion /= (float)samplesCount;
 
 			radiance += scene.ambientOcclusionFactor * brdf * ambientOcclusion;
 		}

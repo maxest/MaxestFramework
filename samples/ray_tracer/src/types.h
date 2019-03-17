@@ -66,7 +66,7 @@ namespace NRayTracer
 		vector<SMaterial> materials;
 		vector<SDirLight> dirLights;
 		vector<SPointLight> pointLights;
-		vector< vector<SSpherical> > samples_hemisphere1;
+		vector< vector<SVector3> > samples_hemisphere1;
 
 		float ambientConst;
 		float ambientOcclusionFactor;
@@ -84,9 +84,9 @@ namespace NRayTracer
 					uint samplesCount;
 					file.ReadBin((char*)&samplesCount, sizeof(uint));
 
-					vector<SSpherical> samples;
+					vector<SVector3> samples;
 					samples.resize(samplesCount);
-					file.ReadBin((char*)&samples[0], sizeof(SSpherical) * samplesCount);
+					file.ReadBin((char*)&samples[0], sizeof(SVector3) * samplesCount);
 
 					samples_hemisphere1[i] = samples;
 				}
@@ -97,7 +97,10 @@ namespace NRayTracer
 				for (int i = 0; i < width * height; i++)
 				{
 					vector<SVector2> samples = MultiJitteredRectSamples2D(samplesCount_sqrt);
-					samples_hemisphere1[i] = MapRectSamplesToHemisphere(samples, 1.0f);
+					vector<SSpherical> samples_spherical = MapRectSamplesToHemisphere(samples, 1.0f);
+
+					for (uint j = 0; j < samples_spherical.size(); j++)
+						samples_hemisphere1[i].push_back(SphericalToCartesian(samples_spherical[j]));
 				}
 
 				MF_ASSERT(file.Open(path, NEssentials::CFile::EOpenMode::WriteBinary));
@@ -105,7 +108,7 @@ namespace NRayTracer
 				{
 					uint samplesCount = (uint)samples_hemisphere1[i].size();
 					file.WriteBin((char*)&samplesCount, sizeof(uint));
-					file.WriteBin((char*)&samples_hemisphere1[i][0], sizeof(SSpherical) * samplesCount);
+					file.WriteBin((char*)&samples_hemisphere1[i][0], sizeof(SVector3) * samplesCount);
 				}
 				file.Close();
             }
