@@ -41,8 +41,9 @@ void Create()
 
 	//
 
-	scene.ambientConst = 0.2f;
-	scene.Create(width, height);
+	scene.ambientConst = 0.0f;
+	scene.ambientOcclusionFactor = 0.5f;
+	scene.Create(8, width, height);
 
 	// floor
 	{
@@ -113,7 +114,7 @@ void Create()
 
 	SDirLight dirLight;
 	dirLight.dir = Normalize(VectorCustom(-1.0f, -1.0f, -1.0f));
-	dirLight.color = cPi * VectorCustom(1.0f, 1.0f, 1.0f);
+	dirLight.color = VectorCustom(1.0f, 1.0f, 1.0f);
 	scene.dirLights.push_back(dirLight);
 
 	//
@@ -159,7 +160,7 @@ bool Run()
 	camera.verticalAngle -= application.MouseRelY() / 1000.0f;
 #endif
 
-	camera.UpdateFree(eye);
+//	camera.UpdateFree(eye);
 
 	//
 

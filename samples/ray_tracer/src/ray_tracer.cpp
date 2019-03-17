@@ -125,7 +125,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 	{
 		const SMaterial& material = scene.materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
-		SMatrix tangentToWorld = Transpose(worldToTangent); //!! Invert doesn't work. Why?
+		SMatrix tangentToWorld = Transpose(worldToTangent);
 		SVector3& point = sir.point;
 		SVector3 wo = -Normalize(rayDir);
 		SVector3 wo_tangent = wo * worldToTangent;
@@ -139,25 +139,31 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 
 		// constant ambient
 		if (depth == 0) // this is a fake effect and seems to make sense to be applied only once (not recursively)
-			radiance += scene.ambientConst * cVector3One;
+			radiance += scene.ambientConst * material.diffuseBRDF->rho();
 
-		// ambient
-	/*	{
-			SVector3 ambient = cVector3Zero;
+		// ambient occlusion
+		if (scene.ambientOcclusionFactor > 0.0f)
+		{
+			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
 
+			float ambientOcclusion = 0.0f;
 			for (uint i = 0; i < scene.samples_hemisphere1[samplesSetIndex].size(); i++)
 			{
-				SVector3 wi = SphericalToCartesian(scene.samples_hemisphere1[samplesSetIndex][i]);
-				wi = wi * tangentToWorld;
+				SVector3 wi_tangent = SphericalToCartesian(scene.samples_hemisphere1[samplesSetIndex][i]);
+				SVector3 wi = wi_tangent * tangentToWorld;
 
-				if (!SceneIntersection_Shadow(scene, point, wi, cFloatMax, triangleIndex))
-					ambient = ambient + cVector3One;
+				if (!SceneIntersection_Shadow(scene, point + 0.001f*wi, wi, cFloatMax, triangleIndex))
+				{
+					float NdotL = Dot(wi, normal);
+					float pdf = NdotL / cPi; // samples used are cosine-weighted
+
+					ambientOcclusion += NdotL / pdf;
+				}
 			}
+			ambientOcclusion /= (float)scene.samples_hemisphere1[samplesSetIndex].size();
 
-			ambient /= (float)scene.samples_hemisphere1[samplesSetIndex].size();
-			ambient *= material.diffuseBRDF->rho();
-			radiance += ambient; // BRDF is assumed to be Lambertian
-		}*/
+			radiance += scene.ambientOcclusionFactor * brdf * ambientOcclusion;
+		}
 
 		// direct illumination
 		{
@@ -174,9 +180,9 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 					float NdotL = Saturate(Dot(wi, normal));
 
 					radiance +=
+						light.color *
 						(material.diffuseBRDF->f(wi_tangent, wo_tangent, normal_tangent) +
 						material.specularBRDF->f(wi_tangent, wo_tangent, normal_tangent)) *
-						light.color *
 						NdotL;
 				}
 			}
@@ -196,9 +202,9 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 					float NdotL = Saturate(Dot(wi, normal));
 
 					radiance +=
+						light.color * (1.0f / Sqr(distanceToLight)) *
 						(material.diffuseBRDF->f(wi_tangent, wo_tangent, normal_tangent) +
 						material.specularBRDF->f(wi_tangent, wo_tangent, normal_tangent)) *
-						light.color * (1.0f / Sqr(distanceToLight)) *
 						NdotL;
 				}
 			}
@@ -244,29 +250,16 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 					SceneRadiance_Recursive(scene, samplesSetIndex, point + 0.001f*wi, wi, depth + 1, maxDepth);
 			}
 		}
-
+		/*
 		// GI
-	/*	for (int i = 0; i < 10; i++)
+		for (uint i = 0; i < scene.samples_hemisphere1[samplesSetIndex].size(); i++)
 		{
-			float u = RandomFloat();
-			float v = RandomFloat();
+			SVector3 wi = SphericalToCartesian(scene.samples_hemisphere1[samplesSetIndex][i]);
+			wi = wi * tangentToWorld;
 
-			Spherical spherical;
-			spherical.theta = ACos(2.0f*v - 1.0f);
-			spherical.phi = 2.0f * Pi * u;
-
-			SVector3 cartesian = SphericalToCartesian(spherical);
-			NormalizeIn(cartesian);
-
-			float dot = Dot(sir.normal, cartesian);
-
-			if (dot < 0.0f)
-			{
-				cartesian = -cartesian;
-				dot = -dot;
-			}
-
-			radiance += brdf * dot * SceneRadiance(scene, eye, sir.intersectionPoint + 0.01f*cartesian, cartesian, level + 1) / 10.0f;
+			radiance +=
+				SceneRadiance_Recursive(scene, samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1, maxDepth) /
+				(float)scene.samples_hemisphere1[samplesSetIndex].size();
 		}*/
 	}
 

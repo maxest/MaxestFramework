@@ -23,7 +23,6 @@
 - ray-tracer
 	- klasa CRayTracer
 	- dokonczyc pokoj (zrobic z modeli 3D)
-	- ambient
 	- GI
 	- lepszy glossy specular
 	- normalny dof

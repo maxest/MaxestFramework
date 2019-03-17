@@ -69,6 +69,7 @@ namespace NRayTracer
 		vector< vector<SSpherical> > samples_hemisphere1;
 
 		float ambientConst;
+		float ambientOcclusionFactor;
 
 		void Create(int samplesCount_sqrt, int width, int height)
 		{
