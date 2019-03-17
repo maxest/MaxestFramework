@@ -8,6 +8,7 @@
     <ClInclude Include="..\..\..\common\src\ogl_texture_renderer.h">
       <Filter>common</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">

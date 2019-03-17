@@ -91,6 +91,7 @@
     <ClInclude Include="..\..\src\camera.h" />
     <ClInclude Include="..\..\src\ray_tracer.h" />
     <ClInclude Include="..\..\src\types.h" />
+    <ClInclude Include="..\..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
