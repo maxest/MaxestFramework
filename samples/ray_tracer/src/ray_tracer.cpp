@@ -147,15 +147,15 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
 
 			float ambientOcclusion = 0.0f;
-			int samplesCount = (int)scene.samples_hemisphere1[samplesSetIndex].size();
+			int samplesCount = (int)scene.samples_hemisphere1_cartesian[samplesSetIndex].size();
 			for (int i = 0; i < samplesCount; i++)
 			{
-				SVector3 wi_tangent = scene.samples_hemisphere1[samplesSetIndex][i];
+				SVector3 wi_tangent = DecodeHemisphericalCartesian(scene.samples_hemisphere1_cartesian[samplesSetIndex][i]);
 				SVector3 wi = wi_tangent * tangentToWorld;
 
 				if (!SceneIntersection_Shadow(scene, point + 0.001f*wi, wi, cFloatMax, triangleIndex))
 				{
-					float NdotL = Dot(wi, normal);
+					float NdotL = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
 					float pdf = NdotL / cPi; // samples used are cosine-weighted
 
 					ambientOcclusion += NdotL / pdf;
