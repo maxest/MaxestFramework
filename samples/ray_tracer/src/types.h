@@ -59,7 +59,7 @@ namespace NRayTracer
 		SVector3 position;
 	};
 
-	struct SScene //!! to class
+	struct SScene //!! (sample i ten Create do klasy CRayTracer)
 	{
 		vector<STrianglePrimitive> triangles;
 		vector<SSpherePrimitive> spheres;
@@ -70,10 +70,10 @@ namespace NRayTracer
 
 		float ambientConst;
 
-		void Create(int width, int height)
+		void Create(int samplesCount_sqrt, int width, int height)
 		{
 			samples_hemisphere1.resize(width * height);
-			string path = "samples_hemisphere1_" + NEssentials::ToString(width) + "x" + NEssentials::ToString(height) + ".cache";
+			string path = "samples_hemisphere1_" + NEssentials::ToString(samplesCount_sqrt) + "_" + NEssentials::ToString(width) + "x" + NEssentials::ToString(height) + ".cache";
 
 			NEssentials::CFile file;
             if (file.Open(path, NEssentials::CFile::EOpenMode::ReadBinary))
@@ -95,14 +95,14 @@ namespace NRayTracer
             {
 				for (int i = 0; i < width * height; i++)
 				{
-					vector<SVector2> samples = MultiJitteredRectSamples2D(4);
+					vector<SVector2> samples = MultiJitteredRectSamples2D(samplesCount_sqrt);
 					samples_hemisphere1[i] = MapRectSamplesToHemisphere(samples, 1.0f);
 				}
 
 				MF_ASSERT(file.Open(path, NEssentials::CFile::EOpenMode::WriteBinary));
 				for (int i = 0; i < width * height; i++)
 				{
-					uint samplesCount = samples_hemisphere1[i].size();
+					uint samplesCount = (uint)samples_hemisphere1[i].size();
 					file.WriteBin((char*)&samplesCount, sizeof(uint));
 					file.WriteBin((char*)&samples_hemisphere1[i][0], sizeof(SSpherical) * samplesCount);
 				}
