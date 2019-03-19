@@ -138,9 +138,11 @@
 		<Unit filename="../../src/brdf.h" />
 		<Unit filename="../../src/camera.h" />
 		<Unit filename="../../src/main.cpp" />
+		<Unit filename="../../src/material.h" />
 		<Unit filename="../../src/ray_tracer.cpp" />
 		<Unit filename="../../src/ray_tracer.h" />
 		<Unit filename="../../src/sampler.h" />
+		<Unit filename="../../src/scene.h" />
 		<Unit filename="../../src/types.h" />
 		<Unit filename="../../src/utils.h" />
 		<Extensions>

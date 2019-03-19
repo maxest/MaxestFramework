@@ -21,7 +21,7 @@
 - w common zrobic szablon aplikacji do sampli
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
-	- klasa CRayTracer
+	- klasa CRayTracer i klasa CScene
 	- dokonczyc pokoj (zrobic z modeli 3D)
 	- GI
 	- lepszy glossy specular

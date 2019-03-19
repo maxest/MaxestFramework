@@ -1,7 +1,6 @@
 #include "ray_tracer.h"
 
 
-
 NRayTracer::CSamplerHemispherical sampler;
 
 
@@ -133,7 +132,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 
 	if (SceneIntersection_Primary(scene, rayStart, rayDir, cFloatMax, sir))
 	{
-		const SMaterial& material = scene.materials[sir.materialIndex];
+		const CMaterial& material = scene.materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
 		SMatrix tangentToWorld = Transpose(worldToTangent);
 		SVector3& point = sir.point;
@@ -192,8 +191,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 
 					radiance +=
 						light.color *
-						(material.diffuseBRDF->f(wi_tangent, wo_tangent, normal_tangent) +
-						material.specularBRDF->f(wi_tangent, wo_tangent, normal_tangent)) *
+						material.BRDF(wi_tangent, wo_tangent, normal_tangent) *
 						NdotL;
 				}
 			}
@@ -214,8 +212,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 
 					radiance +=
 						light.color * (1.0f / Sqr(distanceToLight)) *
-						(material.diffuseBRDF->f(wi_tangent, wo_tangent, normal_tangent) +
-						material.specularBRDF->f(wi_tangent, wo_tangent, normal_tangent)) *
+						material.BRDF(wi_tangent, wo_tangent, normal_tangent) *
 						NdotL;
 				}
 			}

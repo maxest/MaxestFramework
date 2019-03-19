@@ -5,6 +5,7 @@
 #include "brdf.h"
 #include "camera.h"
 #include "sampler.h"
+#include "scene.h"
 
 #include "../../../src/math/main.h"
 #include "../../../src/common/jobs.h"

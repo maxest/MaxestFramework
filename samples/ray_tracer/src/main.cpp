@@ -72,7 +72,7 @@ void Create()
 
 	//
 
-	NRayTracer::SMaterial material;
+	NRayTracer::CMaterial material;
 
 	material.diffuseBRDF = new CLambertianBRDF(0.0f * VectorCustom(1.0f, 1.0f, 1.0f));
 	material.specularBRDF = new CGlossySpecularBRDF(0.0f);

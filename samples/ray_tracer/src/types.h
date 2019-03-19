@@ -16,8 +16,6 @@ using namespace NMath;
 
 namespace NRayTracer
 {
-	class CBRDF;
-
 	struct SPrimitive
 	{
 		int32 materialIndex;
@@ -33,21 +31,6 @@ namespace NRayTracer
 	{
 		SVector3 position;
 		float radius;
-	};
-
-	struct SMaterial
-	{
-		CBRDF* diffuseBRDF;
-		CBRDF* specularBRDF;
-		float transmittance;
-		float transmittanceEta;
-		float reflectivity;
-
-		SMaterial()
-		{
-			diffuseBRDF = nullptr;
-			specularBRDF = nullptr;
-		}
 	};
 
 	struct SLight
@@ -113,17 +96,5 @@ namespace NRayTracer
 			return temp;
 		}
 	#endif
-	};
-
-	struct SScene
-	{
-		vector<STrianglePrimitive> triangles;
-		vector<SSpherePrimitive> spheres;
-		vector<SMaterial> materials;
-		vector<SDirLight> dirLights;
-		vector<SPointLight> pointLights;
-
-		float ambientConst;
-		float ambientOcclusionFactor;
 	};
 }
