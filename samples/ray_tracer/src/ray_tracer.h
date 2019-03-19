@@ -4,6 +4,7 @@
 #include "types.h"
 #include "brdf.h"
 #include "camera.h"
+#include "sampler.h"
 
 #include "../../../src/math/main.h"
 #include "../../../src/common/jobs.h"
@@ -21,9 +22,11 @@ using namespace NCommon;
 
 namespace NRayTracer
 {
+	void Create(int width, int height);
+
 	bool SceneIntersection_Primary(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, SSceneIntersectionResult& sceneIntersectionResult);
 	bool SceneIntersection_Shadow(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, int triangleIndex);
-	SVector3 SceneRadiance_Recursive(const SScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth, int maxDepth);
+	SVector3 SceneRadiance_Recursive(const SScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth);
 	void SceneAddMesh(SScene& scene, const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex);
 
 	//
@@ -65,7 +68,7 @@ namespace NRayTracer
 
 					SVector3 rayStart, rayDir;
 					RayPerspective(*camera, (float)x, (float)y, rayStart, rayDir);
-					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0, MAX_DEPTH) / 1.0f;
+					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0);
 
 					Pixel(x, y, radiance);
 				}
@@ -84,7 +87,7 @@ namespace NRayTracer
 
 					SVector3 rayStart, rayDir;
 					RayPerspectiveDOF(*camera, (float)x, (float)y, RandomFloat(-0.16f, 0.16f), RandomFloat(-0.16f, 0.16f), 8.0f, rayStart, rayDir);
-					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0, MAX_DEPTH) / 1.0f;
+					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) / 1.0f;
 
 					Pixel(x, y, radiance);
 				}
@@ -111,7 +114,7 @@ namespace NRayTracer
 						for (int i = 0; i < samplesCountY; i++)
 						{
 							RayPerspective(*camera, (float)x + i*sampleOffsetX, (float)y + j*sampleOffsetY, rayStart, rayDir);
-							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0, MAX_DEPTH) * oneOverSamplesCount;
+							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
 						}
 					}
 
@@ -142,7 +145,7 @@ namespace NRayTracer
 						for (int i = 0; i < samplesCountY; i++)
 						{
 							RayPerspectiveDOF(*camera, (float)x+ i*sampleOffsetX, (float)y + j*sampleOffsetY, dofDX, dofDY, 8.0f, rayStart, rayDir);
-							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0, MAX_DEPTH) * oneOverSamplesCount;
+							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
 						}
 					}
 

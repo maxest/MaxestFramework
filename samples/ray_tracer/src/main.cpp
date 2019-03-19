@@ -38,7 +38,7 @@ void Create()
 
 	scene.ambientConst = 0.0f;
 	scene.ambientOcclusionFactor = 0.5f;
-	scene.Create(8, width, height);
+	NRayTracer::Create(width, height);
 
 	// floor
 	{

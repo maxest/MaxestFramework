@@ -140,7 +140,9 @@
 		<Unit filename="../../src/main.cpp" />
 		<Unit filename="../../src/ray_tracer.cpp" />
 		<Unit filename="../../src/ray_tracer.h" />
+		<Unit filename="../../src/sampler.h" />
 		<Unit filename="../../src/types.h" />
+		<Unit filename="../../src/utils.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
