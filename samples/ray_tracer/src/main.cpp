@@ -88,7 +88,7 @@ void Create()
 	material.reflectivity = 0.0f;
 	scene.materials.push_back(material);
 
-	material.diffuseBRDF = new CLambertianBRDF(VectorCustom(0.1f, 1.0f, 0.1f));
+	material.diffuseBRDF = new CLambertianBRDF(VectorCustom(1.0f, 1.0f, 1.0f));
 	material.specularBRDF = new CGlossySpecularBRDF(32.0f);
 	material.transmittance = 0.0f;
 	material.transmittanceEta = 0.0f;
@@ -100,12 +100,12 @@ void Create()
 	SPointLight pointLight;
 	//
 	pointLight.position = VectorCustom(2.0f, 3.0f, 0.0f);
-	pointLight.color = 55.0f * VectorCustom(1.0f, 1.0f, 1.0f);
-//	scene.pointLights.push_back(pointLight);
+	pointLight.color = 50.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	scene.pointLights.push_back(pointLight);
 	//
-	pointLight.position = VectorCustom(8.0f, 5.0f, 0.0f);
-	pointLight.color = 55.0f * VectorCustom(1.0f, 1.0f, 1.0f);
-//	scene.pointLights.push_back(pointLight);
+	pointLight.position = VectorCustom(-2.0f, 5.0f, -15.0f);
+	pointLight.color = 500.0f * VectorCustom(1.0f, 0.0f, 0.0f);
+	scene.pointLights.push_back(pointLight);
 
 	SDirLight dirLight;
 	dirLight.dir = Normalize(VectorCustom(-1.0f, -1.0f, -1.0f));
@@ -121,10 +121,7 @@ void Create()
 void Destroy()
 {
 	for (uint i = 0; i < scene.materials.size(); i++)
-	{
-		delete scene.materials[i].diffuseBRDF;
-		delete scene.materials[i].specularBRDF;
-	}
+		scene.materials[i].Destroy();
 
 	delete[] data;
 }
@@ -166,10 +163,10 @@ bool Run()
 
 	uint64 before = TickCount();
 
-	NRayTracer::SCamera rtCamera;
-	UpdateView(rtCamera, camera.eye, camera.at, camera.up);
-//	UpdateOrtho(camera, width, height, 10.0f);
-	UpdatePerspective(rtCamera, width, height, cPi / 3.0f, 4.0f);
+	NRayTracer::CCamera rtCamera;
+	rtCamera.UpdateView(camera.eye, camera.at, camera.up);
+//	rtCamera.SetOrtho(width, height, 10.0f);
+	rtCamera.SetPerspective(cPi / 3.0f, width, height, 4.0f);
 	bool dof = false;
 	bool aa = false;
 

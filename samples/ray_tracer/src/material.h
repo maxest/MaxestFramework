@@ -24,7 +24,19 @@ namespace NRayTracer
 			specularBRDF = nullptr;
 		}
 
-		inline SVector3 BRDF(const SVector3& wi, const SVector3& wo, const SVector3& normal) const
+		void Destroy()
+		{
+			MF_ASSERT(diffuseBRDF != nullptr);
+			MF_ASSERT(specularBRDF != nullptr);
+
+			delete diffuseBRDF;
+			delete specularBRDF;
+
+			diffuseBRDF = nullptr;
+			specularBRDF = nullptr;
+		}
+
+		SVector3 BRDF(const SVector3& wi, const SVector3& wo, const SVector3& normal) const
 		{
 			return diffuseBRDF->f(wi, wo, normal) + specularBRDF->f(wi, wo, normal);
 		}

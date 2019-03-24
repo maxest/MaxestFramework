@@ -103,7 +103,6 @@ namespace NMaxestFramework { namespace NMath
 		this->up = up;
 	}
 
-
 	inline void CCamera::UpdateFree(const SVector3& eye, const SVector3& up)
 	{
 		SMatrix transformMatrix = MatrixRotateX(verticalAngle) * MatrixRotateY(horizontalAngle);
@@ -116,7 +115,6 @@ namespace NMaxestFramework { namespace NMath
 		this->at = eye + forwardVector;
 		this->up = up;
 	}
-
 
 	inline void CCamera::UpdateFocused(const SVector3& at, const SVector3& up)
 	{

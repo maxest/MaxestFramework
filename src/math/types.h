@@ -104,6 +104,12 @@ namespace NMaxestFramework { namespace NMath
 		float a, b, c, d;
 	};
 
+	struct SRay3
+	{
+		SVector3 start;
+		SVector3 dir;
+	};
+
 	struct SMatrix
 	{
 		float m[4][4];
@@ -111,7 +117,7 @@ namespace NMaxestFramework { namespace NMath
 
 	struct SSpherical
 	{
-		float theta, phi; // theta in [0..Pi], phi in [0..2*Pi]
+		float theta, phi; // theta in [0..pi], phi in [0..2*pi]
 	};
 
 	struct SAABB

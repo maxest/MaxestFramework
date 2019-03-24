@@ -9,8 +9,107 @@ using namespace NMath;
 
 namespace NRayTracer
 {
-	struct SCamera
+	class CCamera
 	{
+	private:
+		enum class EType { Perspective, Ortho };
+
+	public:
+		void UpdateView(const SVector3& eye, const SVector3& at, const SVector3& up)
+		{
+			position = eye;
+
+			transformInverse = MatrixLookAtRH(eye, at, up);
+			InvertIn(transformInverse);
+		}
+
+		void SetPerspective(float fovY, int width, int height, float nearPlaneDistance)
+		{
+			type = EType::Perspective;
+
+			float aspect = (float)width / (float)height;
+			SVector2 nearPlaneSize = PlaneSize(fovY, aspect, nearPlaneDistance);
+
+			this->nearPlaneDistance = nearPlaneDistance;
+
+			SVector2 p1 = VectorCustom(0.0f, -nearPlaneSize.y / 2.0f);
+			SVector2 p2 = VectorCustom((float)height, nearPlaneSize.y / 2.0f);
+			yCoeffs = SolveLineCoeffs(p1, p2);
+
+			SVector2 p3 = VectorCustom(0.0f, -nearPlaneSize.x / 2.0f);
+			SVector2 p4 = VectorCustom((float)width, nearPlaneSize.x / 2.0f);
+			xCoeffs = SolveLineCoeffs(p3, p4);
+		}
+
+		void SetOrtho(int width, int height, float nearPlaneHeight)
+		{
+			type = EType::Ortho;
+
+			float aspect = (float)width / (float)height;
+			float nearPlaneWidth = aspect * nearPlaneHeight;
+
+			SVector2 p1 = VectorCustom(0.0f, -nearPlaneHeight / 2.0f);
+			SVector2 p2 = VectorCustom((float)height, nearPlaneHeight / 2.0f);
+			yCoeffs = SolveLineCoeffs(p1, p2);
+
+			SVector2 p3 = VectorCustom(0.0f, -nearPlaneWidth / 2.0f);
+			SVector2 p4 = VectorCustom((float)width, nearPlaneWidth / 2.0f);
+			xCoeffs = SolveLineCoeffs(p3, p4);
+		}
+
+		void Ray(float x, float y, SVector3& rayStart, SVector3& rayDir) const
+		{
+			if (type == EType::Perspective)
+			{
+				rayStart = position;
+
+				rayDir.x = xCoeffs.x*x + xCoeffs.y;
+				rayDir.y = yCoeffs.x*y + yCoeffs.y;
+				rayDir.z = -nearPlaneDistance;
+				NormalizeIn(rayDir);
+				rayDir = Transform(rayDir, transformInverse);
+			}
+			else if (type == EType::Ortho)
+			{
+				rayStart.x = xCoeffs.x*x + xCoeffs.y;
+				rayStart.y = yCoeffs.x*y + yCoeffs.y;
+				rayStart.z = 0.0f;
+				rayStart = TransformPoint(rayStart, transformInverse);
+
+				rayDir.x = 0.0f;
+				rayDir.y = 0.0f;
+				rayDir.z = -1.0f;
+				rayDir = Transform(rayDir, transformInverse);
+			}
+		}
+
+		void RayDOF(float x, float y, float dofDX, float dofDY, float dofFocalPlaneDistance, SVector3& rayStart, SVector3& rayDir) const
+		{
+			if (type == EType::Perspective)
+			{
+				rayDir.x = xCoeffs.x*x + xCoeffs.y;
+				rayDir.y = yCoeffs.x*y + yCoeffs.y;
+				rayDir.z = -nearPlaneDistance;
+				NormalizeIn(rayDir);
+
+				SVector3 pointOnFocalPlane = (-dofFocalPlaneDistance / rayDir.z) * rayDir;
+				SVector3 dofCameraPosition = VectorCustom(dofDX, dofDY, 0.0f);
+
+				rayStart = TransformPoint(dofCameraPosition, transformInverse);
+
+				rayDir = pointOnFocalPlane - dofCameraPosition;
+				NormalizeIn(rayDir);
+				rayDir = Transform(rayDir, transformInverse);
+			}
+			else if (type == EType::Ortho)
+			{
+				MF_ASSERT(false);
+			}
+		}
+
+	private:
+		EType type;
+
 		SVector3 position;
 		SMatrix transformInverse;
 
@@ -18,85 +117,4 @@ namespace NRayTracer
 		SVector2 yCoeffs;
 		SVector2 xCoeffs;
 	};
-
-	//
-
-	inline void UpdateView(SCamera& camera, const SVector3& position, const SVector3& target, const SVector3& up)
-	{
-		camera.position = position;
-
-		camera.transformInverse = MatrixLookAtRH(position, target, up);
-		InvertIn(camera.transformInverse);
-	}
-
-	inline void UpdateOrtho(SCamera& camera, int width, int height, float nearPlaneHeight)
-	{
-		float aspect = (float)width / (float)height;
-		float nearPlaneWidth = aspect * nearPlaneHeight;
-
-		SVector2 p1 = VectorCustom(0.0f, -nearPlaneHeight / 2.0f);
-		SVector2 p2 = VectorCustom((float)height, nearPlaneHeight / 2.0f);
-		camera.yCoeffs = SolveLineCoeffs(p1, p2);
-
-		SVector2 p3 = VectorCustom(0.0f, -nearPlaneWidth / 2.0f);
-		SVector2 p4 = VectorCustom((float)width, nearPlaneWidth / 2.0f);
-		camera.xCoeffs = SolveLineCoeffs(p3, p4);
-	}
-
-	inline void UpdatePerspective(SCamera& camera, int width, int height, float fov, float nearPlaneDistance)
-	{
-		float aspect = (float)width / (float)height;
-		SVector2 nearPlaneSize = PlaneSize(fov, aspect, nearPlaneDistance);
-
-		camera.nearPlaneDistance = nearPlaneDistance;
-
-		SVector2 p1 = VectorCustom(0.0f, -nearPlaneSize.y / 2.0f);
-		SVector2 p2 = VectorCustom((float)height, nearPlaneSize.y / 2.0f);
-		camera.yCoeffs = SolveLineCoeffs(p1, p2);
-
-		SVector2 p3 = VectorCustom(0.0f, -nearPlaneSize.x / 2.0f);
-		SVector2 p4 = VectorCustom((float)width, nearPlaneSize.x / 2.0f);
-		camera.xCoeffs = SolveLineCoeffs(p3, p4);
-	}
-
-	inline void RayOrtho(const SCamera& camera, float x, float y, SVector3& rayStart, SVector3& rayDir)
-	{
-		rayStart.x = camera.xCoeffs.x*x + camera.xCoeffs.y;
-		rayStart.y = camera.yCoeffs.x*y + camera.yCoeffs.y;
-		rayStart.z = 0.0f;
-		rayStart = TransformPoint(rayStart, camera.transformInverse);
-
-		rayDir.x = 0.0f;
-		rayDir.y = 0.0f;
-		rayDir.z = -1.0f;
-		rayDir = Transform(rayDir, camera.transformInverse);
-	}
-
-	inline void RayPerspective(const SCamera& camera, float x, float y, SVector3& rayStart, SVector3& rayDir)
-	{
-		rayStart = camera.position;
-
-		rayDir.x = camera.xCoeffs.x*x + camera.xCoeffs.y;
-		rayDir.y = camera.yCoeffs.x*y + camera.yCoeffs.y;
-		rayDir.z = -camera.nearPlaneDistance;
-		NormalizeIn(rayDir);
-		rayDir = Transform(rayDir, camera.transformInverse);
-	}
-
-	inline void RayPerspectiveDOF(const SCamera& camera, float x, float y, float dofDX, float dofDY, float dofFocalPlaneDistance, SVector3& rayStart, SVector3& rayDir)
-	{
-		rayDir.x = camera.xCoeffs.x*x + camera.xCoeffs.y;
-		rayDir.y = camera.yCoeffs.x*y + camera.yCoeffs.y;
-		rayDir.z = -camera.nearPlaneDistance;
-		NormalizeIn(rayDir);
-
-		SVector3 pointOnFocalPlane = (-dofFocalPlaneDistance / rayDir.z) * rayDir;
-		SVector3 dofCameraPosition = VectorCustom(dofDX, dofDY, 0.0f);
-
-		rayStart = TransformPoint(dofCameraPosition, camera.transformInverse);
-
-		rayDir = pointOnFocalPlane - dofCameraPosition;
-		NormalizeIn(rayDir);
-		rayDir = Transform(rayDir, camera.transformInverse);
-	}
 }
