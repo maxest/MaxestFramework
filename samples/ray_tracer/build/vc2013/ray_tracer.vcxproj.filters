@@ -9,6 +9,9 @@
       <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\utils.h" />
+    <ClInclude Include="..\..\src\material.h" />
+    <ClInclude Include="..\..\src\sampler.h" />
+    <ClInclude Include="..\..\src\scene.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="common">
@@ -18,5 +21,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\src\main.cpp" />
     <ClCompile Include="..\..\src\ray_tracer.cpp" />
+    <ClCompile Include="..\..\src\scene.cpp" />
   </ItemGroup>
 </Project>

@@ -24,18 +24,14 @@ using namespace NCommon;
 namespace NRayTracer
 {
 	void Create(int width, int height);
-
-	bool SceneIntersection_Primary(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, SSceneIntersectionResult& sceneIntersectionResult);
-	bool SceneIntersection_Shadow(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, int triangleIndex);
-	SVector3 SceneRadiance_Recursive(const SScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth);
-	void SceneAddMesh(SScene& scene, const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex);
+	SVector3 SceneRadiance_Recursive(const CScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth);
 
 	//
 
 	class CRayTraceJob: public CJob
 	{
 	public:
-		CRayTraceJob(uint8* data, int width, int heightMin, int heightMax, const SScene& scene, const SCamera& camera, bool dof, bool aa)
+		CRayTraceJob(uint8* data, int width, int heightMin, int heightMax, const CScene& scene, const SCamera& camera, bool dof, bool aa)
 		{
 			this->data = data;
 			this->width = width;
@@ -179,7 +175,7 @@ namespace NRayTracer
 		uint8* data;
 		int width;
 		int heightMin, heightMax;
-		const SScene* scene;
+		const CScene* scene;
 		const SCamera* camera;
 		bool dof;
 		bool aa;

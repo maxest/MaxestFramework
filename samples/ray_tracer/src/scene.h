@@ -3,10 +3,8 @@
 
 #include "material.h"
 
-#include "../../../src/essentials/stl.h"
-#include "../../../src/essentials/string.h"
-#include "../../../src/essentials/coding.h"
 #include "../../../src/math/main.h"
+#include "../../../src/mesh/main.h"
 
 
 using namespace NMaxestFramework;
@@ -15,8 +13,15 @@ using namespace NMath;
 
 namespace NRayTracer
 {
-	struct SScene
+	class CScene
 	{
+	public:
+		void AddMesh(const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex);
+
+		bool IntersectionPrimary(const SVector3& rayStart, const SVector3& rayDir, float maxDistance, SSceneIntersectionResult& sceneIntersectionResult) const;
+		bool IntersectionShadow(const SVector3& rayStart, const SVector3& rayDir, float maxDistance, int triangleIndex) const;
+
+	public:
 		vector<STrianglePrimitive> triangles;
 		vector<SSpherePrimitive> spheres;
 		vector<CMaterial> materials;

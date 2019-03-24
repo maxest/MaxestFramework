@@ -16,7 +16,7 @@ uint8* data;
 int width = 640;
 int height = 480;
 
-NRayTracer::SScene scene;
+NRayTracer::CScene scene;
 NMath::CCamera camera;
 
 
@@ -45,7 +45,7 @@ void Create()
 		NMesh::SMesh mesh;
 		ImportASE("../../../../data/meshes/unit_plane.ASE", mesh);
 		ToIndexed(mesh);
-		SceneAddMesh(scene, mesh, MatrixScale(100.0f, 100.0f, 1.0f) * MatrixRotateX(-cPi / 2.0f), 2);
+		scene.AddMesh(mesh, MatrixScale(100.0f, 100.0f, 1.0f) * MatrixRotateX(-cPi / 2.0f), 2);
 	}
 
 	// box
@@ -53,7 +53,7 @@ void Create()
 		NMesh::SMesh mesh;
 		ImportASE("../../../../data/meshes/unit_box.ASE", mesh);
 		ToIndexed(mesh);
-		SceneAddMesh(scene, mesh, MatrixTranslate(0.0f, 0.5f, 0.0f), 1);
+		scene.AddMesh(mesh, MatrixTranslate(0.0f, 0.5f, 0.0f), 1);
 	}
 
 	//

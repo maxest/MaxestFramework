@@ -10,119 +10,7 @@ void NRayTracer::Create(int width, int height)
 }
 
 
-bool NRayTracer::SceneIntersection_Primary(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, SSceneIntersectionResult& sceneIntersectionResult)
-{
-	float closestDistance = cFloatMax;
-	SVector3 tempIntersectionPoint;
-	float tempDistance;
-
-	for (uint i = 0; i < scene.triangles.size(); i++)
-	{
-		if (IntersectionRayTriangle(rayStart, rayDir, scene.triangles[i].p1, scene.triangles[i].p2, scene.triangles[i].p3, tempIntersectionPoint, tempDistance))
-		{
-			if (tempDistance < 0.0f)
-				continue;
-			if (tempDistance > closestDistance)
-				continue;
-			if (tempDistance > maxDistance)
-				continue;
-			// backface culling
-			if (Dot(rayDir, scene.triangles[i].normal) > 0.0f)
-				continue;
-
-			sceneIntersectionResult.materialIndex = scene.triangles[i].materialIndex;
-			sceneIntersectionResult.point = tempIntersectionPoint;
-			sceneIntersectionResult.normal = scene.triangles[i].normal;
-			sceneIntersectionResult.backside = false;
-			sceneIntersectionResult.triangleIndex = i;
-
-			closestDistance = tempDistance;
-		}
-	}
-
-	for (uint i = 0; i < scene.spheres.size(); i++)
-	{
-		if (IntersectionRaySphere(rayStart, rayDir, scene.spheres[i].position, scene.spheres[i].radius, tempIntersectionPoint, tempDistance))
-		{
-			if (tempDistance < 0.0f)
-				continue;
-			if (tempDistance > closestDistance)
-				continue;
-			if (tempDistance > maxDistance)
-				continue;
-
-			sceneIntersectionResult.materialIndex = scene.spheres[i].materialIndex;
-			sceneIntersectionResult.point = tempIntersectionPoint;
-			sceneIntersectionResult.normal = 1.0f / scene.spheres[i].radius * (tempIntersectionPoint - scene.spheres[i].position);
-			sceneIntersectionResult.backside = false;
-			sceneIntersectionResult.triangleIndex = -1;
-
-			// are we inside the sphere?
-			if (Distance(rayStart, scene.spheres[i].position) < scene.spheres[i].radius)
-			{
-				sceneIntersectionResult.normal = -sceneIntersectionResult.normal;
-				sceneIntersectionResult.backside = true;
-			}
-
-			closestDistance = tempDistance;
-		}
-	}
-
-	return closestDistance != cFloatMax;
-}
-
-
-bool NRayTracer::SceneIntersection_Shadow(const SScene& scene, const SVector3& rayStart, const SVector3& rayDir, float maxDistance, int triangleIndex)
-{
-	float closestDistance = cFloatMax;
-	SVector3 tempIntersectionPoint;
-	float tempDistance;
-
-	for (uint i = 0; i < scene.triangles.size(); i++)
-	{
-		if ((int)i == triangleIndex) // no self-occlusion please
-			continue;
-
-		if (IntersectionRayTriangle(rayStart, rayDir, scene.triangles[i].p1, scene.triangles[i].p2, scene.triangles[i].p3, tempIntersectionPoint, tempDistance))
-		{
-			if (tempDistance < 0.0f)
-				continue;
-			if (tempDistance > closestDistance)
-				continue;
-			if (tempDistance > maxDistance)
-				continue;
-			// backface culling
-			// If we comment this out, then front-facing and back-facing triangles can be aligned and
-			// there won't be a problem with shadow acne.
-			// However, to be consistent with other ray intersection functions it's here.
-			if (Dot(rayDir, scene.triangles[i].normal) > 0.0f)
-				continue;
-
-			closestDistance = tempDistance;
-		}
-	}
-
-	for (uint i = 0; i < scene.spheres.size(); i++)
-	{
-		// sphere uses offset instead of "triangleIndex" because sphere can occlude itself
-		if (IntersectionRaySphere(rayStart + 0.001f*rayDir, rayDir, scene.spheres[i].position, scene.spheres[i].radius, tempIntersectionPoint, tempDistance))
-		{
-			if (tempDistance < 0.0f)
-				continue;
-			if (tempDistance > closestDistance)
-				continue;
-			if (tempDistance > maxDistance)
-				continue;
-
-			closestDistance = tempDistance;
-		}
-	}
-
-	return closestDistance != cFloatMax;
-}
-
-
-SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth)
+SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth)
 {
 	SVector3 radiance = cVector3Zero;
 	SSceneIntersectionResult sir;
@@ -130,7 +18,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 	if (depth == MAX_DEPTH)
 		return radiance;
 
-	if (SceneIntersection_Primary(scene, rayStart, rayDir, cFloatMax, sir))
+	if (scene.IntersectionPrimary(rayStart, rayDir, cFloatMax, sir))
 	{
 		const CMaterial& material = scene.materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
@@ -162,7 +50,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 				const SVector3& wi_tangent = sampler.Get(samplesSetIndex, i);
 				SVector3 wi = wi_tangent * tangentToWorld;
 
-				if (!SceneIntersection_Shadow(scene, point + 0.001f*wi, wi, cFloatMax, triangleIndex))
+				if (!scene.IntersectionShadow(point + 0.001f*wi, wi, cFloatMax, triangleIndex))
 				{
 					float NdotL = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
 					float pdf = NdotL / cPi; // samples used are cosine-weighted
@@ -185,7 +73,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 				SVector3 wi = -light.dir;
 				SVector3 wi_tangent = Normalize(wi * worldToTangent);
 
-				if (!SceneIntersection_Shadow(scene, point, wi, cFloatMax, triangleIndex))
+				if (!scene.IntersectionShadow(point, wi, cFloatMax, triangleIndex))
 				{
 					float NdotL = Saturate(Dot(wi, normal));
 
@@ -206,7 +94,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 				wi = wi / distanceToLight;
 				SVector3 wi_tangent = Normalize(wi * worldToTangent);
 
-				if (!SceneIntersection_Shadow(scene, point, wi, 1.1f*distanceToLight, triangleIndex))
+				if (!scene.IntersectionShadow(point, wi, 1.1f*distanceToLight, triangleIndex))
 				{
 					float NdotL = Saturate(Dot(wi, normal));
 
@@ -272,41 +160,4 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const SScene& scene, int samplesSet
 	}
 
 	return radiance;
-}
-
-
-void NRayTracer::SceneAddMesh(SScene& scene, const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex)
-{
-	for (uint i = 0; i < mesh.chunks.size(); i++)
-		MF_ASSERT(mesh.chunks[i].indices.size() != 0);
-
-	STrianglePrimitive triangle;
-	triangle.materialIndex = materialIndex;
-
-	for (uint i = 0; i < mesh.chunks.size(); i++)
-	{
-		for (uint j = 0; j < mesh.chunks[i].indices.size() / 3; j++)
-		{
-			triangle.p1 = VectorCustom(
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 0]].position.x,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 0]].position.y,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 0]].position.z);
-			triangle.p2 = VectorCustom(
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 1]].position.x,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 1]].position.y,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 1]].position.z);
-			triangle.p3 = VectorCustom(
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 2]].position.x,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 2]].position.y,
-				mesh.chunks[i].vertices[mesh.chunks[i].indices[3 * j + 2]].position.z);
-
-			triangle.p1 = TransformPoint(triangle.p1, transform);
-			triangle.p2 = TransformPoint(triangle.p2, transform);
-			triangle.p3 = TransformPoint(triangle.p3, transform);
-
-			triangle.normal = TriangleNormal(triangle.p1, triangle.p2, triangle.p3);
-
-			scene.triangles.push_back(triangle);
-		}
-	}
 }
