@@ -3,6 +3,7 @@
 
 #include "vector.h"
 #include "matrix.h"
+#include "plane.h"
 
 
 namespace NMaxestFramework { namespace NMath
@@ -45,16 +46,9 @@ namespace NMaxestFramework { namespace NMath
 			{
 				return MatrixPerspectiveRH_XY(zRange, -0.5f*nearPlaneSize.x, 0.5f*nearPlaneSize.x, -0.5f*nearPlaneSize.y, 0.5f*nearPlaneSize.y, zNear, zFar);
 			}
-
-			SVector2 NearPlaneSize(float fovY, float aspectRatio, float zNear)
-			{
-				fovY /= 2.0f;
-				float h = zNear * Tan(fovY);
-				return 2.0f * VectorCustom(aspectRatio*h, h);
-			}
 		} utils;
 		
-		SVector2 nearPlaneSize_startFOV = utils.NearPlaneSize(fovY, aspectRatio, zNear);
+		SVector2 nearPlaneSize_startFOV = PlaneSize(fovY, aspectRatio, zNear);
 	
 		float fovDivider = SolveLineCoeffs(
 			VectorCustom(0.0f, 1.0f),

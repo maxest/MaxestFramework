@@ -21,16 +21,6 @@ namespace NRayTracer
 
 	//
 
-	inline SVector2 ViewPlaneSize(float fov, float aspect, float distance)
-	{
-		SVector2 size;
-
-		size.y = 2.0f * distance * Tan(fov / 2.0f);
-		size.x = aspect * size.y;
-
-		return size;
-	}
-
 	inline void UpdateView(SCamera& camera, const SVector3& position, const SVector3& target, const SVector3& up)
 	{
 		camera.position = position;
@@ -56,7 +46,7 @@ namespace NRayTracer
 	inline void UpdatePerspective(SCamera& camera, int width, int height, float fov, float nearPlaneDistance)
 	{
 		float aspect = (float)width / (float)height;
-		SVector2 nearPlaneSize = ViewPlaneSize(fov, aspect, nearPlaneDistance);
+		SVector2 nearPlaneSize = PlaneSize(fov, aspect, nearPlaneDistance);
 
 		camera.nearPlaneDistance = nearPlaneDistance;
 

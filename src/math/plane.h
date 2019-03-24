@@ -9,7 +9,7 @@ namespace NMaxestFramework { namespace NMath
 {
 	SPlane PlaneFromPointAndNormal(const SVector3& point, const SVector3& normal);
 	SPlane PlaneFromPoints(const SVector3& point1, const SVector3& point2, const SVector3& point3);
-	SVector2 PlaneSize(float distance, float fovY, float aspect);
+	SVector2 PlaneSize(float fovY, float aspect, float distance); // frustum's near plane, at distance 'distance' from the origin and vertical 'fovY'
 	void NormalizeIn(SPlane& plane);
 
 	//
@@ -42,7 +42,7 @@ namespace NMaxestFramework { namespace NMath
 		return temp;
 	}
 
-	inline SVector2 PlaneSize(float distance, float fovY, float aspect)
+	inline SVector2 PlaneSize(float fovY, float aspect, float distance)
 	{
 		SVector2 size;
 
