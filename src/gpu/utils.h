@@ -150,6 +150,12 @@ namespace NMaxestFramework { namespace NGPU { namespace NUtils
 		ID3D11RasterizerState* ccwRasterizerState;
 		ID3D11RasterizerState* cwRasterizerState;
 
+		// depth states
+
+		ID3D11DepthStencilState* depthTestDepthState;
+		ID3D11DepthStencilState* depthTestStencilTestDepthState;
+		ID3D11DepthStencilState* noDepthTestNoStencilTestDepthState;
+
 		// blend states
 
 		ID3D11BlendState* defaultBlendState;

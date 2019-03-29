@@ -1229,7 +1229,7 @@ void NGPU::DestroyRasterizerState(ID3D11RasterizerState*& rasterizerState)
 }
 
 
-void DestroyDepthStencilState(ID3D11DepthStencilState*& depthStencilState)
+void NGPU::DestroyDepthStencilState(ID3D11DepthStencilState*& depthStencilState)
 {
 	SAFE_RELEASE(depthStencilState);
 }

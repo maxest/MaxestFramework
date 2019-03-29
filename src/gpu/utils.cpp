@@ -505,6 +505,12 @@ void NGPU::NUtils::CResources::Create(const string& frameworkPath)
 
 	//
 
+	CreateDepthStencilState(depthTestDepthState, true, false);
+	CreateDepthStencilState(depthTestStencilTestDepthState, true, true);
+	CreateDepthStencilState(noDepthTestNoStencilTestDepthState, false, false);
+
+	//
+
 	CreateBlendState(defaultBlendState, false);
 	CreateBlendState(transparencyBlendState, true);
 
@@ -568,6 +574,12 @@ void NGPU::NUtils::CResources::Destroy()
 
 	DestroyBlendState(defaultBlendState);
 	DestroyBlendState(transparencyBlendState);
+
+	//
+
+	DestroyDepthStencilState(depthTestDepthState);
+	DestroyDepthStencilState(depthTestStencilTestDepthState);
+	DestroyDepthStencilState(noDepthTestNoStencilTestDepthState);
 
 	//
 
