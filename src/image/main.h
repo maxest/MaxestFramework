@@ -1,5 +1,4 @@
 #pragma once
-#ifdef MAXEST_FRAMEWORK_DESKTOP
 
 
 namespace NMaxestFramework
@@ -20,6 +19,3 @@ namespace NMaxestFramework { namespace NImage
 	void Initialize();
 	void Deinitialize();
 } }
-
-
-#endif

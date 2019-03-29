@@ -1,11 +1,12 @@
-#ifdef MAXEST_FRAMEWORK_DESKTOP
-
-
 #include "main.h"
 #include "../essentials/main.h"
 #include "../system/common.h"
 
-#include "../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	#ifdef MAXEST_FRAMEWORK_WINDOWS
+		#include "../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
+	#endif
+#endif
 
 
 using namespace NMaxestFramework;
@@ -13,14 +14,15 @@ using namespace NMaxestFramework;
 
 void NImage::Initialize()
 {
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	FreeImage_Initialise();
+#endif
 }
 
 
 void NImage::Deinitialize()
 {
+#ifdef MAXEST_FRAMEWORK_DESKTOP
 	FreeImage_DeInitialise();
-}
-
-
 #endif
+}
