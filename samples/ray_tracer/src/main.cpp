@@ -18,6 +18,7 @@ int height = 480;
 
 NRayTracer::CScene scene;
 NMath::CCamera camera;
+NRayTracer::CRayTracer rayTracer;
 
 
 void Log(const string& msg)
@@ -38,7 +39,6 @@ void Create()
 
 	scene.ambientConst = 0.0f;
 	scene.ambientOcclusionFactor = 0.5f;
-	NRayTracer::Create(width, height);
 
 	// floor
 	{
@@ -98,11 +98,11 @@ void Create()
 	//
 
 	SPointLight pointLight;
-	//
+
 	pointLight.position = VectorCustom(2.0f, 3.0f, 0.0f);
 	pointLight.color = 50.0f * VectorCustom(1.0f, 1.0f, 1.0f);
 	scene.pointLights.push_back(pointLight);
-	//
+
 	pointLight.position = VectorCustom(-2.0f, 5.0f, -15.0f);
 	pointLight.color = 500.0f * VectorCustom(1.0f, 0.0f, 0.0f);
 	scene.pointLights.push_back(pointLight);
@@ -115,6 +115,10 @@ void Create()
 	//
 
 	camera.UpdateFixed(VectorCustom(0.0f, 5.0f, 17.5f), VectorCustom(0.0f, 0.0f, 0.0f));
+
+	//
+
+	rayTracer.Create(width, height, scene);
 }
 
 
@@ -173,7 +177,7 @@ bool Run()
 	const int jobsCount = 32;
 	CRayTraceJob* jobs[jobsCount];
 	for (int i = 0; i < jobsCount; i++)
-		jobs[i] = new CRayTraceJob(data, width, i*height/jobsCount, (i+1)*height/jobsCount, scene, rtCamera, dof, aa);
+		jobs[i] = new CRayTraceJob(data, width, i*height/jobsCount, (i+1)*height/jobsCount, rayTracer, rtCamera, dof, aa);
 
 //	for (int i = 0; i < jobsCount; i++)
 //		jobs[i]->Do();

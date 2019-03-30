@@ -23,21 +23,29 @@ using namespace NCommon;
 
 namespace NRayTracer
 {
-	void Create(int width, int height);
-	SVector3 SceneRadiance_Recursive(const CScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth);
+	class CRayTracer
+	{
+	public:
+		void Create(int width, int height, const CScene& scene);
+		SVector3 Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const;
+
+	private:
+		const CScene* scene;
+		CSamplerHemispherical sampler;
+	};
 
 	//
 
 	class CRayTraceJob: public CJob
 	{
 	public:
-		CRayTraceJob(uint8* data, int width, int heightMin, int heightMax, const CScene& scene, const CCamera& camera, bool dof, bool aa)
+		CRayTraceJob(uint8* data, int width, int heightMin, int heightMax, const CRayTracer& rayTracer, const CCamera& camera, bool dof, bool aa)
 		{
 			this->data = data;
 			this->width = width;
 			this->heightMin = heightMin;
 			this->heightMax = heightMax;
-			this->scene = &scene;
+			this->rayTracer = &rayTracer;
 			this->camera = &camera;
 			this->dof = dof;
 			this->aa = aa;
@@ -65,7 +73,7 @@ namespace NRayTracer
 
 					SVector3 rayStart, rayDir;
 					camera->Ray((float)x, (float)y, rayStart, rayDir);
-					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0);
+					radiance += rayTracer->Radiance_Recursive(y*width + x, rayStart, rayDir, 0);
 
 					Pixel(x, y, radiance);
 				}
@@ -84,7 +92,7 @@ namespace NRayTracer
 
 					SVector3 rayStart, rayDir;
 					camera->RayDOF((float)x, (float)y, RandomFloat(-0.16f, 0.16f), RandomFloat(-0.16f, 0.16f), 8.0f, rayStart, rayDir);
-					radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) / 1.0f;
+					radiance += rayTracer->Radiance_Recursive(y*width + x, rayStart, rayDir, 0) / 1.0f;
 
 					Pixel(x, y, radiance);
 				}
@@ -111,7 +119,7 @@ namespace NRayTracer
 						for (int i = 0; i < samplesCountY; i++)
 						{
 							camera->Ray((float)x + i*sampleOffsetX, (float)y + j*sampleOffsetY, rayStart, rayDir);
-							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
+							radiance += rayTracer->Radiance_Recursive(y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
 						}
 					}
 
@@ -142,7 +150,7 @@ namespace NRayTracer
 						for (int i = 0; i < samplesCountY; i++)
 						{
 							camera->RayDOF((float)x+ i*sampleOffsetX, (float)y + j*sampleOffsetY, dofDX, dofDY, 8.0f, rayStart, rayDir);
-							radiance += SceneRadiance_Recursive(*scene, y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
+							radiance += rayTracer->Radiance_Recursive(y*width + x, rayStart, rayDir, 0) * oneOverSamplesCount;
 						}
 					}
 
@@ -175,7 +183,7 @@ namespace NRayTracer
 		uint8* data;
 		int width;
 		int heightMin, heightMax;
-		const CScene* scene;
+		const CRayTracer* rayTracer;
 		const CCamera* camera;
 		bool dof;
 		bool aa;

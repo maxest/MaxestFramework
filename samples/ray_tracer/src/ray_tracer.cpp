@@ -1,16 +1,17 @@
 #include "ray_tracer.h"
 
 
-NRayTracer::CSamplerHemispherical sampler;
+using namespace NRayTracer;
 
 
-void NRayTracer::Create(int width, int height)
+void CRayTracer::Create(int width, int height, const CScene &scene)
 {
+	this->scene = &scene;
 	sampler.Create(width, height, 8);
 }
 
 
-SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth)
+SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const
 {
 	SVector3 radiance = cVector3Zero;
 	SSceneIntersectionResult sir;
@@ -18,9 +19,9 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 	if (depth == MAX_DEPTH)
 		return radiance;
 
-	if (scene.IntersectionPrimary(rayStart, rayDir, cFloatMax, sir))
+	if (scene->IntersectionPrimary(rayStart, rayDir, cFloatMax, sir))
 	{
-		const CMaterial& material = scene.materials[sir.materialIndex];
+		const CMaterial& material = scene->materials[sir.materialIndex];
 		SMatrix worldToTangent = WorldToTangent(sir.normal);
 		SMatrix tangentToWorld = Transpose(worldToTangent);
 		SVector3& point = sir.point;
@@ -36,10 +37,10 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 
 		// constant ambient
 		if (depth == 0) // this is a fake effect and seems to make sense to be applied only once (not recursively)
-			radiance += scene.ambientConst * material.diffuseBRDF->rho();
+			radiance += scene->ambientConst * material.diffuseBRDF->rho();
 
 		// ambient occlusion
-		if (scene.ambientOcclusionFactor > 0.0f)
+		if (scene->ambientOcclusionFactor > 0.0f)
 		{
 			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
 
@@ -50,7 +51,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 				const SVector3& wi_tangent = sampler.Get(samplesSetIndex, i);
 				SVector3 wi = wi_tangent * tangentToWorld;
 
-				if (!scene.IntersectionShadow(point + 0.001f*wi, wi, cFloatMax, triangleIndex))
+				if (!scene->IntersectionShadow(point + 0.001f*wi, wi, cFloatMax, triangleIndex))
 				{
 					float NdotL = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
 					float pdf = NdotL / cPi; // samples used are cosine-weighted
@@ -60,20 +61,20 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 			}
 			ambientOcclusion /= (float)samplesCount;
 
-			radiance += scene.ambientOcclusionFactor * brdf * ambientOcclusion;
+			radiance += scene->ambientOcclusionFactor * brdf * ambientOcclusion;
 		}
 
 		// direct illumination
 		{
 			// dir lights
-			for (uint i = 0; i < scene.dirLights.size(); i++)
+			for (uint i = 0; i < scene->dirLights.size(); i++)
 			{
-				const SDirLight& light = scene.dirLights[i];
+				const SDirLight& light = scene->dirLights[i];
 
 				SVector3 wi = -light.dir;
 				SVector3 wi_tangent = Normalize(wi * worldToTangent);
 
-				if (!scene.IntersectionShadow(point, wi, cFloatMax, triangleIndex))
+				if (!scene->IntersectionShadow(point, wi, cFloatMax, triangleIndex))
 				{
 					float NdotL = Saturate(Dot(wi, normal));
 
@@ -85,16 +86,16 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 			}
 
 			// point lights
-			for (uint i = 0; i < scene.pointLights.size(); i++)
+			for (uint i = 0; i < scene->pointLights.size(); i++)
 			{
-				const SPointLight& light = scene.pointLights[i];
+				const SPointLight& light = scene->pointLights[i];
 
 				SVector3 wi = light.position - point;
 				float distanceToLight = Length(wi);
 				wi = wi / distanceToLight;
 				SVector3 wi_tangent = Normalize(wi * worldToTangent);
 
-				if (!scene.IntersectionShadow(point, wi, 1.1f*distanceToLight, triangleIndex))
+				if (!scene->IntersectionShadow(point, wi, 1.1f*distanceToLight, triangleIndex))
 				{
 					float NdotL = Saturate(Dot(wi, normal));
 
@@ -129,7 +130,7 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 					radiance +=
 						transmittance /
 						Sqr(eta) *
-						SceneRadiance_Recursive(scene, samplesSetIndex, point + 0.001f*wi, wi, depth + 1);
+						Radiance_Recursive(samplesSetIndex, point + 0.001f*wi, wi, depth + 1);
 				}
 				else // total internal reflection
 				{
@@ -143,19 +144,19 @@ SVector3 NRayTracer::SceneRadiance_Recursive(const CScene& scene, int samplesSet
 
 				radiance +=
 					reflectivity *
-					SceneRadiance_Recursive(scene, samplesSetIndex, point + 0.001f*wi, wi, depth + 1);
+					Radiance_Recursive(samplesSetIndex, point + 0.001f*wi, wi, depth + 1);
 			}
 		}
 		/*
 		// GI
-		for (uint i = 0; i < scene.samples_hemisphere1[samplesSetIndex].size(); i++)
+		for (uint i = 0; i < scene->samples_hemisphere1[samplesSetIndex].size(); i++)
 		{
-			SVector3 wi = SphericalToCartesian(scene.samples_hemisphere1[samplesSetIndex][i]);
+			SVector3 wi = SphericalToCartesian(scene->samples_hemisphere1[samplesSetIndex][i]);
 			wi = wi * tangentToWorld;
 
 			radiance +=
-				SceneRadiance_Recursive(scene, samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1, maxDepth) /
-				(float)scene.samples_hemisphere1[samplesSetIndex].size();
+				Radiance_Recursive(scene, samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1, maxDepth) /
+				(float)scene->samples_hemisphere1[samplesSetIndex].size();
 		}*/
 	}
 
