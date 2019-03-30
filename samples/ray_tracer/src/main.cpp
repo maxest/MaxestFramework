@@ -169,7 +169,7 @@ bool Run()
 	bool dof = false;
 	bool aa = false;
 
-	uint8* outputData = rayTracer.Render(jobSystem, rtCamera, dof, aa);
+	uint8* outputData = rayTracer.Render(&jobSystem, rtCamera, dof, aa);
 
 	uint64 after = TickCount();
 	cout << after - before << endl;

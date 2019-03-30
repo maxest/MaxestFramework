@@ -35,7 +35,7 @@ namespace NRayTracer
 		void Create(int width, int height, const CScene& scene);
 		void Destroy();
 
-		uint8* Render(CJobSystem& jobSystem, const CCamera& camera, bool dof, bool aa);
+		uint8* Render(CJobSystem* jobSystem, const CCamera& camera, bool dof, bool aa);
 
 		SVector3 Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const;
 
@@ -44,7 +44,7 @@ namespace NRayTracer
 		const CScene* scene;
 		CSamplerHemispherical sampler;
 
-		uint8* outputData; // RGBA8
+		uint8* outputData; // in RGBA8
 	};
 
 	//

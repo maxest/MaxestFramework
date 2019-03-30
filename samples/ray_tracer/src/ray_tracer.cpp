@@ -25,21 +25,26 @@ void CRayTracer::Destroy()
 }
 
 
-uint8* CRayTracer::Render(CJobSystem& jobSystem, const CCamera& camera, bool dof, bool aa)
+uint8* CRayTracer::Render(CJobSystem* jobSystem, const CCamera& camera, bool dof, bool aa)
 {
 	const int jobsCount = 32;
 	CRayTraceJob* jobs[jobsCount];
 	for (int i = 0; i < jobsCount; i++)
 		jobs[i] = new CRayTraceJob(outputData, width, i*height/jobsCount, (i+1)*height/jobsCount, *this, camera, dof, aa);
 
-//	for (int i = 0; i < jobsCount; i++)
-//		jobs[i]->Do();
-
-	CJobGroup jobGroup;
-	for (int i = 0; i < jobsCount; i++)
-		jobGroup.AddJob(jobs[i]);
-	jobSystem.AddJobGroup(jobGroup);
-	jobGroup.Wait();
+	if (jobSystem == nullptr)
+	{
+		for (int i = 0; i < jobsCount; i++)
+			jobs[i]->Do();
+	}
+	else
+	{
+		CJobGroup jobGroup;
+		for (int i = 0; i < jobsCount; i++)
+			jobGroup.AddJob(jobs[i]);
+		jobSystem->AddJobGroup(jobGroup);
+		jobGroup.Wait();
+	}
 
 	for (int i = 0; i < jobsCount; i++)
 		delete jobs[i];
