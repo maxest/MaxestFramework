@@ -26,12 +26,25 @@ namespace NRayTracer
 	class CRayTracer
 	{
 	public:
+		CRayTracer()
+		{
+			outputData = nullptr;
+			scene = nullptr;
+		}
+
 		void Create(int width, int height, const CScene& scene);
+		void Destroy();
+
+		uint8* Render(CJobSystem& jobSystem, const CCamera& camera, bool dof, bool aa);
+
 		SVector3 Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const;
 
 	private:
+		int width, height;
 		const CScene* scene;
 		CSamplerHemispherical sampler;
+
+		uint8* outputData; // RGBA8
 	};
 
 	//

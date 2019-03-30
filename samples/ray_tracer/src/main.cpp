@@ -12,7 +12,6 @@ CApplication application;
 CJobSystem jobSystem;
 COGLTextureRenderer oglTextureRenderer;
 
-uint8* data;
 int width = 640;
 int height = 480;
 
@@ -30,10 +29,6 @@ void Log(const string& msg)
 void Create()
 {
 	Randomize();
-
-	//
-
-	data = new uint8[4 * width * height];
 
 	//
 
@@ -98,11 +93,11 @@ void Create()
 	//
 
 	SPointLight pointLight;
-
+	//
 	pointLight.position = VectorCustom(2.0f, 3.0f, 0.0f);
 	pointLight.color = 50.0f * VectorCustom(1.0f, 1.0f, 1.0f);
 	scene.pointLights.push_back(pointLight);
-
+	//
 	pointLight.position = VectorCustom(-2.0f, 5.0f, -15.0f);
 	pointLight.color = 500.0f * VectorCustom(1.0f, 0.0f, 0.0f);
 	scene.pointLights.push_back(pointLight);
@@ -124,10 +119,10 @@ void Create()
 
 void Destroy()
 {
+	rayTracer.Destroy();
+
 	for (uint i = 0; i < scene.materials.size(); i++)
 		scene.materials[i].Destroy();
-
-	delete[] data;
 }
 
 
@@ -174,27 +169,12 @@ bool Run()
 	bool dof = false;
 	bool aa = false;
 
-	const int jobsCount = 32;
-	CRayTraceJob* jobs[jobsCount];
-	for (int i = 0; i < jobsCount; i++)
-		jobs[i] = new CRayTraceJob(data, width, i*height/jobsCount, (i+1)*height/jobsCount, rayTracer, rtCamera, dof, aa);
-
-//	for (int i = 0; i < jobsCount; i++)
-//		jobs[i]->Do();
-
-	CJobGroup jobGroup;
-	for (int i = 0; i < jobsCount; i++)
-		jobGroup.AddJob(jobs[i]);
-	jobSystem.AddJobGroup(jobGroup);
-	jobGroup.Wait();
-
-	for (int i = 0; i < jobsCount; i++)
-		delete jobs[i];
+	uint8* outputData = rayTracer.Render(jobSystem, rtCamera, dof, aa);
 
 	uint64 after = TickCount();
-	printf("%llu\n", (after - before));
+	cout << after - before << endl;
 
-	oglTextureRenderer.Render(data);
+	oglTextureRenderer.Render(outputData);
 
 	if (application.IsKeyPressed(EKey::Escape))
 		return false;

@@ -6,8 +6,45 @@ using namespace NRayTracer;
 
 void CRayTracer::Create(int width, int height, const CScene &scene)
 {
+	this->width = width;
+	this->height = height;
 	this->scene = &scene;
 	sampler.Create(width, height, 8);
+
+	outputData = new uint8[4 * width * height];
+}
+
+
+void CRayTracer::Destroy()
+{
+	MF_ASSERT(outputData != nullptr);
+	delete[] outputData;
+	outputData = nullptr;
+
+	scene = nullptr;
+}
+
+
+uint8* CRayTracer::Render(CJobSystem& jobSystem, const CCamera& camera, bool dof, bool aa)
+{
+	const int jobsCount = 32;
+	CRayTraceJob* jobs[jobsCount];
+	for (int i = 0; i < jobsCount; i++)
+		jobs[i] = new CRayTraceJob(outputData, width, i*height/jobsCount, (i+1)*height/jobsCount, *this, camera, dof, aa);
+
+//	for (int i = 0; i < jobsCount; i++)
+//		jobs[i]->Do();
+
+	CJobGroup jobGroup;
+	for (int i = 0; i < jobsCount; i++)
+		jobGroup.AddJob(jobs[i]);
+	jobSystem.AddJobGroup(jobGroup);
+	jobGroup.Wait();
+
+	for (int i = 0; i < jobsCount; i++)
+		delete jobs[i];
+
+	return outputData;
 }
 
 
