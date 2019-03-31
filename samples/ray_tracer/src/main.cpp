@@ -166,10 +166,8 @@ bool Run()
 	rtCamera.UpdateView(camera.eye, camera.at, camera.up);
 //	rtCamera.SetOrtho(width, height, 10.0f);
 	rtCamera.SetPerspective(cPi / 3.0f, width, height, 4.0f);
-	bool dof = false;
-	bool aa = false;
 
-	uint8* outputData = rayTracer.Render(&jobSystem, rtCamera, dof, aa);
+	uint8* outputData = rayTracer.Render(&jobSystem, rtCamera);
 
 	uint64 after = TickCount();
 	cout << after - before << endl;

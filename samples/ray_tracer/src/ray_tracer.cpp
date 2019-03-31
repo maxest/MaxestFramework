@@ -25,12 +25,12 @@ void CRayTracer::Destroy()
 }
 
 
-uint8* CRayTracer::Render(CJobSystem* jobSystem, const CCamera& camera, bool dof, bool aa)
+uint8* CRayTracer::Render(CJobSystem* jobSystem, const CCamera& camera)
 {
 	const int jobsCount = 32;
 	CRayTraceJob* jobs[jobsCount];
 	for (int i = 0; i < jobsCount; i++)
-		jobs[i] = new CRayTraceJob(outputData, width, i*height/jobsCount, (i+1)*height/jobsCount, *this, camera, dof, aa);
+		jobs[i] = new CRayTraceJob(outputData, width, i*height/jobsCount, (i+1)*height/jobsCount, *this, camera);
 
 	if (jobSystem == nullptr)
 	{
