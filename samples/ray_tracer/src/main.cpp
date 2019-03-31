@@ -32,9 +32,6 @@ void Create()
 
 	//
 
-	scene.ambientConst = 0.0f;
-	scene.ambientOcclusionFactor = 0.5f;
-
 	// floor
 	{
 		NMesh::SMesh mesh;
@@ -114,6 +111,8 @@ void Create()
 	//
 
 	rayTracer.Create(width, height, scene);
+	rayTracer.ambientConst = 0.0f;
+	rayTracer.ambientOcclusionFactor = 0.5f;
 }
 
 

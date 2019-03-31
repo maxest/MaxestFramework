@@ -6,6 +6,9 @@ using namespace NRayTracer;
 
 void CRayTracer::Create(int width, int height, const CScene &scene)
 {
+	ambientConst = 0.0f;
+	ambientOcclusionFactor = 0.0f;
+
 	this->width = width;
 	this->height = height;
 	this->scene = &scene;
@@ -25,8 +28,84 @@ void CRayTracer::Destroy()
 }
 
 
-uint8* CRayTracer::Render(CJobSystem* jobSystem, const CCamera& camera)
+uint8* CRayTracer::Render(CJobSystem* jobSystem, const NRayTracer::CCamera& camera)
 {
+	class CRayTraceJob : public CJob
+	{
+	public:
+		CRayTraceJob(uint8* data, int width, int heightMin, int heightMax, const CRayTracer& rayTracer, const NRayTracer::CCamera& camera)
+		{
+			this->data = data;
+			this->width = width;
+			this->heightMin = heightMin;
+			this->heightMax = heightMax;
+			this->rayTracer = &rayTracer;
+			this->camera = &camera;
+		}
+
+		int Do()
+		{
+			int samplesCountX = 1;
+			int samplesCountY = 1;
+			bool dof = false;
+
+			float sampleOffsetX = 1.0f / (float)samplesCountX;
+			float sampleOffsetY = 1.0f / (float)samplesCountY;
+			float oneOverSamplesCount = 1.0f / (float)(samplesCountX * samplesCountY);
+
+			for (int y = heightMin; y < heightMax; y++)
+			{
+				for (int x = 0; x < width; x++)
+				{
+					SVector3 radiance = cVector3Zero;
+
+					float dofDX = RandomFloat(-0.16f, 0.16f);
+					float dofDY = RandomFloat(-0.16f, 0.16f);
+					for (int j = 0; j < samplesCountY; j++)
+					{
+						for (int i = 0; i < samplesCountX; i++)
+						{
+							SVector3 rayStart, rayDir;
+
+							if (dof)
+								camera->RayDOF((float)x + i*sampleOffsetX, (float)y + j*sampleOffsetY, dofDX, dofDY, 8.0f, rayStart, rayDir);
+							else
+								camera->Ray((float)x + i*sampleOffsetX, (float)y + j*sampleOffsetY, rayStart, rayDir);
+
+							radiance += rayTracer->Radiance_Recursive(y*width + x, rayStart, rayDir, 0);
+						}
+					}
+
+					radiance *= oneOverSamplesCount;
+
+					SetPixel(x, y, radiance);
+				}
+			}
+
+			return 0;
+		}
+
+	private:
+		FORCE_INLINE void SetPixel(int x, int y, SVector3& radiance)
+		{
+			radiance = Clamp(radiance, cVector3Zero, cVector3One);
+			//PowIn(radiance, 1.0f/2.2f);
+
+			int index = Idx(x, y, width);
+			data[4 * index + 0] = (uint8)(255.0f * radiance.z);
+			data[4 * index + 1] = (uint8)(255.0f * radiance.y);
+			data[4 * index + 2] = (uint8)(255.0f * radiance.x);
+			data[4 * index + 3] = 255;
+		}
+
+	private:
+		uint8* data;
+		int width;
+		int heightMin, heightMax;
+		const CRayTracer* rayTracer;
+		const NRayTracer::CCamera* camera;
+	};
+
 	const int jobsCount = 32;
 	CRayTraceJob* jobs[jobsCount];
 	for (int i = 0; i < jobsCount; i++)
@@ -55,10 +134,12 @@ uint8* CRayTracer::Render(CJobSystem* jobSystem, const CCamera& camera)
 
 SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const
 {
+	const int cMaxDepth = 3;
+
 	SVector3 radiance = cVector3Zero;
 	SSceneIntersectionResult sir;
 
-	if (depth == MAX_DEPTH)
+	if (depth == cMaxDepth)
 		return radiance;
 
 	if (scene->IntersectionPrimary(rayStart, rayDir, cFloatMax, sir))
@@ -79,10 +160,10 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 
 		// constant ambient
 		if (depth == 0) // this is a fake effect and seems to make sense to be applied only once (not recursively)
-			radiance += scene->ambientConst * material.diffuseBRDF->rho();
+			radiance += ambientConst * material.diffuseBRDF->rho();
 
 		// ambient occlusion
-		if (scene->ambientOcclusionFactor > 0.0f)
+		if (ambientOcclusionFactor > 0.0f)
 		{
 			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
 
@@ -103,7 +184,7 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 			}
 			ambientOcclusion /= (float)samplesCount;
 
-			radiance += scene->ambientOcclusionFactor * brdf * ambientOcclusion;
+			radiance += ambientOcclusionFactor * ambientOcclusion * brdf;
 		}
 
 		// direct illumination

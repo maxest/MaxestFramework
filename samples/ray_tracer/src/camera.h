@@ -57,7 +57,7 @@ namespace NRayTracer
 			xCoeffs = SolveLineCoeffs(p3, p4);
 		}
 
-		void Ray(float x, float y, SVector3& rayStart, SVector3& rayDir) const
+		FORCE_INLINE void Ray(float x, float y, SVector3& rayStart, SVector3& rayDir) const
 		{
 			if (type == EType::Perspective)
 			{
@@ -83,7 +83,7 @@ namespace NRayTracer
 			}
 		}
 
-		void RayDOF(float x, float y, float dofDX, float dofDY, float dofFocalPlaneDistance, SVector3& rayStart, SVector3& rayDir) const
+		FORCE_INLINE void RayDOF(float x, float y, float dofDX, float dofDY, float dofFocalPlaneDistance, SVector3& rayStart, SVector3& rayDir) const
 		{
 			if (type == EType::Perspective)
 			{

@@ -27,8 +27,5 @@ namespace NRayTracer
 		vector<CMaterial> materials;
 		vector<SDirLight> dirLights;
 		vector<SPointLight> pointLights;
-
-		float ambientConst;
-		float ambientOcclusionFactor;
 	};
 }
