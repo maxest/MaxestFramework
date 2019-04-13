@@ -5,6 +5,11 @@
 #include <climits>
 
 
+#ifdef __GNUC__
+#define nullptr 0
+#endif
+
+
 typedef wchar_t wchar;
 
 typedef unsigned int uint;
