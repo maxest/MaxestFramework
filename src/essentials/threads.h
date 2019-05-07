@@ -149,7 +149,6 @@ namespace NMaxestFramework { namespace NEssentials
 	{
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		int state = WaitForSingleObject(mutexHandle, INFINITE);
-		MF_ASSERT(state == WAIT_OBJECT_0 || state == WAIT_TIMEOUT);
 		return state == WAIT_OBJECT_0;
 	#else
 		return pthread_mutex_lock(mutexHandle) == 0;
@@ -203,7 +202,6 @@ namespace NMaxestFramework { namespace NEssentials
 	{
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		int state = WaitForSingleObject(semaphoreHandle, INFINITE);
-		MF_ASSERT(state == WAIT_OBJECT_0 || state == WAIT_TIMEOUT);
 		return state == WAIT_OBJECT_0;
 	#else
 		return sem_wait(semaphoreHandle) == 0;

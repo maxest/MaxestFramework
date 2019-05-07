@@ -53,7 +53,7 @@ THREAD_FUNCTION_RETURN_VALUE NMaxestFramework::NNet::CConnectionsManager::RecvTh
 			memcpy(packet.data, data, dataSize);
 			packet.dataSize = dataSize;
 
-			NEssentials::MutexLock(connectionsManager->recvMutex);
+			MF_ASSERT(NEssentials::MutexLock(connectionsManager->recvMutex));
 			connectionsManager->recvPackets.push_back(packet);
 			NEssentials::MutexUnlock(connectionsManager->recvMutex);
 		}
@@ -111,7 +111,7 @@ bool NNet::CConnectionsManager::PopRecvPacket(SPacket* packet)
 	if (recvPackets.size() == 0)
 		return false;
 
-	NEssentials::MutexLock(recvMutex);
+	MF_ASSERT(NEssentials::MutexLock(recvMutex));
 	*packet = recvPackets.front();
 	recvPackets.pop_front();
 	NEssentials::MutexUnlock(recvMutex);

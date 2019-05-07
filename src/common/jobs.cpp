@@ -33,7 +33,7 @@ void NCommon::CJobGroup::AddJob(CJob* job)
 
 void NCommon::CJobGroup::Wait()
 {
-	SemaphoreAcquire(waitingSemaphore);
+	MF_ASSERT(SemaphoreAcquire(waitingSemaphore));
 }
 
 
@@ -56,12 +56,12 @@ THREAD_FUNCTION_RETURN_VALUE NCommon::CJobSystem::JobThread(void* data)
 
 	for (;;)
 	{
-		SemaphoreAcquire(jobSystem->activeJobsSemaphore);
+		MF_ASSERT(SemaphoreAcquire(jobSystem->activeJobsSemaphore));
 
 		if (thread->requestStop)
 			return 0;
 
-		MutexLock(jobSystem->jobsQueueMutex);
+		MF_ASSERT(MutexLock(jobSystem->jobsQueueMutex));
 		NCommon::CJob* job = jobSystem->jobs.front();
 		jobSystem->jobs.pop();
 		MutexUnlock(jobSystem->jobsQueueMutex);
@@ -113,7 +113,7 @@ void NCommon::CJobSystem::Destroy()
 
 void NCommon::CJobSystem::AddJob(CJob* job)
 {
-	MutexLock(jobsQueueMutex);
+	MF_ASSERT(MutexLock(jobsQueueMutex));
 	jobs.push(job);
 	MutexUnlock(jobsQueueMutex);
 
@@ -123,7 +123,7 @@ void NCommon::CJobSystem::AddJob(CJob* job)
 
 void NCommon::CJobSystem::AddJobGroup(const CJobGroup& jobGroup)
 {
-	MutexLock(jobsQueueMutex);
+	MF_ASSERT(MutexLock(jobsQueueMutex));
 	for (uint i = 0; i < jobGroup.jobs.size(); i++)
 		jobs.push(jobGroup.jobs[i]);
 	MutexUnlock(jobsQueueMutex);
