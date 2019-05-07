@@ -29,11 +29,13 @@
     <ClInclude Include="..\..\src\essentials\bit.h" />
     <ClInclude Include="..\..\src\essentials\coding.h" />
     <ClInclude Include="..\..\src\essentials\common.h" />
+    <ClInclude Include="..\..\src\essentials\file.h" />
     <ClInclude Include="..\..\src\essentials\hash.h" />
     <ClInclude Include="..\..\src\essentials\macros.h" />
     <ClInclude Include="..\..\src\essentials\main.h" />
     <ClInclude Include="..\..\src\essentials\stl.h" />
     <ClInclude Include="..\..\src\essentials\string.h" />
+    <ClInclude Include="..\..\src\essentials\threads.h" />
     <ClInclude Include="..\..\src\essentials\types.h" />
     <ClInclude Include="..\..\src\gpu\d3d11.h" />
     <ClInclude Include="..\..\src\gpu\main.h" />
@@ -82,11 +84,9 @@
     <ClInclude Include="..\..\src\physics\rigid_body.h" />
     <ClInclude Include="..\..\src\system\application.h" />
     <ClInclude Include="..\..\src\system\common.h" />
-    <ClInclude Include="..\..\src\system\file.h" />
     <ClInclude Include="..\..\src\system\keys.h" />
     <ClInclude Include="..\..\src\system\main.h" />
     <ClInclude Include="..\..\src\system\sockets.h" />
-    <ClInclude Include="..\..\src\system\threads.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\common\jobs.cpp" />

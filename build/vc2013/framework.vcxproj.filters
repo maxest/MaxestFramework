@@ -45,9 +45,6 @@
     <ClInclude Include="..\..\src\system\common.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\system\file.h">
-      <Filter>system</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\system\keys.h">
       <Filter>system</Filter>
     </ClInclude>
@@ -55,9 +52,6 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\system\sockets.h">
-      <Filter>system</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\system\threads.h">
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\mesh\main.h">
@@ -229,6 +223,12 @@
     </ClInclude>
     <ClInclude Include="..\..\src\gpu\ogl.h">
       <Filter>gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\essentials\threads.h">
+      <Filter>essentials</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\essentials\file.h">
+      <Filter>essentials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
