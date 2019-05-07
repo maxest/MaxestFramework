@@ -3,7 +3,7 @@
 #include "../system/common.h"
 
 #ifdef MAXEST_FRAMEWORK_DESKTOP
-#include "../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
+	#include "../../dependencies/FreeImage-3.17.0/include/FreeImage.h"
 #endif
 
 
