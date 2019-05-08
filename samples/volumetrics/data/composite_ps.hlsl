@@ -9,7 +9,8 @@ Texture2D<float4> gbufferDiffuseTexture: register(t2);
 cbuffer ConstantBuffer: register(b0)
 {
 	float2 projParams;
-	float2 padding;
+	float nearPlaneDistance;
+	float viewDistance;
 }
 
 
@@ -29,11 +30,11 @@ float DepthNDCToView(float depth_ndc)
 float4 main(PS_INPUT input): SV_Target0
 {
 	float depthSample_ndc = depthBufferTexture.SampleLevel(pointClampSampler, input.texCoord, 0).x;
-	float depth = -DepthNDCToView(depthSample_ndc);
+	float depth = DepthNDCToView(depthSample_ndc);
 
 	float3 lightIntegrationTexCoord;
 	lightIntegrationTexCoord.xy = input.texCoord;
-	lightIntegrationTexCoord.z = (depth - 1.0f) / 299.0f;
+	lightIntegrationTexCoord.z = (-depth - nearPlaneDistance) / viewDistance; // -depth because we're in RH system
 	float lightIntegratedSample = lightIntegratedTexture.SampleLevel(linearClampSampler, lightIntegrationTexCoord, 0);
 
 	float4 gbufferDiffuseSample = gbufferDiffuseTexture.SampleLevel(pointClampSampler, input.texCoord, 0);

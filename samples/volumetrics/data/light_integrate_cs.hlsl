@@ -11,7 +11,7 @@ void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
 
 	uint pixelZ = 0;
 	float lightIntegrated = 0.0f;
-	for (int i = 0; i < 64; i++)
+	for (int i = 0; i < LIGHT_VOLUME_TEXTURE_DEPTH; i++)
 	{
 		uint3 pixelCoord = uint3(pixelX, pixelY, pixelZ);
 

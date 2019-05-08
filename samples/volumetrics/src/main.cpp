@@ -1,5 +1,7 @@
-// volume texture wypelnianie
+// sprobowac blur
 // shadow map
+// reparam Z
+// temporal
 // lepszy model oswietlenia
 
 
@@ -17,6 +19,13 @@ struct SMeshConstantBuffer
 bool fullScreen = false;
 int screenWidth;
 int screenHeight;
+
+int lightVolumeTextureWidth = 160;
+int lightVolumeTextureHeight = 90;
+int lightVolumeTextureDepth = 64;
+float fovY = cPi / 3.0f;
+float nearPlaneDistance = 3.0f;
+float farPlaneDistance = 300.0f;
 
 
 CApplication application;
@@ -49,8 +58,14 @@ void CreateShaders()
 	MF_ASSERT(CreatePixelShader("../../data/mesh_gbuffer_ps.hlsl", meshGBufferPS));
 	MF_ASSERT(CreatePixelShader("../../data/composite_ps.hlsl", compositePS));
 
-	MF_ASSERT(CreateComputeShader("../../data/light_calculate_cs.hlsl", lightCalculateCS));
-	MF_ASSERT(CreateComputeShader("../../data/light_integrate_cs.hlsl", lightIntegrateCS));	
+	MF_ASSERT(CreateComputeShader("../../data/light_calculate_cs.hlsl",
+		"LIGHT_VOLUME_TEXTURE_WIDTH=" + ToString(lightVolumeTextureWidth) + "|" +
+		"LIGHT_VOLUME_TEXTURE_HEIGHT=" + ToString(lightVolumeTextureHeight) + "|" +
+		"LIGHT_VOLUME_TEXTURE_DEPTH=" + ToString(lightVolumeTextureDepth),
+		lightCalculateCS));
+	MF_ASSERT(CreateComputeShader("../../data/light_integrate_cs.hlsl",
+		"LIGHT_VOLUME_TEXTURE_DEPTH=" + ToString(lightVolumeTextureDepth),
+		lightIntegrateCS));
 }
 
 
@@ -79,8 +94,8 @@ bool Create()
 	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, compositeRT);
 	CreateDepthStencilTarget(screenWidth, screenHeight, 1, depthStencilTarget);
 
-	CreateRWTexture3D(160, 90, 64, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D);
-	CreateRWTexture3D(160, 90, 64, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D);
 
 	CreateShaders();
 
@@ -112,6 +127,52 @@ void Destroy()
 	gGPUUtilsResources.Destroy();
 
 	DestroyD3D11();
+}
+
+
+void VolumetricFog(const SMatrix& viewTransform)
+{
+	MF_ASSERT(lightVolumeTextureWidth % 10 == 0);
+	MF_ASSERT(lightVolumeTextureHeight % 10 == 0);
+
+	// light calculation
+	{
+		CProfilerScopedQuery psq("LightCalculate");
+
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D.uav, nullptr);
+		deviceContext->CSSetShader(lightCalculateCS, nullptr, 0);
+
+		struct SParams
+		{
+			SMatrix viewToWorldTransform;
+			SVector2 nearPlaneSize;
+			float nearPlaneDistance;
+			float viewDistance;
+		} params;
+		params.viewToWorldTransform = Invert(viewTransform);
+		params.nearPlaneSize = PlaneSize(fovY, (float)screenWidth / (float)screenHeight, nearPlaneDistance);
+		params.nearPlaneDistance = nearPlaneDistance;
+		params.viewDistance = farPlaneDistance - nearPlaneDistance;
+		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(5).buffer, 0, nullptr, &params, 0, 0);
+		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(5).buffer);
+
+		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, lightVolumeTextureDepth);
+
+		ClearUAVs(0, 1);
+	}
+
+	// light integration
+	{
+		CProfilerScopedQuery psq("LightIntegrate");
+
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
+		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
+		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, 1);
+
+		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
+	}
 }
 
 
@@ -152,7 +213,8 @@ bool Run()
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	SMatrix viewTransform = MatrixLookAtRH(camera.eye, camera.at, camera.up);
-	SMatrix projTransform = MatrixPerspectiveFovRH(EZRange::ZeroToOne, cPi/3.0f, (float)screenWidth/(float)screenHeight, 1.0f, 300.0f);
+	SMatrix projTransform = MatrixPerspectiveFovRH(EZRange::ZeroToOne, fovY, (float)screenWidth/(float)screenHeight, nearPlaneDistance, farPlaneDistance);
+	SMatrix viewProjTransform = viewTransform * projTransform;
 
 	SetViewport(screenWidth, screenHeight);
 
@@ -170,7 +232,7 @@ bool Run()
 		deviceContext->IASetInputLayout(gGPUUtilsResources.posNorUV0UV1InputLayout);
 
 		meshConstantBuffer.worldTransform = MatrixScale(0.1f, 0.1f, 0.1f);
-		meshConstantBuffer.viewProjTransform = viewTransform * projTransform;
+		meshConstantBuffer.viewProjTransform = viewProjTransform;
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(8).buffer, 0, nullptr, &meshConstantBuffer, 0, 0);
 		deviceContext->VSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(8).buffer);
 
@@ -189,29 +251,7 @@ bool Run()
 		}
 	}
 
-	// light calculation
-	{
-		CProfilerScopedQuery psq("LightCalculate");
-		
-		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D.uav, nullptr);
-		deviceContext->CSSetShader(lightCalculateCS, nullptr, 0);
-		deviceContext->Dispatch(16, 9, 64);
-
-		ClearUAVs(0, 1);
-	}
-
-	// light integration
-	{
-		CProfilerScopedQuery psq("LightIntegrate");
-
-		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
-		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
-		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
-		deviceContext->Dispatch(16, 9, 1);
-
-		ClearUAVs(0, 1);
-		ClearCSShaderResources(0, 1);
-	}
+	VolumetricFog(viewTransform);
 
 	// composite
 	{
@@ -231,9 +271,12 @@ bool Run()
 		struct SParams
 		{
 			SVector2 projParams;
-			float padding[2];
+			float nearPlaneDistance;
+			float viewDistance;
 		} params;
 		params.projParams = VectorCustom(projTransform.m[2][2], projTransform.m[3][2]);
+		params.nearPlaneDistance = nearPlaneDistance;
+		params.viewDistance = farPlaneDistance - nearPlaneDistance;
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1).buffer, 0, nullptr, &params, 0, 0);
 		deviceContext->PSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1).buffer);
 	
