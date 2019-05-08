@@ -51,6 +51,7 @@ namespace NMaxestFramework { namespace NGPU
 	bool CompileShaderFromSourceFile(const string& path, const string& entryPointName, const string& shaderModelName, const string& shaderMacros, ID3DBlob*& blob);
 
 	void ClearRenderTargets();
+	void ClearUAVs(int offset, int count);
 	void ClearPSShaderResources(int offset, int count);
 	void ClearCSShaderResources(int offset, int count);
 

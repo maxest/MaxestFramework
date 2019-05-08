@@ -313,6 +313,18 @@ void NGPU::ClearRenderTargets()
 }
 
 
+void NGPU::ClearUAVs(int offset, int count)
+{
+	ID3D11UnorderedAccessView** nullUAVs = new ID3D11UnorderedAccessView*[count];
+	for (int i = 0; i < count; i++)
+		nullUAVs[i] = nullptr;
+
+	deviceContext->CSSetUnorderedAccessViews(offset, count, nullUAVs, nullptr);
+
+	delete[] nullUAVs;
+}
+
+
 void NGPU::ClearPSShaderResources(int offset, int count)
 {
 	ID3D11ShaderResourceView** nullSRVs = new ID3D11ShaderResourceView*[count];
