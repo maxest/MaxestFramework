@@ -16,6 +16,7 @@ void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
 	uint pixelX = 10*gID.x + gtID.x;
 	uint pixelY = 10*gID.y + gtID.y;
 	uint pixelZ = 1*gID.z + gtID.z;
+	uint3 pixelCoord = uint3(pixelX, pixelY, pixelZ);
 
 	float z = ((float)pixelZ + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
 	z = viewDistance*z + nearPlaneDistance;
@@ -33,9 +34,7 @@ void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
 
 	float4 position_view = float4(x, y, -z, 1.0f); // -z because we're in RH system
 	float4 position_world = mul(viewToWorldTransform, position_view);
-	position_world /= position_world.w;
 
-	uint3 pixelCoord = uint3(pixelX, pixelY, pixelZ);
 	if (position_world.x > 0.0f)
 		outputLightVolumeTexture[pixelCoord] = 4.0f/64.0f;
 	else

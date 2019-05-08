@@ -1,4 +1,3 @@
-// sprobowac blur
 // shadow map
 // reparam Z
 // temporal
@@ -37,6 +36,8 @@ TDepthStencilTarget depthStencilTarget;
 
 STexture lightVolumeTexture3D;
 STexture lightIntegratedTexture3D;
+STexture lightTempTexture3D1;
+STexture lightTempTexture3D2;
 
 ID3D11VertexShader* meshVS = nullptr;
 
@@ -44,6 +45,9 @@ ID3D11PixelShader* meshGBufferPS = nullptr;
 ID3D11PixelShader* compositePS = nullptr;
 ID3D11ComputeShader* lightCalculateCS = nullptr;
 ID3D11ComputeShader* lightIntegrateCS = nullptr;
+ID3D11ComputeShader* blur3DXCS = nullptr;
+ID3D11ComputeShader* blur3DYCS = nullptr;
+ID3D11ComputeShader* blur3DZCS = nullptr;
 
 NUtils::CMesh sponzaMesh;
 map<string, NUtils::CTexture> textures;
@@ -66,6 +70,9 @@ void CreateShaders()
 	MF_ASSERT(CreateComputeShader("../../data/light_integrate_cs.hlsl",
 		"LIGHT_VOLUME_TEXTURE_DEPTH=" + ToString(lightVolumeTextureDepth),
 		lightIntegrateCS));
+	MF_ASSERT(CreateComputeShader("../../data/blur_3d.hlsl", "X", blur3DXCS));
+	MF_ASSERT(CreateComputeShader("../../data/blur_3d.hlsl", "Y", blur3DYCS));
+	MF_ASSERT(CreateComputeShader("../../data/blur_3d.hlsl", "Z", blur3DZCS));
 }
 
 
@@ -73,6 +80,9 @@ void DestroyShaders()
 {
 	DestroyComputeShader(lightCalculateCS);
 	DestroyComputeShader(lightIntegrateCS);
+	DestroyComputeShader(blur3DXCS);
+	DestroyComputeShader(blur3DYCS);
+	DestroyComputeShader(blur3DZCS);
 
 	DestroyPixelShader(meshGBufferPS);
 	DestroyPixelShader(compositePS);
@@ -96,6 +106,8 @@ bool Create()
 
 	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D);
 	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightTempTexture3D1);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightTempTexture3D2);
 
 	CreateShaders();
 
@@ -117,6 +129,8 @@ void Destroy()
 
 	DestroyTexture(lightVolumeTexture3D);
 	DestroyTexture(lightIntegratedTexture3D);
+	DestroyTexture(lightTempTexture3D1);
+	DestroyTexture(lightTempTexture3D2);
 
 	DestroyRenderTarget(gbufferDiffuseRT);
 	DestroyRenderTarget(gbufferNormalRT);
@@ -130,7 +144,7 @@ void Destroy()
 }
 
 
-void VolumetricFog(const SMatrix& viewTransform)
+void VolumetricFog(bool lightIntegratedBlur, const SMatrix& viewToWorldTransform)
 {
 	MF_ASSERT(lightVolumeTextureWidth % 10 == 0);
 	MF_ASSERT(lightVolumeTextureHeight % 10 == 0);
@@ -149,7 +163,7 @@ void VolumetricFog(const SMatrix& viewTransform)
 			float nearPlaneDistance;
 			float viewDistance;
 		} params;
-		params.viewToWorldTransform = Invert(viewTransform);
+		params.viewToWorldTransform = viewToWorldTransform;
 		params.nearPlaneSize = PlaneSize(fovY, (float)screenWidth / (float)screenHeight, nearPlaneDistance);
 		params.nearPlaneDistance = nearPlaneDistance;
 		params.viewDistance = farPlaneDistance - nearPlaneDistance;
@@ -170,6 +184,33 @@ void VolumetricFog(const SMatrix& viewTransform)
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, 1);
 
+		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
+	}
+
+	// blur
+	if (lightIntegratedBlur)
+	{
+		CProfilerScopedQuery psq("LightIntegratedBlur");
+
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightTempTexture3D1.uav, nullptr);
+		deviceContext->CSSetShader(blur3DXCS, nullptr, 0);
+		deviceContext->CSSetShaderResources(0, 1, &lightIntegratedTexture3D.srv);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, lightVolumeTextureDepth);
+		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
+
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightTempTexture3D2.uav, nullptr);
+		deviceContext->CSSetShader(blur3DYCS, nullptr, 0);
+		deviceContext->CSSetShaderResources(0, 1, &lightTempTexture3D1.srv);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, lightVolumeTextureDepth);
+		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
+
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
+		deviceContext->CSSetShader(blur3DZCS, nullptr, 0);
+		deviceContext->CSSetShaderResources(0, 1, &lightTempTexture3D2.srv);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, lightVolumeTextureDepth);
 		ClearUAVs(0, 1);
 		ClearCSShaderResources(0, 1);
 	}
@@ -251,7 +292,7 @@ bool Run()
 		}
 	}
 
-	VolumetricFog(viewTransform);
+	VolumetricFog(false, Invert(viewTransform));
 
 	// composite
 	{
