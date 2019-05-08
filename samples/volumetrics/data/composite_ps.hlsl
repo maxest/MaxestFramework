@@ -35,8 +35,8 @@ float4 main(PS_INPUT input): SV_Target0
 	lightIntegrationTexCoord.xy = input.texCoord;
 	lightIntegrationTexCoord.z = (depth - 1.0f) / 299.0f;
 	float lightIntegratedSample = lightIntegratedTexture.SampleLevel(linearClampSampler, lightIntegrationTexCoord, 0);
-	
+
 	float4 gbufferDiffuseSample = gbufferDiffuseTexture.SampleLevel(pointClampSampler, input.texCoord, 0);
-	
+
 	return lightIntegratedSample;
 }

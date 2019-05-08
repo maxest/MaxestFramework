@@ -33,6 +33,7 @@ ID3D11VertexShader* meshVS = nullptr;
 
 ID3D11PixelShader* meshGBufferPS = nullptr;
 ID3D11PixelShader* compositePS = nullptr;
+ID3D11ComputeShader* lightCalculateCS = nullptr;
 ID3D11ComputeShader* lightIntegrateCS = nullptr;
 
 NUtils::CMesh sponzaMesh;
@@ -48,12 +49,14 @@ void CreateShaders()
 	MF_ASSERT(CreatePixelShader("../../data/mesh_gbuffer_ps.hlsl", meshGBufferPS));
 	MF_ASSERT(CreatePixelShader("../../data/composite_ps.hlsl", compositePS));
 
-	MF_ASSERT(CreateComputeShader("../../data/light_integrate_cs.hlsl", lightIntegrateCS));
+	MF_ASSERT(CreateComputeShader("../../data/light_calculate_cs.hlsl", lightCalculateCS));
+	MF_ASSERT(CreateComputeShader("../../data/light_integrate_cs.hlsl", lightIntegrateCS));	
 }
 
 
 void DestroyShaders()
 {
+	DestroyComputeShader(lightCalculateCS);
 	DestroyComputeShader(lightIntegrateCS);
 
 	DestroyPixelShader(meshGBufferPS);
@@ -186,20 +189,28 @@ bool Run()
 		}
 	}
 
+	// light calculation
+	{
+		CProfilerScopedQuery psq("LightCalculate");
+		
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D.uav, nullptr);
+		deviceContext->CSSetShader(lightCalculateCS, nullptr, 0);
+		deviceContext->Dispatch(16, 9, 64);
+
+		ClearUAVs(0, 1);
+	}
+
 	// light integration
 	{
-		CProfilerScopedQuery psq("LightIntegration");
+		CProfilerScopedQuery psq("LightIntegrate");
 
-		float data[4] = { 4.0f / 64.0f, 0.0f, 0.0f, 0.0f };
-		deviceContext->ClearUnorderedAccessViewFloat(lightVolumeTexture3D.uav, data);
-
-		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
 		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
+		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
 		deviceContext->Dispatch(16, 9, 1);
 
-		ID3D11UnorderedAccessView* nullUAVs[] = { nullptr };
-		deviceContext->CSSetUnorderedAccessViews(0, 1, nullUAVs, nullptr);
+		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
 	}
 
 	// composite
@@ -227,6 +238,9 @@ bool Run()
 		deviceContext->PSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1).buffer);
 	
 		deviceContext->DrawIndexed(6, 0, 0);
+
+		ClearRenderTargets();
+		ClearPSShaderResources(0, 3);
 	}
 
 	// render full-screen quad
@@ -241,10 +255,10 @@ bool Run()
 		deviceContext->IASetIndexBuffer(gGPUUtilsResources.screenQuadIB.buffer, DXGI_FORMAT_R16_UINT, 0);
 
 		deviceContext->DrawIndexed(6, 0, 0);
-	}
 
-	ID3D11ShaderResourceView* nullSRVS[] = { nullptr, nullptr, nullptr, nullptr, nullptr, nullptr };
-	deviceContext->PSSetShaderResources(0, 6, nullSRVS);
+		ClearRenderTargets();
+		ClearPSShaderResources(0, 1);
+	}
 
 	swapChain->Present(0, 0);
 
