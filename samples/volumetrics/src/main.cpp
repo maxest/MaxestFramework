@@ -1,5 +1,4 @@
 // shadow map
-// reparam Z
 // temporal
 // lepszy model oswietlenia
 
