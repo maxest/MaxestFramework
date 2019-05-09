@@ -10,23 +10,20 @@ cbuffer ConstantBuffer: register(b0)
 	float2 nearPlaneSize;
 	float nearPlaneDistance;
 	float viewDistance;
+	float dither;
+	float3 padding;
 }
 
 
-float RemapZ1(float z)
+float RemapZ(float z)
 {
 	return z * z;
-}
-// https://www.wolframalpha.com/input/?i=y+%3D+(a*e%5E(b*x)+-+1)*c,+0+%3D+(a*e%5E(b*0)+-+1)*c,+0.1+%3D+(a*e%5E(b*0.5)+-+1)*c,+1+%3D+(a*e%5E(b)+-+1)*c
-// f(0) = 0, f(0.5) = 0.1, f(1) = 1; means half of layers occupy 10% of view distance
-float RemapZ2(float z)
-{
-	return 0.0125f * (exp(4.4f * z) - 1.0f);
-}
-// f(0) = 0, f(0.5) = 0.2, f(1) = 1; means half of layers occupy 20% of view distance
-float RemapZ3(float z)
-{
-	return 0.0667f * (exp(2.773f * z) - 1.0f);
+	
+	// https://www.wolframalpha.com/input/?i=y+%3D+(a*e%5E(b*x)+-+1)*c,+0+%3D+(a*e%5E(b*0)+-+1)*c,+0.1+%3D+(a*e%5E(b*0.5)+-+1)*c,+1+%3D+(a*e%5E(b)+-+1)*c
+	// f(0) = 0, f(0.5) = 0.1, f(1) = 1; means half of layers occupy 10% of view distance
+	//return 0.0125f * (exp(4.4f * z) - 1.0f);
+	// f(0) = 0, f(0.5) = 0.2, f(1) = 1; means half of layers occupy 20% of view distance
+	//return 0.0667f * (exp(2.773f * z) - 1.0f);
 }
 
 
@@ -34,10 +31,10 @@ float RemapZ3(float z)
 void main(uint3 dtID : SV_DispatchThreadID)
 {
 	uint3 pixelCoord = dtID;
-	float noise = InterleavedGradientNoise((float2)pixelCoord.xy + 0.5f);
+	float noise = frac(InterleavedGradientNoise((float2)pixelCoord.xy + 0.5f) + dither);
 
 	float z = ((float)pixelCoord.z + 0.5f + noise) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
-	z = RemapZ1(z);
+	z = RemapZ(z);
 	float volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
 	z = viewDistance*z + nearPlaneDistance;
 

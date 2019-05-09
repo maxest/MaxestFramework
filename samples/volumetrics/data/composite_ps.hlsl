@@ -27,17 +27,11 @@ float DepthNDCToView(float depth_ndc)
 }
 
 
-float RemapZ1Invert(float z)
+float RemapZInvert(float z)
 {
 	return sqrt(z);
-}
-float RemapZ2Invert(float z)
-{
-	return 5.0f / 22.0f * log(80.0f * z + 1.0f);
-}
-float RemapZ3Invert(float z)
-{
-	return 1000.0f * log(1.0f/667.0f * (10000.0f * z + 667.0f)) / 2773.0f;
+	//return 5.0f / 22.0f * log(80.0f * z + 1.0f);
+	//return 1000.0f * log(1.0f/667.0f * (10000.0f * z + 667.0f)) / 2773.0f;
 }
 
 
@@ -49,10 +43,10 @@ float4 main(PS_INPUT input): SV_Target0
 	float3 lightIntegrationTexCoord;
 	lightIntegrationTexCoord.xy = input.texCoord;
 	lightIntegrationTexCoord.z = (-depth - nearPlaneDistance) / viewDistance; // -depth because we're in RH system
-	lightIntegrationTexCoord.z = RemapZ1Invert(lightIntegrationTexCoord.z);
+	lightIntegrationTexCoord.z = RemapZInvert(lightIntegrationTexCoord.z);
 	float lightIntegratedSample = lightIntegratedTexture.SampleLevel(linearClampSampler, lightIntegrationTexCoord, 0);
 
 	float4 gbufferDiffuseSample = gbufferDiffuseTexture.SampleLevel(pointClampSampler, input.texCoord, 0);
 
-	return lightIntegratedSample;
+	return 0.0f*0.25f*gbufferDiffuseSample + lightIntegratedSample;
 }
