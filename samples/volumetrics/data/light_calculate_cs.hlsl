@@ -30,7 +30,7 @@ float RemapZ3(float z)
 }
 
 
-[numthreads(10, 10, 1)]
+[numthreads(4, 4, 4)]
 void main(uint3 dtID : SV_DispatchThreadID)
 {
 	uint3 pixelCoord = dtID;

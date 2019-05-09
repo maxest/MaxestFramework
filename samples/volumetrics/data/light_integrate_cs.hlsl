@@ -3,7 +3,7 @@ RWTexture3D<float> outputLightIntegratedTexture: register(u0);
 Texture3D<float> inputLightVolumeTexture: register(t0);
 
 
-[numthreads(10, 10, 1)]
+[numthreads(8, 8, 1)]
 void main(uint3 dtID : SV_DispatchThreadID)
 {
 	float lightIntegrated = 0.0f;

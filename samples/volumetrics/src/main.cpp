@@ -19,7 +19,7 @@ int screenWidth;
 int screenHeight;
 
 int lightVolumeTextureWidth = 160;
-int lightVolumeTextureHeight = 90;
+int lightVolumeTextureHeight = 88;
 int lightVolumeTextureDepth = 64;
 float fovY = cPi / 3.0f;
 float nearPlaneDistance = 3.0f;
@@ -145,8 +145,8 @@ void Destroy()
 
 void VolumetricFog(bool lightIntegratedBlur, const SMatrix& viewToWorldTransform)
 {
-	MF_ASSERT(lightVolumeTextureWidth % 10 == 0);
-	MF_ASSERT(lightVolumeTextureHeight % 10 == 0);
+	MF_ASSERT(lightVolumeTextureWidth % 8 == 0);
+	MF_ASSERT(lightVolumeTextureHeight % 8 == 0);
 
 	// light calculation
 	{
@@ -169,7 +169,7 @@ void VolumetricFog(bool lightIntegratedBlur, const SMatrix& viewToWorldTransform
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(5).buffer, 0, nullptr, &params, 0, 0);
 		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(5).buffer);
 
-		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, lightVolumeTextureDepth);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 4, lightVolumeTextureHeight / 4, lightVolumeTextureDepth / 4);
 
 		ClearUAVs(0, 1);
 	}
@@ -181,7 +181,7 @@ void VolumetricFog(bool lightIntegratedBlur, const SMatrix& viewToWorldTransform
 		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
 		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
-		deviceContext->Dispatch(lightVolumeTextureWidth / 10, lightVolumeTextureHeight / 10, 1);
+		deviceContext->Dispatch(lightVolumeTextureWidth / 8, lightVolumeTextureHeight / 8, 1);
 
 		ClearUAVs(0, 1);
 		ClearCSShaderResources(0, 1);
