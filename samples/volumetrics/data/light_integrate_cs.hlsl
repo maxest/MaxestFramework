@@ -4,20 +4,14 @@ Texture3D<float> inputLightVolumeTexture: register(t0);
 
 
 [numthreads(10, 10, 1)]
-void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
+void main(uint3 dtID : SV_DispatchThreadID)
 {
-	uint pixelX = 10*gID.x + gtID.x;
-	uint pixelY = 10*gID.y + gtID.y;
-
-	uint pixelZ = 0;
 	float lightIntegrated = 0.0f;
 	for (int i = 0; i < LIGHT_VOLUME_TEXTURE_DEPTH; i++)
 	{
-		uint3 pixelCoord = uint3(pixelX, pixelY, pixelZ);
+		uint3 pixelCoord = uint3(dtID.xy, i);
 
 		lightIntegrated += inputLightVolumeTexture[pixelCoord];
 		outputLightIntegratedTexture[pixelCoord] = lightIntegrated;
-
-		pixelZ++;
 	}
 }

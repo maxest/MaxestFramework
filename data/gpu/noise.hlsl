@@ -2,6 +2,13 @@
 #define NOISE_HLSL
 
 
+float Noise(float2 position_screen)
+{
+	float3 magic = float3(12.9898f, 78.233f, 43758.5453123f);
+    return frac(magic.z * sin(dot(position_screen.xy, magic.xy)));
+}
+
+
 float InterleavedGradientNoise(float2 position_screen)
 {
 	float3 magic = float3(0.06711056f, 0.00583715f, 52.9829189f);

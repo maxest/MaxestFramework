@@ -1,3 +1,6 @@
+#include "../../../data/gpu/noise.hlsl"
+
+
 RWTexture3D<float> outputLightVolumeTexture: register(u0);
 
 
@@ -28,24 +31,22 @@ float RemapZ3(float z)
 
 
 [numthreads(10, 10, 1)]
-void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
+void main(uint3 dtID : SV_DispatchThreadID)
 {
-	uint pixelX = 10*gID.x + gtID.x;
-	uint pixelY = 10*gID.y + gtID.y;
-	uint pixelZ = 1*gID.z + gtID.z;
-	uint3 pixelCoord = uint3(pixelX, pixelY, pixelZ);
+	uint3 pixelCoord = dtID;
+	float noise = InterleavedGradientNoise((float2)pixelCoord.xy + 0.5f);
 
-	float z = ((float)pixelZ + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
+	float z = ((float)pixelCoord.z + 0.5f + noise) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
 	z = RemapZ1(z);
 	float volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
 	z = viewDistance*z + nearPlaneDistance;
 
-	float x = ((float)pixelX + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
+	float x = ((float)pixelCoord.x + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
 	x -= 0.5f;
 	x *= nearPlaneSize.x;
 	x = x * z / nearPlaneDistance;	
 
-	float y = ((float)pixelY + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
+	float y = ((float)pixelCoord.y + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
 	y -= 0.5f;
 	y = -y; // invert Y
 	y *= nearPlaneSize.y;
@@ -55,6 +56,7 @@ void main(uint3 gID: SV_GroupID, uint3 gtID: SV_GroupThreadID)
 	float4 position_world = mul(viewToWorldTransform, position_view);
 
 	volumeSliceSize *= 0.25f;
+	volumeSliceSize *= 4.0f;
 	//volumeSliceSize = 0.025f;
 	if (position_world.x > 0.0f)
 		outputLightVolumeTexture[pixelCoord] = volumeSliceSize / 4.0f;
