@@ -1,5 +1,5 @@
-// shadow map
 // temporal
+// shadow map
 // lepszy model oswietlenia
 
 
