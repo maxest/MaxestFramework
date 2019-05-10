@@ -3,6 +3,8 @@
 
 RWTexture3D<float> outputLightVolumeTexture: register(u0);
 
+Texture3D<float> inputPrevLightVolumeTexture: register(t0);
+
 
 cbuffer ConstantBuffer: register(b0)
 {
@@ -38,30 +40,42 @@ void main(uint3 dtID : SV_DispatchThreadID)
 	noise.y = frac(InterleavedGradientNoise((float2)pixelCoord.xz + 0.5f) + dither.y) - 0.5f;
 	noise.xy = 0.0f; // remove to have dither in XY (adds some more noise which is a bit visible but helps with some occasional banding)
 
-	float z = ((float)pixelCoord.z + 0.5f + noise.z) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
-	z = RemapZ(z);
-	float volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
-	z = viewDistance*z + nearPlaneDistance;
+	float volumeSliceSize;
+	float4 position_view;
+	float4 position_world;
+	{
+		float z = ((float)pixelCoord.z + 0.5f + noise.z) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
+		z = RemapZ(z);
+		volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
+		z = viewDistance*z + nearPlaneDistance;
 
-	float x = ((float)pixelCoord.x + 0.5f + noise.x) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
-	x -= 0.5f;
-	x *= nearPlaneSize.x;
-	x = x * z / nearPlaneDistance;	
+		float x = ((float)pixelCoord.x + 0.5f + noise.x) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
+		x -= 0.5f;
+		x *= nearPlaneSize.x;
+		x = x * z / nearPlaneDistance;	
 
-	float y = ((float)pixelCoord.y + 0.5f + noise.y) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
-	y -= 0.5f;
-	y = -y; // invert Y
-	y *= nearPlaneSize.y;
-	y = y * z / nearPlaneDistance;
+		float y = ((float)pixelCoord.y + 0.5f + noise.y) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
+		y -= 0.5f;
+		y = -y; // invert Y
+		y *= nearPlaneSize.y;
+		y = y * z / nearPlaneDistance;
 
-	float4 position_view = float4(x, y, -z, 1.0f); // -z because we're in RH system
-	float4 position_world = mul(viewToWorldTransform, position_view);
-
+		position_view = float4(x, y, -z, 1.0f); // -z because we're in RH system
+		position_world = mul(viewToWorldTransform, position_view);
+	}
+	
 	volumeSliceSize *= 0.25f;
 	volumeSliceSize *= 4.0f;
 	//volumeSliceSize = 0.025f;
+	
+	float light = 0.0f;	
 	if (position_world.x > 0.0f)
-		outputLightVolumeTexture[pixelCoord] = volumeSliceSize / 4.0f;
+		light = volumeSliceSize / 4.0f;
 	else
-		outputLightVolumeTexture[pixelCoord] = volumeSliceSize / 16.0f;
+		light = volumeSliceSize / 16.0f;
+
+	float prevLight = inputPrevLightVolumeTexture[pixelCoord];
+	light = lerp(light, prevLight, 0.9f);
+	
+	outputLightVolumeTexture[pixelCoord] = light;
 }

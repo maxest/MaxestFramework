@@ -33,8 +33,8 @@ TRenderTarget gbufferNormalRT;
 TRenderTarget compositeRT;
 TDepthStencilTarget depthStencilTarget;
 
-STexture lightVolumeTexture3D;
-STexture lightIntegratedTexture3D[2];
+STexture lightVolumeTexture3D[2];
+STexture lightIntegratedTexture3D;
 
 ID3D11VertexShader* meshVS = nullptr;
 
@@ -101,9 +101,9 @@ bool Create()
 	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, compositeRT);
 	CreateDepthStencilTarget(screenWidth, screenHeight, 1, depthStencilTarget);
 
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D);
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D[0]);
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D[1]);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D[0]);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D[1]);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D);
 
 	CreateShaders();
 
@@ -123,9 +123,9 @@ void Destroy()
 
 	DestroyShaders();
 
-	DestroyTexture(lightVolumeTexture3D);
-	DestroyTexture(lightIntegratedTexture3D[0]);
-	DestroyTexture(lightIntegratedTexture3D[1]);
+	DestroyTexture(lightVolumeTexture3D[0]);
+	DestroyTexture(lightVolumeTexture3D[1]);
+	DestroyTexture(lightIntegratedTexture3D);
 
 	DestroyRenderTarget(gbufferDiffuseRT);
 	DestroyRenderTarget(gbufferNormalRT);
@@ -148,7 +148,7 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 	{
 		CProfilerScopedQuery psq("LightCalculate");
 
-		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D.uav, nullptr);
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D[frameIndex % 2].uav, nullptr);
 		deviceContext->CSSetShader(lightCalculateCS, nullptr, 0);
 
 		struct SParams
@@ -186,29 +186,30 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 		params.nearPlaneSize = PlaneSize(fovY, (float)screenWidth / (float)screenHeight, nearPlaneDistance);
 		params.nearPlaneDistance = nearPlaneDistance;
 		params.viewDistance = farPlaneDistance - nearPlaneDistance;
-		params.dither[2] = ditherZ[frameIndex % 8];		
 		params.dither[0] = ditherXY[frameIndex % 8].x;
 		params.dither[1] = ditherXY[frameIndex % 8].y;
+		params.dither[2] = ditherZ[frameIndex % 8];
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(6).buffer, 0, nullptr, &params, 0, 0);
 		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(6).buffer);
 
+		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D[(frameIndex - 1) % 2].srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 4, lightVolumeTextureHeight / 4, lightVolumeTextureDepth / 4);
 
 		ClearUAVs(0, 1);
+		ClearCSShaderResources(0, 1);
 	}
 
 	// light integration
 	{
 		CProfilerScopedQuery psq("LightIntegrate");
 
-		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D[frameIndex % 2].uav, nullptr);
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
 		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
-		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D.srv);
-		deviceContext->CSSetShaderResources(1, 1, &lightIntegratedTexture3D[(frameIndex - 1) % 2].srv);
+		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D[frameIndex % 2].srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 8, lightVolumeTextureHeight / 8, 1);
 
 		ClearUAVs(0, 1);
-		ClearCSShaderResources(0, 2);
+		ClearCSShaderResources(0, 1);
 	}
 }
 
@@ -302,7 +303,7 @@ bool Run()
 		deviceContext->VSSetShader(gGPUUtilsResources.screenQuadVS, nullptr, 0);
 		deviceContext->PSSetShader(compositePS, nullptr, 0);
 		deviceContext->PSSetShaderResources(0, 1, &depthStencilTarget.srv);
-		deviceContext->PSSetShaderResources(1, 1, &lightIntegratedTexture3D[frameIndex % 2].srv);
+		deviceContext->PSSetShaderResources(1, 1, &lightIntegratedTexture3D.srv);
 		deviceContext->PSSetShaderResources(2, 1, &gbufferDiffuseRT.srv);
 	
 		deviceContext->IASetIndexBuffer(gGPUUtilsResources.screenQuadIB.buffer, DXGI_FORMAT_R16_UINT, 0);
