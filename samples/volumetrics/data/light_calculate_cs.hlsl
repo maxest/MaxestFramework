@@ -10,8 +10,8 @@ cbuffer ConstantBuffer: register(b0)
 	float2 nearPlaneSize;
 	float nearPlaneDistance;
 	float viewDistance;
-	float dither;
-	float3 padding;
+	float3 dither;
+	float padding;
 }
 
 
@@ -31,19 +31,24 @@ float RemapZ(float z)
 void main(uint3 dtID : SV_DispatchThreadID)
 {
 	uint3 pixelCoord = dtID;
-	float noise = frac(InterleavedGradientNoise((float2)pixelCoord.xy + 0.5f) + dither);
 
-	float z = ((float)pixelCoord.z + 0.5f + noise) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
+	float3 noise = 0.0f;
+	noise.z = frac(InterleavedGradientNoise((float2)pixelCoord.xy + 0.5f) + dither.z);
+	noise.x = frac(InterleavedGradientNoise((float2)pixelCoord.yz + 0.5f) + dither.x) - 0.5f;
+	noise.y = frac(InterleavedGradientNoise((float2)pixelCoord.xz + 0.5f) + dither.y) - 0.5f;
+	noise.xy = 0.0f; // remove to have dither in XY (adds some more noise which is a bit visible but helps with some occasional banding)
+
+	float z = ((float)pixelCoord.z + 0.5f + noise.z) / (float)LIGHT_VOLUME_TEXTURE_DEPTH;
 	z = RemapZ(z);
 	float volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
 	z = viewDistance*z + nearPlaneDistance;
 
-	float x = ((float)pixelCoord.x + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
+	float x = ((float)pixelCoord.x + 0.5f + noise.x) / (float)LIGHT_VOLUME_TEXTURE_WIDTH;
 	x -= 0.5f;
 	x *= nearPlaneSize.x;
 	x = x * z / nearPlaneDistance;	
 
-	float y = ((float)pixelCoord.y + 0.5f) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
+	float y = ((float)pixelCoord.y + 0.5f + noise.y) / (float)LIGHT_VOLUME_TEXTURE_HEIGHT;
 	y -= 0.5f;
 	y = -y; // invert Y
 	y *= nearPlaneSize.y;

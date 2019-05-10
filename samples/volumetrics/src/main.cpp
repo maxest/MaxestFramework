@@ -157,10 +157,10 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 			SVector2 nearPlaneSize;
 			float nearPlaneDistance;
 			float viewDistance;
-			float dither;
-			float padding[3];
+			float dither[3];
+			float padding;
 		} params;
-		float dither[8] =
+		float ditherZ[8] =
 		{
 			0.3125f,
 			0.9375f,
@@ -171,11 +171,24 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 			0.1875f,
 			0.5625f,
 		};
+		SVector2 ditherXY[] = 
+		{
+			VectorCustom(0.0997132f, -0.992501f),
+			VectorCustom(-0.0314335f, 0.167088f),
+			VectorCustom(0.757265f, -0.231721f),
+			VectorCustom(-0.47771f, -0.518986f),
+			VectorCustom(-0.190608f, -0.963504f),
+			VectorCustom(0.448828f, 0.406f),
+			VectorCustom(-0.712654f, 0.0617393f),
+			VectorCustom(0.609766f, -0.770284f),
+		};
 		params.viewToWorldTransform = viewToWorldTransform;
 		params.nearPlaneSize = PlaneSize(fovY, (float)screenWidth / (float)screenHeight, nearPlaneDistance);
 		params.nearPlaneDistance = nearPlaneDistance;
 		params.viewDistance = farPlaneDistance - nearPlaneDistance;
-		params.dither = dither[frameIndex % 8];
+		params.dither[2] = ditherZ[frameIndex % 8];		
+		params.dither[0] = ditherXY[frameIndex % 8].x;
+		params.dither[1] = ditherXY[frameIndex % 8].y;
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(6).buffer, 0, nullptr, &params, 0, 0);
 		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(6).buffer);
 
