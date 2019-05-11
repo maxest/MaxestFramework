@@ -1,17 +1,10 @@
-// temporal - reprojection
+// temporal - invalidation
 // shadow map
 // lepszy model oswietlenia
 
 
 #include "../../../src/main.h"
 #include "../../../src/namespaces.h"
-
-
-struct SMeshConstantBuffer
-{
-	SMatrix worldTransform;
-	SMatrix viewProjTransform;
-} meshConstantBuffer;
 
 
 bool fullScreen = false;
@@ -24,6 +17,7 @@ int lightVolumeTextureDepth = 64;
 float fovY = cPi / 3.0f;
 float nearPlaneDistance = 3.0f;
 float farPlaneDistance = 300.0f;
+SMatrix viewTransforms[2];
 
 
 CApplication application;
@@ -154,6 +148,7 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 		struct SParams
 		{
 			SMatrix viewToWorldTransform;
+			SMatrix viewReprojectTransform;
 			SVector2 nearPlaneSize;
 			float nearPlaneDistance;
 			float viewDistance;
@@ -171,7 +166,7 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 			0.1875f,
 			0.5625f,
 		};
-		SVector2 ditherXY[] = 
+		SVector2 ditherXY[] =
 		{
 			VectorCustom(0.0997132f, -0.992501f),
 			VectorCustom(-0.0314335f, 0.167088f),
@@ -183,14 +178,15 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 			VectorCustom(0.609766f, -0.770284f),
 		};
 		params.viewToWorldTransform = viewToWorldTransform;
+		params.viewReprojectTransform = Invert(viewTransforms[frameIndex % 2]) * viewTransforms[(frameIndex - 1) % 2];
 		params.nearPlaneSize = PlaneSize(fovY, (float)screenWidth / (float)screenHeight, nearPlaneDistance);
 		params.nearPlaneDistance = nearPlaneDistance;
 		params.viewDistance = farPlaneDistance - nearPlaneDistance;
 		params.dither[0] = ditherXY[frameIndex % 8].x;
 		params.dither[1] = ditherXY[frameIndex % 8].y;
 		params.dither[2] = ditherZ[frameIndex % 8];
-		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(6).buffer, 0, nullptr, &params, 0, 0);
-		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(6).buffer);
+		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(10).buffer, 0, nullptr, &params, 0, 0);
+		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(10).buffer);
 
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D[(frameIndex - 1) % 2].srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 4, lightVolumeTextureHeight / 4, lightVolumeTextureDepth / 4);
@@ -255,6 +251,7 @@ bool Run()
 	SMatrix viewTransform = MatrixLookAtRH(camera.eye, camera.at, camera.up);
 	SMatrix projTransform = MatrixPerspectiveFovRH(EZRange::ZeroToOne, fovY, (float)screenWidth/(float)screenHeight, nearPlaneDistance, farPlaneDistance);
 	SMatrix viewProjTransform = viewTransform * projTransform;
+	viewTransforms[frameIndex % 2] = viewTransform;
 
 	SetViewport(screenWidth, screenHeight);
 
@@ -271,6 +268,11 @@ bool Run()
 
 		deviceContext->IASetInputLayout(gGPUUtilsResources.posNorUV0UV1InputLayout);
 
+		struct SMeshConstantBuffer
+		{
+			SMatrix worldTransform;
+			SMatrix viewProjTransform;
+		} meshConstantBuffer;
 		meshConstantBuffer.worldTransform = MatrixScale(0.1f, 0.1f, 0.1f);
 		meshConstantBuffer.viewProjTransform = viewProjTransform;
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(8).buffer, 0, nullptr, &meshConstantBuffer, 0, 0);
