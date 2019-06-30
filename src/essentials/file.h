@@ -44,6 +44,14 @@ namespace NMaxestFramework { namespace NEssentials
 
 			file.open(path.c_str(), openMode_stl);
 
+			size = 0;
+			if ((openMode_stl & ios::in) == ios::in)
+			{
+				file.seekg(0, ios::end);
+				size = file.tellg();
+				file.seekg(0, ios::beg);
+			}
+
 			if (file)
 				return true;
 			else
@@ -55,12 +63,17 @@ namespace NMaxestFramework { namespace NEssentials
 			file.close();
 		}
 
-		bool EndOfFile()
+		size_t Size()
 		{
-			return file.eof();
+			return size;
 		}
 
-		void Seek(int position)
+		bool EndOfFile()
+		{
+			return (file.eof()) || ((size_t)file.tellg() == size);
+		}
+
+		void Seek(size_t position)
 		{
 			file.clear();
 			file.seekg(position, ios::beg);
@@ -160,6 +173,7 @@ namespace NMaxestFramework { namespace NEssentials
 
 	private:
 		fstream file;
+		size_t size; // only valid for in/read file
 	};
 
 	bool CreateDir(const string& path);
