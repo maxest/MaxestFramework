@@ -34,6 +34,10 @@ namespace NRayTracer
 
 		SVector3 f(const SVector3& wi, const SVector3& wo, const SVector3& normal)
 		{
+			UNUSED(wi);
+			UNUSED(wo);
+			UNUSED(normal);
+
 			return albedo / cPi;
 		}
 
@@ -64,6 +68,8 @@ namespace NRayTracer
 
 		float f(const SVector3& wi, const SVector3& wo, const SSceneIntersectionResult& sir)
 		{
+			UNUSED(sir);
+
 			float sinthetai = SinTheta(wi);
 			float sinthetao = SinTheta(wo);
 			// Compute cosine term of Oren-Nayar model

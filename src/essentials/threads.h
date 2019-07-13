@@ -70,7 +70,7 @@ namespace NMaxestFramework { namespace NEssentials
 
 		SetPriorityClass(GetCurrentProcess(), processPriority_winapi);
 	#else
-
+		UNUSED(processPriority);
 	#endif
 	}
 
@@ -107,7 +107,8 @@ namespace NMaxestFramework { namespace NEssentials
 
 		SetThreadPriority(threadHandle == 0 ? GetCurrentThread() : threadHandle, threadPriority_winapi);
 	#else
-
+		UNUSED(threadHandle);
+		UNUSED(threadPriority);
 	#endif
 	}
 
@@ -182,6 +183,7 @@ namespace NMaxestFramework { namespace NEssentials
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		return ::CreateSemaphore(nullptr, initialCount, maxCount, nullptr);
 	#else
+		UNUSED(maxCount);
 		TSemaphoreHandle semaphoreHandle = new sem_t();
 		sem_init(semaphoreHandle, 0, initialCount);
 		return semaphoreHandle;
@@ -236,6 +238,8 @@ namespace NMaxestFramework { namespace NEssentials
 	#ifdef MAXEST_FRAMEWORK_WINDOWS
 		::InterlockedExchange((long*)data, x);
 	#else
+		UNUSED(data);
+		UNUSED(x);
 		MF_ASSERT(false);
 	#endif
 	}

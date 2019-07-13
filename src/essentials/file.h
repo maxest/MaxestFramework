@@ -192,6 +192,7 @@ namespace NMaxestFramework { namespace NEssentials
 		BOOL result = CreateDirectoryA(path.c_str(), 0);
 		return (result == 0 ? false : true);
 	#else
+		UNUSED(path);
 		MF_ASSERT(false);
 		return false;
 	#endif
@@ -351,6 +352,8 @@ namespace NMaxestFramework { namespace NEssentials
 
 		return t1 > t2;
 	#else
+		UNUSED(path);
+		UNUSED(refFilePath);
 		MF_ASSERT(false);
 		return false;
 	#endif

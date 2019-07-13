@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "stl.h"
+#include "macros.h"
 
 
 namespace NMaxestFramework { namespace NEssentials
@@ -88,6 +89,8 @@ namespace NMaxestFramework { namespace NEssentials
 	}
 	template<> inline bool FromString(const string& s, const bool& dummy)
 	{
+		UNUSED(dummy);
+
 		if (s == "true")
 			return true;
 		else

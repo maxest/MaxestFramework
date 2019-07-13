@@ -46,6 +46,9 @@ namespace NMaxestFramework { namespace NSystem
 		width = GetSystemMetrics(SM_CXSCREEN);
 		height = GetSystemMetrics(SM_CYSCREEN);
 	#else
+		UNUSED(width);
+		UNUSED(height);
+
 		MF_ASSERT(false);
 	#endif
 	}
