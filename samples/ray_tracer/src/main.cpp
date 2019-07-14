@@ -26,9 +26,33 @@ void Log(const string& msg)
 }
 
 
-void Create()
+void CreateScene1()
 {
-	Randomize();
+	NRayTracer::CMaterial material;
+
+	material.lambertianBRDFAlbedo = 0.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
+	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
+	material.transmittance = 0.75f;
+	material.transmittanceEta = 0.5f;
+	material.reflectivity = 0.0f;
+	scene.materials.push_back(material);
+
+	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 0.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
+	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
+	material.transmittance = 0.0f;
+	material.transmittanceEta = 0.0f;
+	material.reflectivity = 0.0f;
+	scene.materials.push_back(material);
+
+	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
+	material.specularBRDF = new CGlossySpecularBRDF(32.0f);
+	material.transmittance = 0.0f;
+	material.transmittanceEta = 0.0f;
+	material.reflectivity = 0.0f;
+	scene.materials.push_back(material);
 
 	//
 
@@ -64,55 +88,156 @@ void Create()
 
 	//
 
+	SPointLight pointLight;
+	//
+	pointLight.position = VectorCustom(2.0f, 3.0f, 0.0f);
+	pointLight.color = 5.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	scene.pointLights.push_back(pointLight);
+	//
+	pointLight.position = VectorCustom(-2.0f, 5.0f, -15.0f);
+	pointLight.color = 10.0f * VectorCustom(1.0f, 0.0f, 0.0f);
+	scene.pointLights.push_back(pointLight);
+
+	SDirLight dirLight;
+	dirLight.dir = Normalize(VectorCustom(-1.0f, -1.0f, -1.0f));
+	dirLight.color = 2.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	scene.dirLights.push_back(dirLight);
+
+	//
+
+	camera.UpdateFixed(VectorCustom(5.0f, 5.0f, 17.5f), VectorCustom(0.0f, 0.0f, 0.0f));
+
+	//
+
+	rayTracer.maxRecursionDepth = 3;
+	rayTracer.ambientConst = 0.0f;
+	rayTracer.ambientOcclusionFactor = 0.5f;
+	rayTracer.globalIllumination = false;
+}
+
+
+void CreateScene2()
+{
 	NRayTracer::CMaterial material;
 
-	material.diffuseBRDF = new CLambertianBRDF(0.0f * VectorCustom(1.0f, 1.0f, 1.0f));
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.75f;
-	material.transmittanceEta = 0.5f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
-
-	material.diffuseBRDF = new CLambertianBRDF(VectorCustom(1.0f, 1.0f, 0.0f));
+	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
 	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
 	material.transmittance = 0.0f;
 	material.transmittanceEta = 0.0f;
 	material.reflectivity = 0.0f;
 	scene.materials.push_back(material);
 
-	material.diffuseBRDF = new CLambertianBRDF(VectorCustom(1.0f, 1.0f, 1.0f));
-	material.specularBRDF = new CGlossySpecularBRDF(32.0f);
+	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 0.0f, 0.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
+	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
 	material.transmittance = 0.0f;
 	material.transmittanceEta = 0.0f;
 	material.reflectivity = 0.0f;
 	scene.materials.push_back(material);
+
+	material.lambertianBRDFAlbedo = VectorCustom(0.0f, 1.0f, 0.0f);
+	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
+	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
+	material.transmittance = 0.0f;
+	material.transmittanceEta = 0.0f;
+	material.reflectivity = 0.0f;
+	scene.materials.push_back(material);
+
+	//
+
+	// room
+	{
+		NMesh::SMesh mesh;
+		ImportASE("../../../../data/meshes/unit_box.ASE", mesh);
+		SwapOrdering(mesh);
+
+		NMesh::SMesh whiteWalls = mesh;
+		whiteWalls.chunks[0].vertices.clear();
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[0]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[1]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[2]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[3]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[4]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[5]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[12]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[13]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[14]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[15]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[16]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[17]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[24]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[25]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[26]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[27]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[28]);
+		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[29]);
+		ToIndexed(whiteWalls);
+		scene.AddMesh(whiteWalls, MatrixScale(10.0f, 10.0f, 10.0f) * MatrixTranslate(0.0f, 0.0f, 0.0f), 0);
+
+		NMesh::SMesh redWallMesh = mesh;
+		redWallMesh.chunks[0].vertices.clear();
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[30]);
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[31]);
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[32]);
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[33]);
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[34]);
+		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[35]);
+		ToIndexed(redWallMesh);
+		scene.AddMesh(redWallMesh, MatrixScale(10.0f, 10.0f, 10.0f) * MatrixTranslate(0.0f, 0.0f, 0.0f), 1);
+
+		NMesh::SMesh greenWallMesh = mesh;
+		greenWallMesh.chunks[0].vertices.clear();
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[18]);
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[19]);
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[20]);
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[21]);
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[22]);
+		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[23]);
+		ToIndexed(greenWallMesh);
+		scene.AddMesh(greenWallMesh, MatrixScale(10.0f, 10.0f, 10.0f) * MatrixTranslate(0.0f, 0.0f, 0.0f), 2);
+	}
+
+	//
+
+	SSpherePrimitive sphere;
+
+	sphere.position = VectorCustom(1.5f, -2.5f, 0.0f);
+	sphere.radius = 1.5f;
+	sphere.materialIndex = 0;
+	scene.spheres.push_back(sphere);
+
+	sphere.position = VectorCustom(-1.5f, -2.5f, -2.5f);
+	sphere.radius = 1.5f;
+	sphere.materialIndex = 0;
+	scene.spheres.push_back(sphere);
 
 	//
 
 	SPointLight pointLight;
 	//
-	pointLight.position = VectorCustom(2.0f, 3.0f, 0.0f);
-	pointLight.color = 50.0f * VectorCustom(1.0f, 1.0f, 1.0f);
-	scene.pointLights.push_back(pointLight);
-	//
-	pointLight.position = VectorCustom(-2.0f, 5.0f, -15.0f);
-	pointLight.color = 500.0f * VectorCustom(1.0f, 0.0f, 0.0f);
+	pointLight.position = VectorCustom(0.0f, 4.75f, 0.0f);
+	pointLight.color = 10.0f * VectorCustom(1.0f, 1.0f, 1.0f);
 	scene.pointLights.push_back(pointLight);
 
-	SDirLight dirLight;
-	dirLight.dir = Normalize(VectorCustom(-1.0f, -1.0f, -1.0f));
-	dirLight.color = VectorCustom(1.0f, 1.0f, 1.0f);
-	scene.dirLights.push_back(dirLight);
+	//
+
+	camera.UpdateFixed(VectorCustom(0.0f, 0.0f, 10.0f), VectorCustom(0.0f, 0.0f, 0.0f));
 
 	//
 
-	camera.UpdateFixed(VectorCustom(0.0f, 5.0f, 17.5f), VectorCustom(0.0f, 0.0f, 0.0f));
-
-	//
-
-	rayTracer.Create(width, height, scene);
+	rayTracer.maxRecursionDepth = 2;
 	rayTracer.ambientConst = 0.0f;
-	rayTracer.ambientOcclusionFactor = 0.5f;
+	rayTracer.ambientOcclusionFactor = 0.0f;
+	rayTracer.globalIllumination = true;
+}
+
+
+void Create()
+{
+	Randomize();
+	rayTracer.Create(width, height, scene);
+	CreateScene1();
 }
 
 
@@ -127,6 +252,11 @@ void Destroy()
 
 bool Run()
 {
+	if (application.IsKeyPressed(EKey::Right))
+		scene.pointLights[0].position.x += 0.1f;
+	if (application.IsKeyPressed(EKey::Left))
+		scene.pointLights[0].position.x -= 0.1f;
+
 	SVector3 eye;
 
 	float speed = 0.02f;
@@ -146,7 +276,8 @@ bool Run()
 	camera.horizontalAngle -= application.MouseRelX() / 1000.0f;
 	camera.verticalAngle -= application.MouseRelY() / 1000.0f;
 
-//	camera.UpdateFree(eye);
+	if (application.IsKeyPressed(EKey::Space))
+		camera.UpdateFree(eye);
 
 	//
 

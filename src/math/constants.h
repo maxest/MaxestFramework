@@ -4,6 +4,7 @@
 namespace NMaxestFramework { namespace NMath
 {
 	const float cPi = 3.141593f;
+	const float cInvPi = 1.0f / cPi;
 	const float cHalfPi = 1.570797f;
 	const float cTwoPi = 6.283186f;
 	const float cGoldenAngle = 2.4f;

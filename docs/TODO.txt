@@ -21,9 +21,8 @@
 - w common zrobic szablon aplikacji do sampli
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
+	- material ma miec generic liste brdf'ow
 	- mierzyc perf job'ow
-	- dokonczyc pokoj (zrobic z modeli 3D)
-	- GI
 	- lepszy glossy specular
 	- normalny dof
 	- area lights

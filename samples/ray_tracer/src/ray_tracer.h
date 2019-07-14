@@ -37,13 +37,17 @@ namespace NRayTracer
 		SVector3 Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const;
 
 	public:
+		int maxRecursionDepth;
+
 		float ambientConst;
 		float ambientOcclusionFactor;
+
+		bool globalIllumination;
 
 	private:
 		int width, height;
 		const CScene* scene;
-		CSamplerHemispherical sampler;
+		CSamplerHemispherical sampler64;
 
 		uint8* outputData; // in RGBA8
 	};

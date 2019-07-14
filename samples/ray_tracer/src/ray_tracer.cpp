@@ -12,7 +12,7 @@ void CRayTracer::Create(int width, int height, const CScene &scene)
 	this->width = width;
 	this->height = height;
 	this->scene = &scene;
-	sampler.Create(width, height, 8);
+	sampler64.Create(width, height, 8);
 
 	outputData = new uint8[4 * width * height];
 }
@@ -134,12 +134,10 @@ uint8* CRayTracer::Render(CJobSystem* jobSystem, const NRayTracer::CCamera& came
 
 SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& rayStart, const SVector3& rayDir, int depth) const
 {
-	const int cMaxDepth = 3;
-
 	SVector3 radiance = cVector3Zero;
 	SSceneIntersectionResult sir;
 
-	if (depth == cMaxDepth)
+	if (depth == maxRecursionDepth)
 		return radiance;
 
 	if (scene->IntersectionPrimary(rayStart, rayDir, cFloatMax, sir))
@@ -165,13 +163,12 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 		// ambient occlusion
 		if (ambientOcclusionFactor > 0.0f)
 		{
-			SVector3 brdf = material.diffuseBRDF->f(cVector3Zero, cVector3Zero, cVector3Zero); // assume the surface to be Lambertian; for Lambertian the input params to f are not used
-
 			float ambientOcclusion = 0.0f;
-			int samplesCount = sampler.SamplesCount();
-			for (int i = 0; i < samplesCount; i++)
+
+			uint samplesCount = sampler64.SamplesCount();
+			for (uint i = 0; i < samplesCount; i++)
 			{
-				const SVector3& wi_tangent = sampler.Get(samplesSetIndex, i);
+				const SVector3& wi_tangent = sampler64.Get(samplesSetIndex, i);
 				SVector3 wi = wi_tangent * tangentToWorld;
 
 				if (!scene->IntersectionShadow(point + 0.001f*wi, wi, cFloatMax, triangleIndex))
@@ -184,7 +181,7 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 			}
 			ambientOcclusion /= (float)samplesCount;
 
-			radiance += ambientOcclusionFactor * ambientOcclusion * brdf;
+			radiance += ambientOcclusionFactor * ambientOcclusion * material.LambertianBRDF(); // assume the surface to be Lambertian
 		}
 
 		// direct illumination
@@ -218,19 +215,41 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 				wi = wi / distanceToLight;
 				SVector3 wi_tangent = Normalize(wi * worldToTangent);
 
-				if (!scene->IntersectionShadow(point, wi, 1.1f*distanceToLight, triangleIndex))
+				if (!scene->IntersectionShadow(point, wi, distanceToLight, triangleIndex))
 				{
 					float NdotL = Saturate(Dot(wi, normal));
 
 					radiance +=
-						light.color * (1.0f / Sqr(distanceToLight)) *
+						light.color * (1.0f / distanceToLight) *
 						material.BRDF(wi_tangent, wo_tangent, normal_tangent) *
 						NdotL;
 				}
 			}
 		}
 
-		// indirect illumination
+		// GI
+		if (globalIllumination)
+		{
+			SVector3 gi = cVector3Zero;
+
+			uint samplesCount = sampler64.SamplesCount();
+			for (uint i = 0; i < samplesCount; i++)
+			{
+				const SVector3& wi_tangent = sampler64.Get(samplesSetIndex, i);
+				SVector3 wi = wi_tangent * tangentToWorld;
+
+				float NdotL = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
+				float pdf = NdotL / cPi; // samples used are cosine-weighted
+
+				gi += Radiance_Recursive(samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1) * NdotL / pdf;
+
+			}
+			gi /= (float)samplesCount;
+
+			radiance += gi * material.LambertianBRDF();
+		}
+		
+		// transmittance and reflectivity
 		{
 			float transmittance = material.transmittance;
 			float reflectivity = material.reflectivity;
@@ -270,17 +289,6 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 					Radiance_Recursive(samplesSetIndex, point + 0.001f*wi, wi, depth + 1);
 			}
 		}
-		/*
-		// GI
-		for (uint i = 0; i < scene->samples_hemisphere1[samplesSetIndex].size(); i++)
-		{
-			SVector3 wi = SphericalToCartesian(scene->samples_hemisphere1[samplesSetIndex][i]);
-			wi = wi * tangentToWorld;
-
-			radiance +=
-				Radiance_Recursive(scene, samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1, maxDepth) /
-				(float)scene->samples_hemisphere1[samplesSetIndex].size();
-		}*/
 	}
 
 	return radiance;

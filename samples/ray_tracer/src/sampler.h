@@ -74,9 +74,9 @@ namespace NRayTracer
             }
 		}
 
-		inline int SamplesCount() const
+		inline uint SamplesCount() const
 		{
-			return (int)samples_hemisphere1_cartesian[0].size();
+			return (uint)samples_hemisphere1_cartesian[0].size();
 		}
 
 		inline SVector3 Get(int setIndex, int sampleIndex) const
