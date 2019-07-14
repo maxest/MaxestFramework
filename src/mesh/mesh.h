@@ -13,6 +13,9 @@ namespace NMaxestFramework { namespace NMesh
 	void ToIndexed(const vector<SVertex>& vertices, vector<SVertex>& indexedVertices, vector<int>& indices);
 	void ToIndexed(SChunk& chunk);
 	void ToIndexed(SMesh& mesh);
+	void SwapOrdering(vector<SVertex>& vertices);
+	void SwapOrdering(SChunk& chunk);
+	void SwapOrdering(SMesh& mesh);
 	void FlipVectors(vector<SVertex>& vertices, bool normals, bool tangents, bool bitangents);
 	void GenerateTangents(vector<SVertex>& vertices);
 	void AverageTangents(vector<SVertex>& vertices, float minTangentsPairDotProduct = 0.5f, EMirrorType mirrorType = EMirrorType::NoMirror); // averages if positions and normals of vertices are the same and the dot product of tangents is greater or equal to minTangentsPairDotProduct

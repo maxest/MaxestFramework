@@ -57,6 +57,34 @@ void NMesh::ToIndexed(SMesh& mesh)
 }
 
 
+void NMesh::SwapOrdering(vector<SVertex>& vertices)
+{
+	for (uint i = 0; i < vertices.size() / 3; i++)
+	{
+		SVertex temp = vertices[3*i + 0];
+		vertices[3*i + 0] = vertices[3*i + 2];
+		vertices[3*i + 2] = temp;
+
+		vertices[3*i + 0].normal *= -1.0f;
+		vertices[3*i + 1].normal *= -1.0f;
+		vertices[3*i + 2].normal *= -1.0f;
+	}
+}
+
+
+void NMesh::SwapOrdering(SChunk& chunk)
+{
+	SwapOrdering(chunk.vertices);
+}
+
+
+void NMesh::SwapOrdering(SMesh& mesh)
+{
+	for (uint i = 0; i < mesh.chunks.size(); i++)
+		SwapOrdering(mesh.chunks[i]);
+}
+
+
 void NMesh::FlipVectors(vector<SVertex>& vertices, bool normals, bool tangents, bool bitangents)
 {
 	for (uint i = 0; i < vertices.size(); i++)
