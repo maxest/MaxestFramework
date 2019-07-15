@@ -18,22 +18,24 @@ namespace NRayTracer
 	class CMaterial
 	{
 	public:
-		CMaterial()
-		{
-			this->diffuseBRDF = nullptr;
-			this->specularBRDF = nullptr;
-		}
+		CMaterial() {}
 
 		void Destroy()
 		{
-			MF_ASSERT(diffuseBRDF != nullptr);
-			MF_ASSERT(specularBRDF != nullptr);
+			for (uint i = 0; i < brdfs.size(); i++)
+				delete brdfs[i];
 
-			delete diffuseBRDF;
-			delete specularBRDF;
+			brdfs.clear();
+		}
 
-			diffuseBRDF = nullptr;
-			specularBRDF = nullptr;
+		void AddBRDF(CBRDF* brdf)
+		{
+			brdfs.push_back(brdf);
+		}
+
+		SVector3 LambertianRHO() const
+		{
+			return lambertianBRDFAlbedo;
 		}
 
 		SVector3 LambertianBRDF() const
@@ -43,13 +45,17 @@ namespace NRayTracer
 
 		SVector3 BRDF(const SVector3& wi, const SVector3& wo, const SVector3& normal) const
 		{
-			return diffuseBRDF->f(wi, wo, normal) + specularBRDF->f(wi, wo, normal);
+			SVector3 brdf = cVector3Zero;
+
+			for (uint i = 0; i < brdfs.size(); i++)
+				brdf += brdfs[i]->f(wi, wo, normal);
+
+			return brdf;
 		}
 
 	public:
 		SVector3 lambertianBRDFAlbedo;
-		CBRDF* diffuseBRDF;
-		CBRDF* specularBRDF;
+		vector< CBRDF* > brdfs;
 		float transmittance;
 		float transmittanceEta;
 		float reflectivity;

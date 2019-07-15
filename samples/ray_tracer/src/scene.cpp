@@ -4,6 +4,19 @@
 using namespace NRayTracer;
 
 
+void CScene::Destroy()
+{
+	for (uint i = 0; i < materials.size(); i++)
+		materials[i].Destroy();
+	
+	triangles.clear();
+	spheres.clear();
+	materials.clear();
+	dirLights.clear();
+	pointLights.clear();
+}
+
+
 void CScene::AddMesh(const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex)
 {
 	for (uint i = 0; i < mesh.chunks.size(); i++)

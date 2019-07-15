@@ -28,31 +28,32 @@ void Log(const string& msg)
 
 void CreateScene1()
 {
-	NRayTracer::CMaterial material;
+	NRayTracer::CMaterial material1;
+	material1.lambertianBRDFAlbedo = 0.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	material1.AddBRDF(new CLambertianBRDF(material1.lambertianBRDFAlbedo));
+	material1.AddBRDF(new CGlossySpecularBRDF(0.0f));
+	material1.transmittance = 0.75f;
+	material1.transmittanceEta = 0.5f;
+	material1.reflectivity = 0.0f;
+	scene.materials.push_back(material1);
 
-	material.lambertianBRDFAlbedo = 0.0f * VectorCustom(1.0f, 1.0f, 1.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.75f;
-	material.transmittanceEta = 0.5f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
+	NRayTracer::CMaterial material2;
+	material2.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 0.0f);
+	material2.AddBRDF(new CLambertianBRDF(material2.lambertianBRDFAlbedo));
+	material2.AddBRDF(new CGlossySpecularBRDF(0.0f));
+	material2.transmittance = 0.0f;
+	material2.transmittanceEta = 0.0f;
+	material2.reflectivity = 0.0f;
+	scene.materials.push_back(material2);
 
-	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 0.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.0f;
-	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
-
-	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(32.0f);
-	material.transmittance = 0.0f;
-	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
+	NRayTracer::CMaterial material3;
+	material3.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
+	material3.AddBRDF(new CLambertianBRDF(material3.lambertianBRDFAlbedo));
+	material3.AddBRDF(new CGlossySpecularBRDF(32.0f));
+	material3.transmittance = 0.0f;
+	material3.transmittanceEta = 0.0f;
+	material3.reflectivity = 0.0f;
+	scene.materials.push_back(material3);
 
 	//
 
@@ -118,31 +119,32 @@ void CreateScene1()
 
 void CreateScene2()
 {
-	NRayTracer::CMaterial material;
+	NRayTracer::CMaterial material1;
+	material1.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
+	material1.AddBRDF(new CLambertianBRDF(material1.lambertianBRDFAlbedo));
+	material1.AddBRDF( new CGlossySpecularBRDF(0.0f));
+	material1.transmittance = 0.0f;
+	material1.transmittanceEta = 0.0f;
+	material1.reflectivity = 0.0f;
+	scene.materials.push_back(material1);
 
-	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.0f;
-	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
+	NRayTracer::CMaterial material2;
+	material2.lambertianBRDFAlbedo = VectorCustom(1.0f, 0.0f, 0.0f);
+	material2.AddBRDF(new CLambertianBRDF(material2.lambertianBRDFAlbedo));
+	material2.AddBRDF(new CGlossySpecularBRDF(0.0f));
+	material2.transmittance = 0.0f;
+	material2.transmittanceEta = 0.0f;
+	material2.reflectivity = 0.0f;
+	scene.materials.push_back(material2);
 
-	material.lambertianBRDFAlbedo = VectorCustom(1.0f, 0.0f, 0.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.0f;
-	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
-
-	material.lambertianBRDFAlbedo = VectorCustom(0.0f, 1.0f, 0.0f);
-	material.diffuseBRDF = new CLambertianBRDF(material.lambertianBRDFAlbedo);
-	material.specularBRDF = new CGlossySpecularBRDF(0.0f);
-	material.transmittance = 0.0f;
-	material.transmittanceEta = 0.0f;
-	material.reflectivity = 0.0f;
-	scene.materials.push_back(material);
+	NRayTracer::CMaterial material3;
+	material3.lambertianBRDFAlbedo = VectorCustom(0.0f, 1.0f, 0.0f);
+	material3.AddBRDF(new CLambertianBRDF(material3.lambertianBRDFAlbedo));
+	material3.AddBRDF(new CGlossySpecularBRDF(0.0f));
+	material3.transmittance = 0.0f;
+	material3.transmittanceEta = 0.0f;
+	material3.reflectivity = 0.0f;
+	scene.materials.push_back(material3);
 
 	//
 
@@ -244,9 +246,7 @@ void Create()
 void Destroy()
 {
 	rayTracer.Destroy();
-
-	for (uint i = 0; i < scene.materials.size(); i++)
-		scene.materials[i].Destroy();
+	scene.Destroy();
 }
 
 

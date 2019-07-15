@@ -153,12 +153,9 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 		bool& backside = sir.backside;
 		int32& triangleIndex = sir.triangleIndex;
 
-		MF_ASSERT(material.diffuseBRDF != nullptr);
-		MF_ASSERT(material.specularBRDF != nullptr);
-
 		// constant ambient
 		if (depth == 0) // this is a fake effect and seems to make sense to be applied only once (not recursively)
-			radiance += ambientConst * material.diffuseBRDF->rho();
+			radiance += ambientConst * material.LambertianRHO();
 
 		// ambient occlusion
 		if (ambientOcclusionFactor > 0.0f)

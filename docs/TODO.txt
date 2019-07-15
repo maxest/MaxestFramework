@@ -21,7 +21,6 @@
 - w common zrobic szablon aplikacji do sampli
 - skrypt tworzacy projekty visual'owe
 - ray-tracer
-	- material ma miec generic liste brdf'ow
 	- mierzyc perf job'ow
 	- lepszy glossy specular
 	- normalny dof

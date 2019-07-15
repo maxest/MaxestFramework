@@ -16,6 +16,8 @@ namespace NRayTracer
 	class CScene
 	{
 	public:
+		void Destroy();
+
 		void AddMesh(const NMesh::SMesh& mesh, const SMatrix& transform, int materialIndex);
 
 		bool IntersectionPrimary(const SVector3& rayStart, const SVector3& rayDir, float maxDistance, SSceneIntersectionResult& sceneIntersectionResult) const;
