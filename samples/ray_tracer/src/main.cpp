@@ -318,8 +318,8 @@ int main()
 
 	if (!application.Create(width, height, false))
 		return 1;
-	application.SetMouseWrapping(true);
-	application.ShowCursor(false);
+	application.MouseShowCursor(false);
+	application.MouseSetRelativeMode(true);
 	jobSystem.Create(16);
 	oglTextureRenderer.Create(width, height);
 

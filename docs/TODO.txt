@@ -9,7 +9,6 @@
 - math
 	- funkcje do konwersji macierz/kwaternion/euler
 	- quaternion pow jest dobrze zrobiony?
-- czasem mouseRelX/mouseRelY zle zwraca
 - zrobic typy f32, f64, s8, s16, ..., i nie uzywac w ogole int, float itp.
 - TCP na socketach i wyjebac SDL_net
 - dx11

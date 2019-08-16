@@ -24,7 +24,7 @@ namespace NMaxestFramework { namespace NSystem
 	public:
 		CApplication();
 
-		bool Create(int width, int height, bool fullScreen, int displayIndex = 0);
+		bool Create(int width, int height, bool fullScreen);
 		void Destroy();
 
 		void Run(bool(*runFunction)());
@@ -34,17 +34,15 @@ namespace NMaxestFramework { namespace NSystem
 		bool IsKeyPressed(EKey key);
 		bool IsKeyDown(EKey key);
 		bool IsKeyUp(EKey key);
-		void SetMouseWrapping(bool state);
+		void MouseShowCursor(bool show);
+		void MouseSetRelativeMode(bool state);
 		bool MouseLeftButtonDown();
 		bool MouseMiddleButtonDown();
 		bool MouseRightButtonDown();
-		int MouseWindowX();
-		int MouseWindowY();
-		int MouseDesktopX();
-		int MouseDesktopY();
+		int MouseX();
+		int MouseY();
 		int MouseRelX();
 		int MouseRelY();
-		void ShowCursor(bool show);
 
 		float LastFrameTime();
 
@@ -55,21 +53,20 @@ namespace NMaxestFramework { namespace NSystem
 
 	private:
 		bool fullScreen;
+		int displayWidth, displayHeight;
 
 		bool keysPressed[512];
 		bool keysDown[512];
 		bool keysUp[512];
-		bool mouseWrapping;
+		bool mouseCursorVisible;
+		bool mouseRelativeMode;
 		bool mouseLeftButtonDown;
 		bool mouseMiddleButtonDown;
 		bool mouseRightButtonDown;
-		int mouseWindowX;
-		int mouseWindowY;
-		int mouseDesktopX;
-		int mouseDesktopY;
+		int mouseX;
+		int mouseY;
 		int mouseRelX;
 		int mouseRelY;
-		bool cursorVisible;
 
 		uint64 runStartTime, runStopTime;
 		float lastFrameTime;

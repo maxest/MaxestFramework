@@ -500,8 +500,8 @@ int main()
 
 	if (!application.Create(screenWidth, screenHeight, fullScreen))
 		return 1;
-	application.SetMouseWrapping(true);
-	application.ShowCursor(false);
+	application.MouseShowCursor(false);
+	application.MouseSetRelativeMode(true);
 
 	Create();
 	application.Run(Run);

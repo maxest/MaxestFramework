@@ -24,17 +24,15 @@ NSystem::CApplication::CApplication()
 		keysDown[i] = false;
 		keysUp[i] = false;
 	}
-	mouseWrapping = false;
+	mouseCursorVisible = true;
+	mouseRelativeMode = false;
 	mouseLeftButtonDown = false;
 	mouseMiddleButtonDown = false;
 	mouseRightButtonDown = false;
-	mouseWindowX = 0;
-	mouseWindowY = 0;
-	mouseDesktopX = 0;
-	mouseDesktopY = 0;
+	mouseX = 0;
+	mouseY = 0;
 	mouseRelX = 0;
 	mouseRelY = 0;
-	cursorVisible = true;
 
 	runStartTime = runStopTime = 0;
 	lastFrameTime = 0.0f;
@@ -46,20 +44,20 @@ NSystem::CApplication::CApplication()
 }
 
 
-bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int displayIndex)
+bool NSystem::CApplication::Create(int width, int height, bool fullScreen)
 {
 	this->fullScreen = fullScreen;
 
 #ifdef MAXEST_FRAMEWORK_DESKTOP
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
-	int screenWidth = displayMode.w;
-	int screenHeight = displayMode.h;
+	displayWidth = displayMode.w;
+	displayHeight = displayMode.h;
 
 	if (width == 0 && height == 0)
 	{
-		width = screenWidth;
-		height = screenHeight;
+		width = displayWidth;
+		height = displayHeight;
 	}
 
 	Uint32 windowCreationFlags = 0;
@@ -69,9 +67,8 @@ bool NSystem::CApplication::Create(int width, int height, bool fullScreen, int d
 		windowCreationFlags |= SDL_WINDOW_OPENGL;
 	#endif
 
-	int x = screenWidth/2 - width/2;
-	int y = screenHeight/2 - height/2;
-	x += displayIndex * screenWidth;
+	int x = displayWidth/2 - width/2;
+	int y = displayHeight/2 - height/2;
 
 	window = SDL_CreateWindow(
 		"MaxestFrameworkWindow",
@@ -121,9 +118,6 @@ void NSystem::CApplication::Destroy()
 void NSystem::CApplication::Run(bool(*runFunction)())
 {
 #ifdef MAXEST_FRAMEWORK_DESKTOP
-	int prevMouseX;
-	int prevMouseY;
-
 	SDL_DisplayMode displayMode;
 	SDL_GetCurrentDisplayMode(0, &displayMode);
 #endif
@@ -137,6 +131,8 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 			keysDown[i] = false;
 			keysUp[i] = false;
 		}
+		mouseRelX = 0;
+		mouseRelY = 0;
 
 	#ifdef MAXEST_FRAMEWORK_DESKTOP
 		SDL_Event event;
@@ -161,11 +157,20 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 			}
 			else if (event.type == SDL_MOUSEMOTION)
 			{
-				mouseWindowX = event.motion.x;
-				mouseWindowY = event.motion.y;
+				int prevMouseX = mouseX;
+				int prevMouseY = mouseY;
+
+				mouseX = event.motion.x;
+				mouseY = event.motion.y;
+
+				if (!mouseRelativeMode)
+				{
+					mouseRelX = mouseX - prevMouseX;
+					mouseRelY = mouseY - prevMouseY;
+				}
 
 				if (mouseMotionFunction)
-					mouseMotionFunction(event.button.x, event.button.y);
+					mouseMotionFunction(event.motion.x, event.motion.y);
 			}
 			else if (event.type == SDL_MOUSEBUTTONDOWN)
 			{
@@ -202,54 +207,20 @@ void NSystem::CApplication::Run(bool(*runFunction)())
 				}
 			}
 		}
-
+		
 		if (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS)
 		{
-			prevMouseX = mouseDesktopX;
-			prevMouseY = mouseDesktopY;
-
-			SDL_GetGlobalMouseState(&mouseDesktopX, &mouseDesktopY);
-
-			mouseRelX = mouseDesktopX - prevMouseX;
-			mouseRelY = mouseDesktopY - prevMouseY;
-
-			if (mouseWrapping)
+			if (mouseRelativeMode)
 			{
-				int minX = 0, maxX = displayMode.w, minY = 0, maxY = displayMode.h;
-				for (int i = 0; i < SDL_GetNumVideoDisplays(); i++)
-				{
-					SDL_Rect rect;
-					SDL_GetDisplayBounds(i, &rect);
+				const int refX = displayWidth / 2;
+				const int refY = displayHeight / 2;
 
-					if (i == 0)
-					{
-						minX = rect.x;
-						maxX = rect.x + rect.w;
-						minY = rect.y;
-						maxY = rect.y + rect.h;
-					}
-					else
-					{
-						minX = Min(minX, rect.x);
-						maxX = Max(maxX, rect.x + rect.w);
-						minY = Min(minY, rect.y);
-						maxY = Max(maxY, rect.y + rect.h);
-					}
-				}
-				maxX--;
-				maxY--;
+				SDL_GetGlobalMouseState(&mouseX, &mouseY);
 
-				if (mouseDesktopX <= minX)
-					mouseDesktopX = maxX - 1;
-				if (mouseDesktopX >= maxX)
-					mouseDesktopX = minX + 1;
+				mouseRelX = mouseX - refX;
+				mouseRelY = mouseY - refY;
 
-				if (mouseDesktopY <= minY)
-					mouseDesktopY = maxY - 1;
-				if (mouseDesktopY >= maxY)
-					mouseDesktopY = minY + 1;
-
-				SDL_WarpMouseGlobal(mouseDesktopX, mouseDesktopY);
+				SDL_WarpMouseGlobal(refX, refY);
 			}
 		}
 	#endif
@@ -298,9 +269,18 @@ bool NSystem::CApplication::IsKeyUp(EKey key)
 }
 
 
-void NSystem::CApplication::SetMouseWrapping(bool state)
+void NSystem::CApplication::MouseShowCursor(bool show)
 {
-	mouseWrapping = state;
+	mouseCursorVisible = show;
+#ifdef MAXEST_FRAMEWORK_DESKTOP
+	SDL_ShowCursor(show);
+#endif
+}
+
+
+void NSystem::CApplication::MouseSetRelativeMode(bool state)
+{
+	mouseRelativeMode = state;
 }
 
 
@@ -322,27 +302,15 @@ bool NSystem::CApplication::MouseRightButtonDown()
 }
 
 
-int NSystem::CApplication::MouseWindowX()
+int NSystem::CApplication::MouseX()
 {
-	return mouseWindowX;
+	return mouseX;
 }
 
 
-int NSystem::CApplication::MouseWindowY()
+int NSystem::CApplication::MouseY()
 {
-	return mouseWindowY;
-}
-
-
-int NSystem::CApplication::MouseDesktopX()
-{
-	return mouseDesktopX;
-}
-
-
-int NSystem::CApplication::MouseDesktopY()
-{
-	return mouseDesktopY;
+	return mouseY;
 }
 
 
@@ -355,15 +323,6 @@ int NSystem::CApplication::MouseRelX()
 int NSystem::CApplication::MouseRelY()
 {
 	return mouseRelY;
-}
-
-
-void NSystem::CApplication::ShowCursor(bool show)
-{
-	cursorVisible = show;
-#ifdef MAXEST_FRAMEWORK_DESKTOP
-	SDL_ShowCursor(show);
-#endif
 }
 
 
