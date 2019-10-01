@@ -1,26 +1,17 @@
-- threaddestroy nigdzie najlepiej nie uzywac
+- TCP na socketach i wyjebac SDL_net (raczej odwrotnie jednak, ale SDL_net potrzebuje setsocketopt (bo rozmiar bufora))
+- threaddestroy nigdzie najlepiej nie uzywac (CConnectionsManager jest problemem bo ma recv, SDL powinien rozwiazac timeoutem)
 - assert
 	- nie jest thread-safe
-- job system: powinny byc dependencies ktore mozna zrobic tak ze jak dodajemy job'a z dependem to sprawdzamy
-	- jesli parent sie nie skonczyl to dodajemy do jego listy dependow i jak parent job sie skonczy dodajemy elementy z tej listy do listy jobow
-	- jesli parent sie juz skonczyl to mozna dodac po prostu do listy jobow
-- connections manager
-	- deque zamienic chyba na queue
 - math
 	- funkcje do konwersji macierz/kwaternion/euler
 	- quaternion pow jest dobrze zrobiony?
-- zrobic typy f32, f64, s8, s16, ..., i nie uzywac w ogole int, float itp.
-- TCP na socketach i wyjebac SDL_net
 - dx11
 	- devicecontext itp. wsadzic w jakas klase
 	- porobic resource view'y
 - demo z ssao
 	- temporal z min-max'em
 	- w artykule masz reszte sugestii
-- w common zrobic szablon aplikacji do sampli
-- skrypt tworzacy projekty visual'owe
 - ray-tracer
-	- mierzyc perf job'ow
 	- lepszy glossy specular
 	- normalny dof
 	- area lights
@@ -33,3 +24,8 @@
 
 	
 - wszystkie funkcje powinny miec schemat argumentow: output values, input values (bo moze byc ... w inpucie)
+- job system: powinny byc dependencies ktore mozna zrobic tak ze jak dodajemy job'a z dependem to sprawdzamy
+	- jesli parent sie nie skonczyl to dodajemy do jego listy dependow i jak parent job sie skonczy dodajemy elementy z tej listy do listy jobow
+	- jesli parent sie juz skonczyl to mozna dodac po prostu do listy jobow
+- zrobic typy f32, f64, s8, s16, ..., i nie uzywac w ogole int, float itp.
+

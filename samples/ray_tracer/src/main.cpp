@@ -154,8 +154,8 @@ void CreateScene2()
 		ImportASE("../../../../data/meshes/unit_box.ASE", mesh);
 		SwapOrdering(mesh);
 
-		NMesh::SMesh whiteWalls = mesh;
-		whiteWalls.chunks[0].vertices.clear();
+		NMesh::SMesh whiteWalls;
+		whiteWalls.chunks.resize(1);
 		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[0]);
 		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[1]);
 		whiteWalls.chunks[0].vertices.push_back(mesh.chunks[0].vertices[2]);
@@ -177,8 +177,8 @@ void CreateScene2()
 		ToIndexed(whiteWalls);
 		scene.AddMesh(whiteWalls, MatrixScale(10.0f, 10.0f, 10.0f) * MatrixTranslate(0.0f, 0.0f, 0.0f), 0);
 
-		NMesh::SMesh redWallMesh = mesh;
-		redWallMesh.chunks[0].vertices.clear();
+		NMesh::SMesh redWallMesh;
+		redWallMesh.chunks.resize(1);
 		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[30]);
 		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[31]);
 		redWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[32]);
@@ -188,8 +188,8 @@ void CreateScene2()
 		ToIndexed(redWallMesh);
 		scene.AddMesh(redWallMesh, MatrixScale(10.0f, 10.0f, 10.0f) * MatrixTranslate(0.0f, 0.0f, 0.0f), 1);
 
-		NMesh::SMesh greenWallMesh = mesh;
-		greenWallMesh.chunks[0].vertices.clear();
+		NMesh::SMesh greenWallMesh;
+		greenWallMesh.chunks.resize(1);
 		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[18]);
 		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[19]);
 		greenWallMesh.chunks[0].vertices.push_back(mesh.chunks[0].vertices[20]);
@@ -235,11 +235,83 @@ void CreateScene2()
 }
 
 
+void CreateScene3()
+{
+	NRayTracer::CMaterial material1;
+	material1.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 1.0f);
+	material1.AddBRDF(new CLambertianBRDF(material1.lambertianBRDFAlbedo));
+	material1.AddBRDF(new CGlossySpecularBRDF(32.0f));
+	material1.transmittance = 0.0f;
+	material1.transmittanceEta = 0.0f;
+	material1.reflectivity = 1.0f;
+	scene.materials.push_back(material1);
+
+	NRayTracer::CMaterial material2;
+	material2.lambertianBRDFAlbedo = VectorCustom(1.0f, 1.0f, 0.0f);
+	material2.AddBRDF(new CLambertianBRDF(material2.lambertianBRDFAlbedo));
+	material2.AddBRDF(new CGlossySpecularBRDF(0.0f));
+	material2.transmittance = 0.0f;
+	material2.transmittanceEta = 0.0f;
+	material2.reflectivity = 0.0f;
+	scene.materials.push_back(material2);
+
+	//
+
+	// floor
+	{
+		NMesh::SMesh mesh;
+		ImportASE("../../../../data/meshes/unit_plane.ASE", mesh);
+		ToIndexed(mesh);
+		scene.AddMesh(mesh, MatrixScale(100.0f, 100.0f, 1.0f) * MatrixRotateX(-cPi / 2.0f), 0);
+	}
+
+	// box
+	{
+		NMesh::SMesh mesh;
+		ImportASE("../../../../data/meshes/unit_box.ASE", mesh);
+		ToIndexed(mesh);
+		scene.AddMesh(mesh, MatrixTranslate(0.0f, 0.5f, 0.0f), 1);
+	}
+
+	//
+
+	SSpherePrimitive sphere;
+
+	sphere.position = VectorCustom(-7.5f, 3.0f, 0.0f);
+	sphere.radius = 2.5f;
+	sphere.materialIndex = 1;
+	scene.spheres.push_back(sphere);
+
+	sphere.position = VectorCustom(7.5f, 3.0f, 0.0f);
+	sphere.radius = 2.5f;
+	sphere.materialIndex = 1;
+	scene.spheres.push_back(sphere);
+
+	//
+
+	SDirLight dirLight;
+	dirLight.dir = Normalize(VectorCustom(-1.0f, -1.0f, -1.0f));
+	dirLight.color = 2.0f * VectorCustom(1.0f, 1.0f, 1.0f);
+	scene.dirLights.push_back(dirLight);
+
+	//
+
+	camera.UpdateFixed(VectorCustom(5.0f, 5.0f, 17.5f), VectorCustom(0.0f, 0.0f, 0.0f));
+
+	//
+
+	rayTracer.maxRecursionDepth = 2;
+	rayTracer.ambientConst = 0.25f;
+	rayTracer.ambientOcclusionFactor = 0.0f;
+	rayTracer.globalIllumination = false;
+}
+
+
 void Create()
 {
 	Randomize();
 	rayTracer.Create(width, height, scene);
-	CreateScene1();
+	CreateScene3();
 }
 
 
@@ -252,11 +324,6 @@ void Destroy()
 
 bool Run()
 {
-	if (application.IsKeyPressed(EKey::Right))
-		scene.pointLights[0].position.x += 0.1f;
-	if (application.IsKeyPressed(EKey::Left))
-		scene.pointLights[0].position.x -= 0.1f;
-
 	SVector3 eye;
 
 	float speed = 0.02f;
