@@ -44,7 +44,7 @@ namespace NRayTracer
 
 		bool globalIllumination;
 
-	private:
+	public: // TODO
 		int width, height;
 		const CScene* scene;
 		CSamplerHemispherical sampler64;

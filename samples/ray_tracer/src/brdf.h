@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "utils.h"
+#include "sampler.h"
 
 #include "../../../src/essentials/common.h"
 #include "../../../src/math/main.h"
@@ -21,7 +22,13 @@ namespace NRayTracer
         virtual ~CBRDF() {}
 
 		virtual SVector3 f(const SVector3& wi, const SVector3& wo, const SVector3& normal) = 0;
+		virtual SVector3 f_sample(int samplesSetIndex, int sampleIndex, const SMatrix& tangentToWorld, const SVector3& wo, const SVector3& normal, SVector3& wi, float& NdotWi, float& pdf) = 0;
 		virtual SVector3 rho() = 0;
+
+		int SamplesCount() { return sampler64->SamplesCount(); }
+
+	public:
+		CSamplerHemispherical* sampler64;
 	};
 
 	//
@@ -41,62 +48,15 @@ namespace NRayTracer
 			return albedo / cPi;
 		}
 
-		SVector3 rho()
+		SVector3 f_sample(int samplesSetIndex, int sampleIndex, const SMatrix& tangentToWorld, const SVector3& wo, const SVector3& normal, SVector3& wi, float& NdotWi, float& pdf)
 		{
-			return albedo;
-		}
+			const SVector3& wi_tangent = sampler64->Get(samplesSetIndex, sampleIndex);
+			wi = wi_tangent * tangentToWorld;
 
-	public:
-		SVector3 albedo;
-	};
+			NdotWi = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
+			pdf = NdotWi / cPi; // samples used are cosine-weighted
 
-	//
-
-	class COrenNayarBRDF: public CBRDF
-	{
-	public:
-		COrenNayarBRDF(float sigma)
-		{
-			float sigma2 = sigma*sigma;
-			_A = 1.f - (sigma2 / (2.f * (sigma2 + 0.33f)));
-			_B = 0.45f * sigma2 / (sigma2 + 0.09f);
-		}
-		COrenNayarBRDF(float sigma, const SVector3& albedo): COrenNayarBRDF(sigma)
-		{
-			this->albedo = albedo;
-		}
-
-		float f(const SVector3& wi, const SVector3& wo, const SSceneIntersectionResult& sir)
-		{
-			UNUSED(sir);
-
-			float sinthetai = SinTheta(wi);
-			float sinthetao = SinTheta(wo);
-			// Compute cosine term of Oren-Nayar model
-			float maxcos = 0.f;
-			if (sinthetai > 1e-4 && sinthetao > 1e-4)
-			{
-				float sinphii = SinPhi(wi);
-				float cosphii = CosPhi(wi);
-				float sinphio = SinPhi(wo);
-				float cosphio = CosPhi(wo);
-				float dcos = cosphii * cosphio + sinphii * sinphio;
-				maxcos = Max(0.f, dcos);
-			}
-
-			// Compute sine and tangent terms of Oren-Nayar model
-			float sinalpha, tanbeta;
-			if (Abs(CosTheta(wi)) > Abs(CosTheta(wo)))
-			{
-				sinalpha = sinthetao;
-				tanbeta = sinthetai / Abs(CosTheta(wi));
-			}
-			else
-			{
-				sinalpha = sinthetai;
-				tanbeta = sinthetao / Abs(CosTheta(wo));
-			}
-			return (_A + _B * maxcos * sinalpha * tanbeta) / cPi;
+			return albedo * cInvPi;
 		}
 
 		SVector3 rho()
@@ -106,9 +66,6 @@ namespace NRayTracer
 
 	public:
 		SVector3 albedo;
-
-	public:
-		float _A, _B;
 	};
 
 	//
@@ -135,6 +92,11 @@ namespace NRayTracer
 			{
 				return cVector3Zero;
 			}
+		}
+
+		SVector3 f_sample(int samplesSetIndex, int sampleIndex, const SMatrix& tangentToWorld, const SVector3& wo, const SVector3& normal, SVector3& wi, float& NdotWi, float& pdf)
+		{
+			return cVector3Zero; // TODO
 		}
 
 		SVector3 rho()

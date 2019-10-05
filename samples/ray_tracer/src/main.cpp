@@ -311,7 +311,13 @@ void Create()
 {
 	Randomize();
 	rayTracer.Create(width, height, scene);
-	CreateScene3();
+	CreateScene2();
+	// TODO
+	for (uint i = 0; i < scene.materials.size(); i++)
+	{
+		for (uint j = 0; j < scene.materials[i].brdfs.size(); j++)
+			scene.materials[i].brdfs[j]->sampler64 = &rayTracer.sampler64;
+	}
 }
 
 

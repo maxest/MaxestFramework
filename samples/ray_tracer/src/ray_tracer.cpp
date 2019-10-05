@@ -227,23 +227,29 @@ SVector3 CRayTracer::Radiance_Recursive(int samplesSetIndex, const SVector3& ray
 		// GI
 		if (globalIllumination)
 		{
-			SVector3 gi = cVector3Zero;
-
-			uint samplesCount = sampler64.SamplesCount();
-			for (uint i = 0; i < samplesCount; i++)
+			for (uint i = 0; i < material.brdfs.size(); i++)
 			{
-				const SVector3& wi_tangent = sampler64.Get(samplesSetIndex, i);
-				SVector3 wi = wi_tangent * tangentToWorld;
+				// TODO
+				if (i > 0) // only let 0'th which is assumed (temporarily) to be Lambertian
+					break;
 
-				float NdotL = Dot(wi, normal); // should never be zero because the samples should never be perfectly parallel to the surface
-				float pdf = NdotL / cPi; // samples used are cosine-weighted
+				SVector3 brdfRadiance = cVector3Zero;
+				uint samplesCount = material.brdfs[i]->SamplesCount();
 
-				gi += Radiance_Recursive(samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1) * NdotL / pdf;
+				for (uint j = 0; j < samplesCount; j++)
+				{
+					SVector3 wi;
+					float NdotWi;					
+					float pdf;
 
+					SVector3 brdf = material.brdfs[i]->f_sample(samplesSetIndex, j, tangentToWorld, wo, normal, wi, NdotWi, pdf);
+
+					brdfRadiance += brdf * Radiance_Recursive(samplesSetIndex, sir.point + 0.001f*wi, wi, depth + 1) * NdotWi / pdf;
+				}
+
+				brdfRadiance /= (float)samplesCount;
+				radiance += brdfRadiance;
 			}
-			gi /= (float)samplesCount;
-
-			radiance += gi * material.LambertianBRDF();
 		}
 		
 		// transmittance and reflectivity
