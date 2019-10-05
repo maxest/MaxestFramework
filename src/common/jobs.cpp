@@ -99,9 +99,7 @@ void NCommon::CJobSystem::Destroy()
 	SemaphoreRelease(activeJobsSemaphore, (int)threads.size());
 	for (uint i = 0; i < threads.size(); i++)
 	{
-		// SemaphoreRelease(activeJobsSemaphore, 1); // can't do that because we don't know which thread will first acquire the semaphore. Hence we release the semaphore before the loop with a value equal to the number of threads
 		ThreadJoin(threads[i]->handle);
-		ThreadDestroy(threads[i]->handle);
 		delete threads[i];
 	}
 	threads.clear();

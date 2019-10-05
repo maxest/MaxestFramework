@@ -1180,7 +1180,7 @@ void NGPU::NUtils::CPostprocessor::Downsample(const NGPU::STexture& input, int s
 
 void NGPU::NUtils::CPostprocessor::PixelCopy(const NGPU::STexture& dstTexture, const NGPU::STexture& srcTexture, int width, int height)
 {
-	uint data[] = { width, height, 0, 0 };
+	int32 data[] = { width, height, 0, 0 };
 	deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer, 0, nullptr, data, 0, 0);
 	deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(1, "gpu_utils_pp").buffer);
 

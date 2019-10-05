@@ -28,4 +28,3 @@
 	- jesli parent sie nie skonczyl to dodajemy do jego listy dependow i jak parent job sie skonczy dodajemy elementy z tej listy do listy jobow
 	- jesli parent sie juz skonczyl to mozna dodac po prostu do listy jobow
 - zrobic typy f32, f64, s8, s16, ..., i nie uzywac w ogole int, float itp.
-
