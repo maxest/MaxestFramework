@@ -43,10 +43,12 @@ namespace NMaxestFramework { namespace NCommon
 				file.Close();
 			fileOpened = false;
 
-			MF_ASSERT(file.Open(path, NEssentials::CFile::EOpenMode::WriteText));
-			for (uint i = 0; i < options.size(); i++)
-				file.WriteText(options[i].first + " " + options[i].second + "\n");
-			file.Close();
+			if (file.Open(path, NEssentials::CFile::EOpenMode::WriteText))
+			{
+				for (uint i = 0; i < options.size(); i++)
+					file.WriteText(options[i].first + " " + options[i].second + "\n");
+				file.Close();
+			}
 		}
 
 		template<typename TYPE> void Process(const string& key, TYPE& value)
