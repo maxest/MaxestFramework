@@ -1,4 +1,3 @@
-// temporal - invalidation
 // shadow map
 
 
@@ -134,8 +133,8 @@ void Destroy()
 
 void VolumetricFog(int frameIndex, const SVector3& eyePosition, const SMatrix& viewToWorldTransform)
 {
-	MF_ASSERT(lightVolumeTextureWidth % 8 == 0);
-	MF_ASSERT(lightVolumeTextureHeight % 8 == 0);
+	MF_ASSERT(lightVolumeTextureWidth % 4 == 0);
+	MF_ASSERT(lightVolumeTextureHeight % 4 == 0);
 
 	// light calculation
 	{

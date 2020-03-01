@@ -79,11 +79,14 @@ void main(uint3 dtID : SV_DispatchThreadID)
 		float4 prevPosition_view = mul(viewReprojectTransform, position_view);
 		float3 prevPosition_lightVolume = ViewSpaceToLightVolumeSpace(prevPosition_view.xyz, nearPlaneSize, nearPlaneDistance, viewDistance);
 
-		//!! invalidate if invalid
-
 		// sample
 		float4 prevLightVolumeSample = inputPrevLightVolumeTexture.SampleLevel(linearClampSampler, prevPosition_lightVolume, 0);
-		lightVolume = lerp(lightVolume, prevLightVolumeSample, 0.9f);
+
+		bool prevLightVolumeSampleValid =
+			prevPosition_lightVolume.x >= 0.0f && prevPosition_lightVolume.x <= 1.0f &&
+			prevPosition_lightVolume.y >= 0.0f && prevPosition_lightVolume.y <= 1.0f;
+
+		lightVolume = lerp(lightVolume, prevLightVolumeSample, prevLightVolumeSampleValid ? 0.9f : 0.0f);
 	}
 
 	outputLightVolumeTexture[pixelCoord] = lightVolume;
