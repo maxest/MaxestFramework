@@ -1,12 +1,13 @@
 #include "common.hlsl"
 
 #include "../../../data/gpu/samplers.hlsl"
+#include "../../../data/gpu/math.hlsl"
 #include "../../../data/gpu/noise.hlsl"
 
 
-RWTexture3D<float> outputLightVolumeTexture: register(u0);
+RWTexture3D<float4> outputLightVolumeTexture: register(u0);
 
-Texture3D<float> inputPrevLightVolumeTexture: register(t0);
+Texture3D<float4> inputPrevLightVolumeTexture: register(t0);
 
 
 cbuffer ConstantBuffer: register(b0)
@@ -17,7 +18,17 @@ cbuffer ConstantBuffer: register(b0)
 	float nearPlaneDistance;
 	float viewDistance;
 	float3 dither;
-	float padding;
+	float padding1;
+	float3 eyePosition;
+	float padding2;
+}
+
+
+float SchlickPhase(float cosTheta, float k)
+{
+	float a = 1.0f - k*k;
+	float b = 1.0f - k*cosTheta;
+	return a / (4.0f * Pi * b * b);
 }
 
 
@@ -41,11 +52,22 @@ void main(uint3 dtID : SV_DispatchThreadID)
 		position_world = mul(viewToWorldTransform, position_view);
 	}
 
-	float fogDensity = 0.0f;		
+	float3 positionToCamera = normalize(eyePosition - position_world.xyz);
+	float3 lightDir = normalize(float3(-1.0f, -1.0f, 0.0f));
+	float cosTheta = dot(positionToCamera, lightDir);
+	float schlickPhase = SchlickPhase(cosTheta, 0.5f);
+
+	float3 inScattering =
+		float3(0.15f, 0.0f, 0.0f) +
+		2.0f * float3(0.5f, 0.5f, 0.5f) * schlickPhase;
+
+	float density = 0.0f;		
 	if (position_world.x > 0.0f)
-		fogDensity = 8.0f;
+		density = 8.0f;
 	else
-		fogDensity = 2.0f;
+		density = 0.0f;
+
+	float4 lightVolume = float4(inScattering, density);
 
 	// temporal
 	{
@@ -53,16 +75,16 @@ void main(uint3 dtID : SV_DispatchThreadID)
 		float3 position_lightVolume = ((float3)pixelCoord + 0.5f) / lightVolumeSize;
 		float4 position_view = float4(LightVolumeSpaceToViewSpace(position_lightVolume, nearPlaneSize, nearPlaneDistance, viewDistance), 1.0f);
 
-		// get to light volume space
+		// reproject and get back to light volume space
 		float4 prevPosition_view = mul(viewReprojectTransform, position_view);
 		float3 prevPosition_lightVolume = ViewSpaceToLightVolumeSpace(prevPosition_view.xyz, nearPlaneSize, nearPlaneDistance, viewDistance);
 
 		//!! invalidate if invalid
 
 		// sample
-		float prevFogDensity = inputPrevLightVolumeTexture.SampleLevel(linearClampSampler, prevPosition_lightVolume, 0);
-		fogDensity = lerp(fogDensity, prevFogDensity, 0.8f);
+		float4 prevLightVolumeSample = inputPrevLightVolumeTexture.SampleLevel(linearClampSampler, prevPosition_lightVolume, 0);
+		lightVolume = lerp(lightVolume, prevLightVolumeSample, 0.9f);
 	}
 
-	outputLightVolumeTexture[pixelCoord] = fogDensity;
+	outputLightVolumeTexture[pixelCoord] = lightVolume;
 }

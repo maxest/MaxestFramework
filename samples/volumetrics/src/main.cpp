@@ -1,6 +1,5 @@
 // temporal - invalidation
 // shadow map
-// lepszy model oswietlenia
 
 
 #include "../../../src/main.h"
@@ -28,7 +27,7 @@ TRenderTarget compositeRT;
 TDepthStencilTarget depthStencilTarget;
 
 STexture lightVolumeTexture3D[2];
-STexture lightIntegratedTexture3D;
+STexture lightVolumeIntegratedTexture3D;
 
 ID3D11VertexShader* meshVS = nullptr;
 
@@ -95,9 +94,9 @@ bool Create()
 	CreateRenderTarget(screenWidth, screenHeight, floatFormat, 1, compositeRT);
 	CreateDepthStencilTarget(screenWidth, screenHeight, 1, depthStencilTarget);
 
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D[0]);
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightVolumeTexture3D[1]);
-	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R32_FLOAT, lightIntegratedTexture3D);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, lightVolumeTexture3D[0]);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, lightVolumeTexture3D[1]);
+	CreateRWTexture3D(lightVolumeTextureWidth, lightVolumeTextureHeight, lightVolumeTextureDepth, 1, DXGI_FORMAT_R16G16B16A16_FLOAT, lightVolumeIntegratedTexture3D);
 
 	CreateShaders();
 
@@ -119,7 +118,7 @@ void Destroy()
 
 	DestroyTexture(lightVolumeTexture3D[0]);
 	DestroyTexture(lightVolumeTexture3D[1]);
-	DestroyTexture(lightIntegratedTexture3D);
+	DestroyTexture(lightVolumeIntegratedTexture3D);
 
 	DestroyRenderTarget(gbufferDiffuseRT);
 	DestroyRenderTarget(gbufferNormalRT);
@@ -133,7 +132,7 @@ void Destroy()
 }
 
 
-void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
+void VolumetricFog(int frameIndex, const SVector3& eyePosition, const SMatrix& viewToWorldTransform)
 {
 	MF_ASSERT(lightVolumeTextureWidth % 8 == 0);
 	MF_ASSERT(lightVolumeTextureHeight % 8 == 0);
@@ -153,7 +152,9 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 			float nearPlaneDistance;
 			float viewDistance;
 			float dither[3];
-			float padding;
+			float padding1;
+			SVector3 eyePosition;
+			float padding2;
 		} params;
 		float ditherZ[8] =
 		{
@@ -185,8 +186,9 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 		params.dither[0] = ditherXY[frameIndex % 8].x;
 		params.dither[1] = ditherXY[frameIndex % 8].y;
 		params.dither[2] = ditherZ[frameIndex % 8];
-		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(10).buffer, 0, nullptr, &params, 0, 0);
-		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(10).buffer);
+		params.eyePosition = eyePosition;
+		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(11).buffer, 0, nullptr, &params, 0, 0);
+		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(11).buffer);
 
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D[(frameIndex - 1) % 2].srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 4, lightVolumeTextureHeight / 4, lightVolumeTextureDepth / 4);
@@ -199,7 +201,7 @@ void VolumetricFog(int frameIndex, const SMatrix& viewToWorldTransform)
 	{
 		CProfilerScopedQuery psq("LightIntegrate");
 
-		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightIntegratedTexture3D.uav, nullptr);
+		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeIntegratedTexture3D.uav, nullptr);
 		deviceContext->CSSetShader(lightIntegrateCS, nullptr, 0);
 		deviceContext->CSSetShaderResources(0, 1, &lightVolumeTexture3D[frameIndex % 2].srv);
 		deviceContext->Dispatch(lightVolumeTextureWidth / 8, lightVolumeTextureHeight / 8, 1);
@@ -293,7 +295,7 @@ bool Run()
 		}
 	}
 
-	VolumetricFog(frameIndex, Invert(viewTransform));
+	VolumetricFog(frameIndex, camera.eye, Invert(viewTransform));
 
 	// composite
 	{
@@ -305,7 +307,7 @@ bool Run()
 		deviceContext->VSSetShader(gGPUUtilsResources.screenQuadVS, nullptr, 0);
 		deviceContext->PSSetShader(compositePS, nullptr, 0);
 		deviceContext->PSSetShaderResources(0, 1, &depthStencilTarget.srv);
-		deviceContext->PSSetShaderResources(1, 1, &lightIntegratedTexture3D.srv);
+		deviceContext->PSSetShaderResources(1, 1, &lightVolumeIntegratedTexture3D.srv);
 		deviceContext->PSSetShaderResources(2, 1, &gbufferDiffuseRT.srv);
 	
 		deviceContext->IASetIndexBuffer(gGPUUtilsResources.screenQuadIB.buffer, DXGI_FORMAT_R16_UINT, 0);
@@ -345,7 +347,7 @@ bool Run()
 		ClearPSShaderResources(0, 1);
 	}
 
-	swapChain->Present(0, 0);
+	swapChain->Present(2, 0);
 
 	gGPUProfiler.EndFrame();
 	gGPUProfiler.StopProfiling();
