@@ -34,12 +34,16 @@ float4 main(PS_INPUT input): SV_Target0
 	float depthSample_ndc = depthBufferTexture.SampleLevel(pointClampSampler, input.texCoord, 0).x;
 	float depth = DepthNDCToView(depthSample_ndc);
 
-	float3 position_lightVolume;
-	position_lightVolume.xy = input.texCoord;
-	position_lightVolume.z = ViewSpaceToLightVolumeSpaceZ(depth, nearPlaneDistance, viewDistance);
-	float lightIntegratedSample = lightIntegratedTexture.SampleLevel(linearClampSampler, position_lightVolume, 0);
-
+	float transmittance;
+	{
+		float3 position_lightVolume;
+		position_lightVolume.xy = input.texCoord;
+		position_lightVolume.z = ViewSpaceToLightVolumeSpaceZ(depth, nearPlaneDistance, viewDistance);
+		float lightIntegratedSample = lightIntegratedTexture.SampleLevel(linearClampSampler, position_lightVolume, 0);
+		transmittance = exp(-lightIntegratedSample);
+	}
+	
 	float4 gbufferDiffuseSample = gbufferDiffuseTexture.SampleLevel(pointClampSampler, input.texCoord, 0);
-
-	return 0.0f*0.25f*gbufferDiffuseSample + lightIntegratedSample;
+	
+	return transmittance * gbufferDiffuseSample;
 }

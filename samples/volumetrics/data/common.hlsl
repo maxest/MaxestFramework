@@ -19,10 +19,9 @@ float RemapZInvert(float z)
 }
 
 
-float3 LightVolumeSpaceToViewSpace(float x, float y, float z, float2 nearPlaneSize, float nearPlaneDistance, float viewDistance, out float volumeSliceSize)
+float3 LightVolumeSpaceToViewSpace(float x, float y, float z, float2 nearPlaneSize, float nearPlaneDistance, float viewDistance)
 {
 	z = RemapZ(z);
-	volumeSliceSize = z; // approximate the current volume slice's size; layers closer are smaller while layers farther are bigger
 	z = viewDistance*z + nearPlaneDistance;
 
 	x -= 0.5f;
@@ -36,9 +35,9 @@ float3 LightVolumeSpaceToViewSpace(float x, float y, float z, float2 nearPlaneSi
 
 	return float3(x, y, -z); // -z because we're in RH system
 }
-float3 LightVolumeSpaceToViewSpace(float3 position, float2 nearPlaneSize, float nearPlaneDistance, float viewDistance, out float volumeSliceSize)
+float3 LightVolumeSpaceToViewSpace(float3 position, float2 nearPlaneSize, float nearPlaneDistance, float viewDistance)
 {
-	return LightVolumeSpaceToViewSpace(position.x, position.y, position.z, nearPlaneSize, nearPlaneDistance, viewDistance, volumeSliceSize);
+	return LightVolumeSpaceToViewSpace(position.x, position.y, position.z, nearPlaneSize, nearPlaneDistance, viewDistance);
 }
 
 
