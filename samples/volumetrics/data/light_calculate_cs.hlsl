@@ -20,7 +20,7 @@ cbuffer ConstantBuffer: register(b0)
 	float3 dither;
 	float padding1;
 	float3 eyePosition;
-	float padding2;
+	float time;
 }
 
 
@@ -59,13 +59,14 @@ void main(uint3 dtID : SV_DispatchThreadID)
 
 	float3 inScattering =
 		float3(0.15f, 0.0f, 0.0f) +
-		2.0f * float3(0.5f, 0.5f, 0.5f) * schlickPhase;
+		4.0f * float3(0.5f, 0.5f, 0.5f) * schlickPhase;
 
-	float density = 0.0f;		
+	float density = 0.0f;
 	if (position_world.x > 0.0f)
 		density = 8.0f;
 	else
 		density = 0.0f;
+//	density = 40.0f * abs(saturate(10.0f * cos(0.1f * position_world.x - time)));
 
 	float4 lightVolume = float4(inScattering, density);
 
@@ -84,7 +85,8 @@ void main(uint3 dtID : SV_DispatchThreadID)
 
 		bool prevLightVolumeSampleValid =
 			prevPosition_lightVolume.x >= 0.0f && prevPosition_lightVolume.x <= 1.0f &&
-			prevPosition_lightVolume.y >= 0.0f && prevPosition_lightVolume.y <= 1.0f;
+			prevPosition_lightVolume.y >= 0.0f && prevPosition_lightVolume.y <= 1.0f &&
+			prevPosition_lightVolume.z >= 0.0f && prevPosition_lightVolume.z <= 1.0f;
 
 		lightVolume = lerp(lightVolume, prevLightVolumeSample, prevLightVolumeSampleValid ? 0.9f : 0.0f);
 	}

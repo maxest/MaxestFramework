@@ -1,4 +1,5 @@
 // shadow map
+// render to half-res, blur smart and upsample
 
 
 #include "../../../src/main.h"
@@ -143,6 +144,9 @@ void VolumetricFog(int frameIndex, const SVector3& eyePosition, const SMatrix& v
 		deviceContext->CSSetUnorderedAccessViews(0, 1, &lightVolumeTexture3D[frameIndex % 2].uav, nullptr);
 		deviceContext->CSSetShader(lightCalculateCS, nullptr, 0);
 
+		static float time = 0.0f;
+		time += 0.001f * application.LastFrameTime();
+
 		struct SParams
 		{
 			SMatrix viewToWorldTransform;
@@ -153,7 +157,7 @@ void VolumetricFog(int frameIndex, const SVector3& eyePosition, const SMatrix& v
 			float dither[3];
 			float padding1;
 			SVector3 eyePosition;
-			float padding2;
+			float time;
 		} params;
 		float ditherZ[8] =
 		{
@@ -186,6 +190,7 @@ void VolumetricFog(int frameIndex, const SVector3& eyePosition, const SMatrix& v
 		params.dither[1] = ditherXY[frameIndex % 8].y;
 		params.dither[2] = ditherZ[frameIndex % 8];
 		params.eyePosition = eyePosition;
+		params.time = time;
 		deviceContext->UpdateSubresource(gGPUUtilsResources.ConstantBuffer(11).buffer, 0, nullptr, &params, 0, 0);
 		deviceContext->CSSetConstantBuffers(0, 1, &gGPUUtilsResources.ConstantBuffer(11).buffer);
 
