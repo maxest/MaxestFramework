@@ -209,7 +209,7 @@ void SSAO(const SMatrix& viewTransform, const SMatrix& projTransform, int varian
 			float contrast;
 		} params;
 		params.pixelSize = VectorCustom(2.0f/(float)screenWidth, 2.0f/(float)screenHeight);
-		params.nearPlaneSize_normalized = PlaneSize(1.0f, cPi/3.0f, (float)screenWidth/(float)screenHeight);
+		params.nearPlaneSize_normalized = PlaneSize(cPi/3.0f, (float)screenWidth/(float)screenHeight, 1.0f);
 		params.viewTransform = viewTransform;
 		params.aspect = (float)screenWidth / (float)screenHeight;
 		params.radius_world = radius_world;
