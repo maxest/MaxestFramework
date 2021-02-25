@@ -3,6 +3,8 @@
 
 #include "types.h"
 #include "vector.h"
+#include "matrix.h"
+#include "plane.h"
 #include "quaternion.h"
 
 
