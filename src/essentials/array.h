@@ -158,13 +158,13 @@ namespace NMaxestFramework { namespace NEssentials
 	};
 
 	void ArrayUInt8Set(uint8* data, int bitIndex, uint8 value, int valueBitsCount);
-	uint8 ArrayUInt8Get(uint8* data, int bitIndex, int bitsCount);
+	uint8 ArrayUInt8Get(const uint8* data, int bitIndex, int bitsCount);
 	void ArrayUInt16Set(uint16* data, int bitIndex, uint16 value, int valueBitsCount);
-	uint16 ArrayUInt16Get(uint16* data, int bitIndex, int bitsCount);
+	uint16 ArrayUInt16Get(const uint16* data, int bitIndex, int bitsCount);
 	void ArrayUInt32Set(uint32* data, int bitIndex, uint32 value, int valueBitsCount);
-	uint32 ArrayUInt32Get(uint32* data, int bitIndex, int bitsCount);
+	uint32 ArrayUInt32Get(const uint32* data, int bitIndex, int bitsCount);
 	void ArrayUInt64Set(uint64* data, int bitIndex, uint64 value, int valueBitsCount);
-	uint64 ArrayUInt64Get(uint64* data, int bitIndex, int bitsCount);
+	uint64 ArrayUInt64Get(const uint64* data, int bitIndex, int bitsCount);
 
 	int ArrayFindSmallest(const float* elements, int elementsCount);
 	int ArrayFindBiggest(const float* elements, int elementsCount);
@@ -193,7 +193,7 @@ namespace NMaxestFramework { namespace NEssentials
 		data[part2ByteIndex] |= part2;
 	}
 
-	FORCE_INLINE uint8 ArrayUInt8Get(uint8* data, int bitIndex, int bitsCount)
+	FORCE_INLINE uint8 ArrayUInt8Get(const uint8* data, int bitIndex, int bitsCount)
 	{
 		uint part1ByteIndex = bitIndex >> 3;
 		uint part2ByteIndex = (bitIndex + bitsCount) >> 3;
@@ -228,7 +228,7 @@ namespace NMaxestFramework { namespace NEssentials
 		data[part2ByteIndex] |= part2;
 	}
 
-	FORCE_INLINE uint16 ArrayUInt16Get(uint16* data, int bitIndex, int bitsCount)
+	FORCE_INLINE uint16 ArrayUInt16Get(const uint16* data, int bitIndex, int bitsCount)
 	{
 		uint part1ByteIndex = bitIndex >> 4;
 		uint part2ByteIndex = (bitIndex + bitsCount) >> 4;
@@ -263,7 +263,7 @@ namespace NMaxestFramework { namespace NEssentials
 		data[part2ByteIndex] |= part2;
 	}
 
-	FORCE_INLINE uint32 ArrayUInt32Get(uint32* data, int bitIndex, int bitsCount)
+	FORCE_INLINE uint32 ArrayUInt32Get(const uint32* data, int bitIndex, int bitsCount)
 	{
 		uint part1ByteIndex = bitIndex >> 5;
 		uint part2ByteIndex = (bitIndex + bitsCount) >> 5;
@@ -298,7 +298,7 @@ namespace NMaxestFramework { namespace NEssentials
 		data[part2ByteIndex] |= part2;
 	}
 
-	FORCE_INLINE uint64 ArrayUInt64Get(uint64* data, int bitIndex, int bitsCount)
+	FORCE_INLINE uint64 ArrayUInt64Get(const uint64* data, int bitIndex, int bitsCount)
 	{
 		uint64 part1ByteIndex = bitIndex >> 6;
 		uint64 part2ByteIndex = (bitIndex + bitsCount) >> 6;
