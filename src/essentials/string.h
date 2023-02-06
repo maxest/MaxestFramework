@@ -43,9 +43,14 @@ namespace NMaxestFramework { namespace NEssentials
 		return wstring(s.begin(), s.end());
 	}
 
-	inline string WStringToString(const wstring& s)
+	inline string WStringToString(const wstring& ws)
 	{
-		return string(s.begin(), s.end());
+		string s = "";
+		for (size_t i = 0; i < ws.size(); i++)
+		{
+			s += (char)ws[i];
+		}
+		return s;
 	}
 
 	inline bool ToBool(const string& s)
