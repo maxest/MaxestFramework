@@ -687,6 +687,8 @@ NImage::SImage NImage::MergeChannelImages(const vector<SImage>& images)
 
 NImage::SImage NImage::Compress(const SImage& image, EFormat compressionFormat)
 {
+	MF_ASSERT(false); // squish was compiled for older VS and doesn't link anymore
+
 	MF_ASSERT(image.format == EFormat::RGBA8);
 	MF_ASSERT(IsCompressed(compressionFormat));
 
@@ -698,7 +700,7 @@ NImage::SImage NImage::Compress(const SImage& image, EFormat compressionFormat)
 	flags |= squish::kColourIterativeClusterFit;
 
 	SImage compressedImage = Create(image.width, image.height, compressionFormat);
-	squish::CompressImage(image.data, image.width, image.height, compressedImage.data, flags);
+	//squish::CompressImage(image.data, image.width, image.height, compressedImage.data, flags);
 
 	return compressedImage;
 }
@@ -706,6 +708,8 @@ NImage::SImage NImage::Compress(const SImage& image, EFormat compressionFormat)
 
 NImage::SImage NImage::Decompress(const SImage& image)
 {
+	MF_ASSERT(false); // squish was compiled for older VS and doesn't link anymore
+
 	MF_ASSERT(IsCompressed(image));
 
 	int flags = 0;
@@ -715,7 +719,7 @@ NImage::SImage NImage::Decompress(const SImage& image)
 		flags = squish::kDxt5;
 
 	SImage decompressedImage = Create(image.width, image.height, EFormat::RGBA8);
-	squish::DecompressImage(decompressedImage.data, image.width, image.height, image.data, flags);
+	//squish::DecompressImage(decompressedImage.data, image.width, image.height, image.data, flags);
 
 	return decompressedImage;
 }

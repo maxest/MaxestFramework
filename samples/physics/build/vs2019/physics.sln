@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2019
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "physics", "physics.vcxproj", "{1062A674-6C5B-4B26-8F58-E8C81AC83D2F}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E38DE4AA-032D-491B-A307-98DA4CC6332B} = {E38DE4AA-032D-491B-A307-98DA4CC6332B}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "framework", "..\..\..\..\build\vs2019\framework.vcxproj", "{E38DE4AA-032D-491B-A307-98DA4CC6332B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1062A674-6C5B-4B26-8F58-E8C81AC83D2F}.Debug|x64.ActiveCfg = Debug|x64
+		{1062A674-6C5B-4B26-8F58-E8C81AC83D2F}.Debug|x64.Build.0 = Debug|x64
+		{1062A674-6C5B-4B26-8F58-E8C81AC83D2F}.Release|x64.ActiveCfg = Release|x64
+		{1062A674-6C5B-4B26-8F58-E8C81AC83D2F}.Release|x64.Build.0 = Release|x64
+		{E38DE4AA-032D-491B-A307-98DA4CC6332B}.Debug|x64.ActiveCfg = Debug|x64
+		{E38DE4AA-032D-491B-A307-98DA4CC6332B}.Debug|x64.Build.0 = Debug|x64
+		{E38DE4AA-032D-491B-A307-98DA4CC6332B}.Release|x64.ActiveCfg = Release|x64
+		{E38DE4AA-032D-491B-A307-98DA4CC6332B}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
