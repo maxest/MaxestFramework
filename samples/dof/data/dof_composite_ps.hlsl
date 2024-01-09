@@ -30,13 +30,15 @@ float4 main(PS_INPUT input): SV_Target
 
 	// far field
 	{
+		float2 pixelSize_x4 = 2.0f * pixelSize;
+
 		float2 texCoord00 = input.texCoord;
-		float2 texCoord10 = input.texCoord + float2(pixelSize.x, 0.0f);
-		float2 texCoord01 = input.texCoord + float2(0.0f, pixelSize.y);
-		float2 texCoord11 = input.texCoord + float2(pixelSize.x, pixelSize.y);
+		float2 texCoord10 = input.texCoord + float2(pixelSize_x4.x, 0.0f);
+		float2 texCoord01 = input.texCoord + float2(0.0f, pixelSize_x4.y);
+		float2 texCoord11 = input.texCoord + float2(pixelSize_x4.x, pixelSize_x4.y);
 
 		float cocFar = cocTexture.SampleLevel(pointClampSampler, input.texCoord, 0).y;
-		float4 cocsFar_x4 = cocTexture_x4.GatherGreen(pointClampSampler, texCoord00).wzxy;
+		float4 cocsFar_x4 = cocTexture_x4.GatherGreen(pointClampSampler, texCoord00 + 0.5f*pixelSize_x4).wzxy;
 		float4 cocsFarDiffs = abs(cocFar.xxxx - cocsFar_x4);
 
 		float4 dofFar00 = dofFarTexture_x4.SampleLevel(pointClampSampler, texCoord00, 0);

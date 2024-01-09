@@ -28,17 +28,14 @@ float DepthNDCToView(float depth_ndc)
 
 float4 main(PS_INPUT input): SV_Target0
 {
-	float2 texCoord00 = input.texCoord;
-	float2 texCoord10 = input.texCoord + float2(pixelSize.x, 0.0f);
-	float2 texCoord01 = input.texCoord + float2(0.0f, pixelSize.y);
-	float2 texCoord11 = input.texCoord + float2(pixelSize.x, pixelSize.y);
-	
+	float2 pixelSize_x4 = 2.0f * pixelSize;
+
 	float depth = depthBufferTexture.Sample(pointClampSampler, input.texCoord).x;
 	depth = DepthNDCToView(depth);
-	float4 depths_x4 = depth16Texture_x4.GatherRed(pointClampSampler, texCoord00).wzxy;
+	float4 depths_x4 = depth16Texture_x4.GatherRed(pointClampSampler, input.texCoord + 0.5f*pixelSize_x4).wzxy;
 	float4 depthsDiffs = abs(depth.xxxx - depths_x4);
-	
-	float4 ssaos_x4 = ssaoTexture_x4.GatherRed(pointClampSampler, texCoord00).wzxy;
+
+	float4 ssaos_x4 = ssaoTexture_x4.GatherRed(pointClampSampler, input.texCoord + 0.5f*pixelSize_x4).wzxy;
 
 	float2 imageCoord = input.texCoord / pixelSize;
 	float2 fractional = frac(imageCoord);
