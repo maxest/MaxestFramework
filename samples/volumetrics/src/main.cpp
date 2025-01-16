@@ -50,7 +50,11 @@ void CreateShaders()
 	MF_ASSERT(CreateVertexShader("../../data/mesh_vs.hlsl", meshVS));
 
 	MF_ASSERT(CreatePixelShader("../../data/mesh_gbuffer_ps.hlsl", meshGBufferPS));
-	MF_ASSERT(CreatePixelShader("../../data/composite_ps.hlsl", compositePS));
+	MF_ASSERT(CreatePixelShader("../../data/composite_ps.hlsl",
+		"LIGHT_VOLUME_TEXTURE_WIDTH=" + ToString(lightVolumeTextureWidth) + "|" +
+		"LIGHT_VOLUME_TEXTURE_HEIGHT=" + ToString(lightVolumeTextureHeight) + "|" +
+		"LIGHT_VOLUME_TEXTURE_DEPTH=" + ToString(lightVolumeTextureDepth),
+		compositePS));
 
 	MF_ASSERT(CreateComputeShader("../../data/light_calculate_cs.hlsl",
 		"LIGHT_VOLUME_TEXTURE_WIDTH=" + ToString(lightVolumeTextureWidth) + "|" +
@@ -351,7 +355,7 @@ bool Run()
 		ClearPSShaderResources(0, 1);
 	}
 
-	swapChain->Present(2, 0);
+	swapChain->Present(1, 0);
 
 	gGPUProfiler.EndFrame();
 	gGPUProfiler.StopProfiling();
